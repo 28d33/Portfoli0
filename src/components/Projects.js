@@ -10,7 +10,7 @@ const projects = [
   {
     title: 'Perimeter_Security',
     description: 'A security tool or project focused on perimeter security (e.g. protecting network edges).',
-    link: 'https://github.github.com/28d33/Perimeter_Security',
+    link: 'https://.github.com/28d33/Perimeter_Security',
     tags: ['VirtualBox', 'ELK Stack','Filebeat','VPN','Networking','Network Security','Firewall','Security Monitoring'],
   },
   {
