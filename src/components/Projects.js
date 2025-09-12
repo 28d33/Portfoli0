@@ -54,7 +54,7 @@ export default function Projects() {
       </div>
       <div className="flex justify-center mt-8">
         <a
-          href="/resume.pdf"
+          href="https://github.com/28d33/Portfoli0/blob/main/resume/Resume.pdf"
           download
           className="inline-block px-6 py-2 bg-blue-600 text-gray-100 font-bold rounded shadow hover:bg-blue-700 hover:text-blue-300 transition-colors duration-200 border border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
