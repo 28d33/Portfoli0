@@ -4,8 +4,8 @@
 
 
 @keyframes typewriter {
-  from { width: 0; }
-  to { width: 39em; }
+  from { width: -1em; }
+  to { width: 38em; }
 }
 
 
