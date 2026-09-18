@@ -26,7 +26,7 @@ body {
 
 @media (pointer: fine) {
     body {
-        cursor: none; /* Custom physics cursor on desktop / mouse pointer devices only */
+        cursor: none; /* Custom physics cursor on desktop pointer devices only */
     }
 }
 
@@ -40,6 +40,42 @@ body::-webkit-scrollbar {
 
 .font-mono {
     font-family: 'JetBrains Mono', monospace;
+}
+
+/* Fluid Auto-Adjusting Typography Classes */
+.fluid-hero-title {
+    font-size: clamp(2.35rem, 7.2vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+}
+
+.fluid-section-title {
+    font-size: clamp(1.85rem, 4.5vw, 4.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+}
+
+.fluid-card-title {
+    font-size: clamp(1.2rem, 2.2vw, 2.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.fluid-body-text {
+    font-size: clamp(0.85rem, 1.15vw, 1.1rem);
+    line-height: 1.65;
+}
+
+/* Fluid Showcase Card Dimensions (Never overflows on short laptops or ultra-wide screens) */
+.showcase-card {
+    width: clamp(290px, 84vw, 620px);
+    max-height: clamp(420px, 80vh, 650px);
+    flex-shrink: 0;
+}
+
+.showcase-intro-card {
+    width: clamp(280px, 80vw, 480px);
+    flex-shrink: 0;
 }
 
 /* 3D Canvas fixed to background (v8.5 Engine) */

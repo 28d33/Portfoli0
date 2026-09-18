@@ -1,6 +1,6 @@
 // =========================================================================
-// DEEKSHITH (D33) — RESPONSIVE FUSION ARCHITECTURE (v5 + v8 + v8.5)
-// Multi-Resolution Engine for Mobile, Tablet, Laptop, Desktop & 4K
+// DEEKSHITH (D33) — FLUID AUTO-ADJUSTING FUSION ARCHITECTURE
+// Automatic resolution detection for Mobile, Tablet, Laptop, Desktop & 4K
 // =========================================================================
 
 (function () {
@@ -75,7 +75,7 @@
         link.addEventListener('click', () => toggleMobileMenu(false));
     });
 
-    // --- 4. CUSTOM DUAL LERP CURSOR LOGIC (Desktop / Fine Pointer Only) ---
+    // --- 4. CUSTOM DUAL LERP CURSOR (Desktop / Fine Pointer Only) ---
     const cursorDot = document.getElementById('cursor-dot');
     const cursorRing = document.getElementById('cursor-ring');
     let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -90,7 +90,6 @@
             mouse.x = e.clientX;
             mouse.y = e.clientY;
             
-            // Map to -1 to 1 for Three.js camera parallax
             targetX = (e.clientX / window.innerWidth) * 2 - 1;
             targetY = -(e.clientY / window.innerHeight) * 2 + 1;
         });
@@ -117,7 +116,7 @@
         }
         renderCursor();
 
-        // Magnetic Buttons (Desktop)
+        // Magnetic Buttons
         function initMagneticButtons() {
             const magnetics = document.querySelectorAll('.magnetic-wrap');
             magnetics.forEach(wrap => {
@@ -179,7 +178,7 @@
     }
 
 
-    // --- 6. 10,000 PARTICLE MORPHING THREE.JS BACKGROUND (v8.5 Engine) ---
+    // --- 6. AUTO-ADJUSTING 10,000 PARTICLE MORPHING THREE.JS BACKGROUND ---
     const particleCount = window.innerWidth < 640 ? 6000 : 10000;
     const positionAttributes = {
         shape1: new Float32Array(particleCount * 3), // Hero: Clustered Torus Knot
@@ -229,9 +228,37 @@
         positionAttributes.shape4[i3 + 2] = Math.sin(angle4) * radius4;
     }
 
+    let camera = null;
+    let renderer = null;
     let particleSystem = null;
+    let particleMaterial = null;
     let particleGeometry = null;
     let scrollProgress = 0;
+
+    // Fluid Camera Distance Calculation according to aspect ratio and screen width
+    function getResponsiveCamZ() {
+        const aspect = window.innerWidth / window.innerHeight;
+        if (aspect < 0.75) {
+            // Tall portrait mobile
+            return 44;
+        } else if (aspect < 1.1) {
+            // Square screens / Portrait Tablets
+            return 38;
+        } else if (window.innerWidth >= 2560) {
+            // 4K & Ultrawide Monitors
+            return 28;
+        } else {
+            // Standard Laptops (1366x768, 1440x900, 1920x1080)
+            return 32;
+        }
+    }
+
+    function getResponsiveParticleSize() {
+        if (window.innerWidth < 640) return 0.38;
+        if (window.innerWidth < 1024) return 0.32;
+        if (window.innerWidth >= 2560) return 0.24;
+        return 0.28;
+    }
 
     function initThreeJS() {
         const canvas = document.getElementById('webgl-canvas');
@@ -240,10 +267,10 @@
         const scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2('#050507', 0.02);
 
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, window.innerWidth < 640 ? 38 : 32);
+        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, getResponsiveCamZ());
 
-        const renderer = new THREE.WebGLRenderer({
+        renderer = new THREE.WebGLRenderer({
             canvas: canvas,
             alpha: true,
             antialias: window.innerWidth >= 768,
@@ -284,10 +311,8 @@
             return new THREE.CanvasTexture(c);
         };
 
-        const particleSize = window.innerWidth < 640 ? 0.36 : window.innerWidth < 1024 ? 0.30 : 0.28;
-
-        const particleMaterial = new THREE.PointsMaterial({
-            size: particleSize,
+        particleMaterial = new THREE.PointsMaterial({
+            size: getResponsiveParticleSize(),
             vertexColors: true,
             map: createCircleTexture(),
             transparent: true,
@@ -364,18 +389,25 @@
         }
         animate();
 
-        // Responsive Resize Handler
+        // Responsive Debounced Resize Handler
         let resizeTimer;
-        window.addEventListener('resize', () => {
+        function handleResize() {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.position.z = window.innerWidth < 640 ? 38 : 32;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
+                if (camera && renderer && particleMaterial) {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.position.z = getResponsiveCamZ();
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    particleMaterial.size = getResponsiveParticleSize();
+                }
                 ScrollTrigger.refresh();
-            }, 100);
-        });
+            }, 80);
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
     }
 
     if (document.readyState === 'loading') {
@@ -385,13 +417,13 @@
     }
 
 
-    // --- 7. GSAP HORIZONTAL PINNED SHOWCASE (v8 Major Scrolling Architecture) ---
+    // --- 7. GSAP HORIZONTAL PINNED SHOWCASE (Auto-Adjusting Horizontal Distance) ---
     function initHorizontalScroll() {
         const horizontalSection = document.getElementById('horizontal-work');
         const track = document.getElementById('horizontal-track');
         if (!horizontalSection || !track) return;
 
-        const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + (window.innerWidth < 640 ? 40 : 100));
+        const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + (window.innerWidth < 640 ? 30 : 80));
 
         gsap.to(track, {
             x: getScrollAmount,
@@ -399,7 +431,7 @@
             scrollTrigger: {
                 trigger: horizontalSection,
                 start: "top top",
-                end: () => `+=${track.scrollWidth - window.innerWidth + 300}`,
+                end: () => `+=${Math.max(window.innerHeight * 1.5, track.scrollWidth - window.innerWidth + 200)}`,
                 pin: true,
                 scrub: 1.1,
                 invalidateOnRefresh: true,
