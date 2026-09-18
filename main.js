@@ -1,32 +1,31 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — ADVANCED 3D MOTION PORTFOLIO (v4.0)
-   GSAP Preloader & ScrollTrigger + Three.js Liquid Distortion Sphere + Terminal
+   DEEKSHITH (D33) — SYSTEM BREACH // ctOS JAVASCRIPT ENGINE (v5.0)
+   Three.js Wireframe Terrain + Central Core Node + Terminal Console
    ========================================================================== */
 
 (function () {
     'use strict';
 
     /* ==========================================================================
-       1. LUCIDE ICONS
+       1. LUCIDE ICONS INITIALIZATION
        ========================================================================== */
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
 
     /* ==========================================================================
-       2. CUSTOM LERP CURSOR LOGIC
+       2. SNAPPY CROSSHAIR CURSOR LOGIC
        ========================================================================== */
-    const dot = document.getElementById('cursor-dot');
-    const circle = document.getElementById('cursor-circle');
+    const cursor = document.getElementById('cursor-crosshair');
 
-    if (dot && circle && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        let dotPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        let circlePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX;
             mouse.y = e.clientY;
+            // Direct instantaneous transformation for snappy military/hacker feel
+            cursor.style.transform = `translate(${mouse.x}px, ${mouse.y}px) translate(-50%, -50%)`;
         }, { passive: true });
 
         const bindHoverables = () => {
@@ -37,91 +36,83 @@
             });
         };
 
-        const lerp = (start, end, factor) => start + (end - start) * factor;
-
-        function animateCursor() {
-            dotPos.x = lerp(dotPos.x, mouse.x, 0.4);
-            dotPos.y = lerp(dotPos.y, mouse.y, 0.4);
-            
-            circlePos.x = lerp(circlePos.x, mouse.x, 0.15);
-            circlePos.y = lerp(circlePos.y, mouse.y, 0.15);
-
-            dot.style.transform = `translate(${dotPos.x}px, ${dotPos.y}px) translate(-50%, -50%)`;
-            circle.style.transform = `translate(${circlePos.x}px, ${circlePos.y}px) translate(-50%, -50%)`;
-            
-            requestAnimationFrame(animateCursor);
-        }
-
         bindHoverables();
-        requestAnimationFrame(animateCursor);
     }
 
     /* ==========================================================================
-       3. GSAP SCROLL ANIMATIONS & CINEMATIC PRELOADER
+       3. GSAP ANIMATIONS & TERMINAL BOOT SEQUENCE
        ========================================================================== */
-    function initGsapAnimations() {
+    function initAnimations() {
         if (typeof gsap === 'undefined') return;
 
         if (typeof ScrollTrigger !== 'undefined') {
             gsap.registerPlugin(ScrollTrigger);
         }
 
-        // Preloader Timeline Sequence
         const tl = gsap.timeline();
 
-        tl.to("#loader-progress", {
-            width: "100%",
-            duration: 1.4,
-            ease: "power3.inOut"
-        })
-        .to(".loader-text .char", {
-            y: "0%",
+        // Staggered log terminal sequence
+        tl.to(".log-line", {
             opacity: 1,
-            stagger: 0.04,
-            duration: 0.7,
-            ease: "power4.out"
-        }, "-=0.4")
-        .to("#loader", {
-            yPercent: -100,
-            duration: 0.9,
-            ease: "power4.inOut",
-            delay: 0.15
+            y: 0,
+            duration: 0.08,
+            stagger: 0.22,
+            ease: "none"
         })
-        .to("#main-content", {
+        // Cyan screen flash
+        .to("#terminal-loader", {
+            backgroundColor: "#00e5ff",
+            duration: 0.08,
+            delay: 0.3
+        })
+        // Fade out loader
+        .to("#terminal-loader", {
+            opacity: 0,
+            duration: 0.45,
+            ease: "power2.inOut",
+            onComplete: () => {
+                const loader = document.getElementById('terminal-loader');
+                if (loader) loader.style.display = 'none';
+                initThreeJS(); // Launch 3D engine immediately after boot
+            }
+        })
+        // Reveal main UI
+        .to("#main-ui", {
             opacity: 1,
             duration: 0.1
-        }, "-=0.9")
-        .to(".hero-line", {
-            y: "0%",
-            duration: 1.1,
-            stagger: 0.12,
-            ease: "power4.out"
-        }, "-=0.4")
-        .fromTo(".hero-elem", 
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: "power3.out" },
+        }, "-=0.2")
+        // Hero text reveals
+        .fromTo(".gs-reveal", 
+            { opacity: 0, x: -40 },
+            { opacity: 1, x: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }
+        )
+        .fromTo(".gs-title-line",
+            { y: "100%" },
+            { y: "0%", duration: 0.9, stagger: 0.12, ease: "power4.out" },
             "-=0.7"
         );
 
-        // Section Title Reveals
-        gsap.utils.toArray('.section-title').forEach(title => {
-            gsap.to(title, {
-                scrollTrigger: {
-                    trigger: title.parentElement,
-                    start: "top 85%",
-                },
-                y: "0%",
-                duration: 1,
-                ease: "power4.out"
-            });
+        // Section Headers
+        gsap.utils.toArray('.gs-section-header').forEach(header => {
+            gsap.fromTo(header,
+                { opacity: 0, x: -40 },
+                {
+                    scrollTrigger: {
+                        trigger: header,
+                        start: "top 85%",
+                    },
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.7,
+                    ease: "power3.out"
+                }
+            );
         });
 
-        // Project Cards Parallax & Scroll Reveal
-        gsap.utils.toArray('.project-card').forEach(card => {
-            const img = card.querySelector('.parallax-img');
-            
+        // Project Cards
+        gsap.utils.toArray('.gs-project').forEach((card, i) => {
             gsap.fromTo(card,
-                { opacity: 0, y: 80 },
+                { opacity: 0, y: 45 },
                 {
                     scrollTrigger: {
                         trigger: card,
@@ -129,61 +120,44 @@
                     },
                     opacity: 1,
                     y: 0,
-                    duration: 1.1,
+                    duration: 0.7,
+                    delay: i % 2 === 0 ? 0 : 0.15,
                     ease: "power3.out"
                 }
             );
-
-            if (img) {
-                gsap.to(img, {
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: 1
-                    },
-                    yPercent: 18,
-                    ease: "none"
-                });
-            }
         });
 
-        // Expertise Cards Stagger
-        gsap.fromTo('.expertise-card', 
-            { opacity: 0, x: 40 },
+        // Skills Stagger
+        gsap.fromTo(".gs-skill",
+            { opacity: 0, y: 30 },
             {
                 scrollTrigger: {
-                    trigger: "#expertise",
-                    start: "top 65%",
+                    trigger: "#specs",
+                    start: "top 80%"
                 },
                 opacity: 1,
-                x: 0,
-                duration: 0.8,
+                y: 0,
+                duration: 0.6,
                 stagger: 0.12,
-                ease: "power3.out"
+                ease: "power2.out"
             }
         );
     }
 
     /* ==========================================================================
-       4. THREE.JS PROCEDURAL LIQUID DISTORTION PARTICLE SPHERE
+       4. THREE.JS 3D CYBER DEFENSE ENVIRONMENT
        ========================================================================== */
     function initThreeJS() {
         const canvas = document.getElementById('webgl-canvas');
         if (!canvas || typeof THREE === 'undefined') return;
 
-        // 1. Scene & Camera Setup
+        // 1. Scene Setup
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x050505, 0.03);
+        scene.fog = new THREE.FogExp2(0x020202, 0.04);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 12;
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 15);
         
-        if (window.innerWidth > 768) {
-            camera.position.x = 2; 
-        }
-
-        // 2. Renderer
         const renderer = new THREE.WebGLRenderer({
             canvas: canvas,
             alpha: true,
@@ -193,67 +167,99 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // 3. Icosahedron High-Detail Mesh (~9,000 vertices)
-        const geometry = new THREE.IcosahedronGeometry(4, 30);
-        const basePositions = new Float32Array(geometry.attributes.position.array);
+        // 2. Wireframe Terrain (The Digital Grid)
+        const terrainGeo = new THREE.PlaneGeometry(100, 100, 40, 40);
+        terrainGeo.rotateX(-Math.PI / 2);
+        
+        const vertices = terrainGeo.attributes.position.array;
+        for (let i = 0; i < vertices.length; i += 3) {
+            const x = vertices[i];
+            const z = vertices[i + 2];
+            vertices[i + 1] = (Math.sin(x * 0.2) * Math.cos(z * 0.2) * 2) + (Math.sin(x * 0.05) * 4);
+        }
+        terrainGeo.computeVertexNormals();
 
-        // Circular Soft-Glow Texture
-        const createCircleTexture = () => {
-            const cvs = document.createElement('canvas');
-            cvs.width = 64;
-            cvs.height = 64;
-            const ctx = cvs.getContext('2d');
-            ctx.beginPath();
-            ctx.arc(32, 32, 28, 0, Math.PI * 2);
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-            return new THREE.CanvasTexture(cvs);
-        };
+        const terrainMat = new THREE.MeshBasicMaterial({ 
+            color: 0x00e5ff, 
+            wireframe: true, 
+            transparent: true, 
+            opacity: 0.18 
+        });
+        const terrain = new THREE.Mesh(terrainGeo, terrainMat);
+        terrain.position.y = -4;
+        scene.add(terrain);
 
-        const material = new THREE.PointsMaterial({
-            size: 0.08,
-            color: 0xd8f34c, // Theme accent neon lime
-            map: createCircleTexture(),
+        // 3. Central Data Core Node
+        const coreGroup = new THREE.Group();
+        
+        // Outer Cyan Wireframe Icosahedron
+        const outerGeo = new THREE.IcosahedronGeometry(4, 1);
+        const outerMat = new THREE.MeshBasicMaterial({
+            color: 0x00e5ff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.35
+        });
+        const outerCore = new THREE.Mesh(outerGeo, outerMat);
+        
+        // Inner Red Wireframe Octahedron
+        const innerGeo = new THREE.OctahedronGeometry(2, 0);
+        const innerMat = new THREE.MeshBasicMaterial({
+            color: 0xff003c,
+            wireframe: true
+        });
+        const innerCore = new THREE.Mesh(innerGeo, innerMat);
+
+        coreGroup.add(outerCore);
+        coreGroup.add(innerCore);
+        
+        coreGroup.position.set(window.innerWidth > 768 ? 4 : 0, 2, -5);
+        scene.add(coreGroup);
+
+        // 4. Floating Cyan Data Stream Particles
+        const particlesGeo = new THREE.BufferGeometry();
+        const particlesCount = 800;
+        const posArray = new Float32Array(particlesCount * 3);
+        
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 50;
+        }
+        
+        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMat = new THREE.PointsMaterial({
+            size: 0.06,
+            color: 0x00e5ff,
             transparent: true,
             opacity: 0.7,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
+            blending: THREE.AdditiveBlending
         });
+        
+        const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+        scene.add(particlesMesh);
 
-        const particleMesh = new THREE.Points(geometry, material);
-        scene.add(particleMesh);
-
-        // 4. Background Star/Dust Field
-        const dustGeo = new THREE.BufferGeometry();
-        const dustCount = 1500;
-        const dustPos = new Float32Array(dustCount * 3);
-        for (let i = 0; i < dustCount * 3; i++) {
-            dustPos[i] = (Math.random() - 0.5) * 60;
-        }
-        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
-        const dustMat = new THREE.PointsMaterial({
-            size: 0.05,
-            color: 0xffffff,
-            transparent: true,
-            opacity: 0.25
-        });
-        const dust = new THREE.Points(dustGeo, dustMat);
-        scene.add(dust);
-
-        // 5. Interactivity Variables
-        let mouseX = 0;
-        let mouseY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+        // 5. Interactive Mouse Parallax
+        let targetX = 0;
+        let targetY = 0;
 
         window.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX) * 0.001;
-            mouseY = (event.clientY - windowHalfY) * 0.001;
+            targetX = (event.clientX / window.innerWidth) * 2 - 1;
+            targetY = -(event.clientY / window.innerHeight) * 2 + 1;
         }, { passive: true });
 
-        // ScrollTrigger 3D Manipulations
+        // 6. GSAP Scroll Connection
         if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-            gsap.to(particleMesh.rotation, {
+            gsap.to(camera.position, {
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                },
+                z: -10,
+                y: 10
+            });
+
+            gsap.to(coreGroup.rotation, {
                 scrollTrigger: {
                     trigger: "body",
                     start: "top top",
@@ -261,76 +267,56 @@
                     scrub: 1
                 },
                 x: Math.PI * 2,
-                y: Math.PI
-            });
-            
-            gsap.to(particleMesh.position, {
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1
-                },
-                z: -5
+                z: Math.PI
             });
         }
 
-        // Resize Handler
+        // 7. Resize Handler
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-            if (window.innerWidth > 768) {
-                camera.position.x = 2; 
-            } else {
-                camera.position.x = 0;
-            }
+            coreGroup.position.x = window.innerWidth > 768 ? 4 : 0;
         });
 
-        // 6. Animation Loop (Liquid Vertex Mathematics)
+        // 8. Render Loop
         const clock = new THREE.Clock();
-        const positions = particleMesh.geometry.attributes.position.array;
 
         function animate() {
             requestAnimationFrame(animate);
             
             const time = clock.getElapsedTime();
 
-            // Parallax Mouse Follow
-            camera.position.x += (mouseX * 3 - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY * 3 - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
+            // Parallax Camera drift
+            camera.position.x += (targetX * 2 - camera.position.x) * 0.05;
+            camera.position.y += (targetY * 2 + 5 - camera.position.y) * 0.05;
+            camera.lookAt(0, 0, 0);
 
-            // Organic Vertex Mathematical Distortion
-            for (let i = 0; i < positions.length; i += 3) {
-                const bx = basePositions[i];
-                const by = basePositions[i + 1];
-                const bz = basePositions[i + 2];
-
-                const noise = Math.sin(bx * 1.5 + time) * 
-                              Math.cos(by * 1.5 + time) * 
-                              Math.sin(bz * 1.5 + time);
-
-                const wave = Math.sin(time * 0.5 + by * 0.5) * 0.5;
-
-                const len = Math.sqrt(bx * bx + by * by + bz * bz) || 1;
-                const nx = bx / len;
-                const ny = by / len;
-                const nz = bz / len;
-
-                const displacement = noise * 0.8 + wave;
-
-                positions[i] = bx + nx * displacement;
-                positions[i + 1] = by + ny * displacement;
-                positions[i + 2] = bz + nz * displacement;
+            // Animate Core Nodes
+            outerCore.rotation.y += 0.002;
+            outerCore.rotation.x += 0.001;
+            innerCore.rotation.y -= 0.005;
+            
+            // Random glitch jitter on Core
+            if (Math.random() > 0.98) {
+                innerCore.scale.setScalar(1 + Math.random() * 0.25);
+                outerMat.opacity = Math.random() * 0.5 + 0.15;
+            } else {
+                innerCore.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
+                outerMat.opacity = 0.35;
             }
 
-            particleMesh.geometry.attributes.position.needsUpdate = true;
+            // Infinite terrain flight loop
+            terrain.position.z = (time * 2) % 4;
 
-            // Ambient mesh rotation
-            particleMesh.rotation.y += 0.001;
-            dust.rotation.y -= 0.0005;
-            dust.rotation.x += 0.0002;
+            // Animate floating upward data particles
+            const pPositions = particlesGeo.attributes.position.array;
+            for (let i = 1; i < particlesCount * 3; i += 3) {
+                pPositions[i] += 0.03;
+                if (pPositions[i] > 20) pPositions[i] = -20;
+            }
+            particlesGeo.attributes.position.needsUpdate = true;
+            particlesMesh.rotation.y = time * 0.04;
 
             renderer.render(scene, camera);
         }
@@ -360,7 +346,7 @@
     }
 
     /* ==========================================================================
-       6. INTERACTIVE TERMINAL DRAWER
+       6. INTERACTIVE ctOS TERMINAL DRAWER
        ========================================================================== */
     class InteractiveTerminalDrawer {
         constructor() {
@@ -434,7 +420,7 @@
         appendHistory(text, styleClass = 'text-gray-300') {
             if (!this.history) return;
             const div = document.createElement('div');
-            div.className = `${styleClass} whitespace-pre-wrap leading-relaxed`;
+            div.className = `${styleClass} whitespace-pre-wrap leading-relaxed font-mono`;
             div.textContent = text;
             this.history.appendChild(div);
 
@@ -444,32 +430,32 @@
 
         processCommand(rawCmd) {
             const cmd = rawCmd.toLowerCase();
-            this.appendHistory(`d33:~$ ${rawCmd}`, 'text-[#d8f34c] font-semibold');
+            this.appendHistory(`d33:root# ${rawCmd}`, 'text-[#00e5ff] font-bold');
 
             switch (cmd) {
                 case 'help':
                     this.appendHistory(`Available Commands:
-- whoami       : Security credentials & profile
-- projects     : Production engineering & security suites
+- whoami       : Operator identity & kernel clearance
+- projects     : Database records of security suites
 - skills       : Offensive & cryptographic toolsets
-- certs        : Industry certifications & CTF awards
-- contact      : Direct communication coordinates
-- clear        : Clear terminal output
-- exit         : Close terminal`, 'text-[#d8f34c]');
+- certs        : Verified accreditations & CTF records
+- uplink       : Direct communication channels
+- clear        : Clear console buffer
+- exit         : Terminate session`, 'text-[#00e5ff]');
                     break;
 
                 case 'whoami':
-                    this.appendHistory(`DEEKSHITH (D33)
-Specialization : Offensive Cybersecurity, Cryptography (C/C++), Digital Forensics
-Location       : Bangalore, Karnataka, India
-Philosophy     : Hardening defenses through adversarial exploit depth`, 'text-gray-200');
+                    this.appendHistory(`OPERATOR : DEEKSHITH (D33)
+ROLE     : Offensive Security Architect & Systems Developer
+NODE     : Bangalore, Karnataka, India [12.9716° N, 77.5946° E]
+CORE     : Low-level C/C++ Cryptography, Pen-Testing, Digital Forensics`, 'text-gray-200');
                     break;
 
                 case 'projects':
-                    this.appendHistory(`1. E-D--Crypto         -> Pure C / OpenSSL / AES-256 / RSA-2048 Hybrid
-2. Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
-3. Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
-4. Data Stream Masking -> C++20 Financial Payload Sanitizer & Tokenizer`, 'text-sky-300');
+                    this.appendHistory(`[0x11A] E-D--Crypto         -> C / OpenSSL / AES-256-CBC / RSA-2048
+[0x11B] Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
+[0x11C] Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
+[0x11D] Data Stream Masking -> C++20 Financial Payload Tokenizer`, 'text-sky-300');
                     break;
 
                 case 'skills':
@@ -487,14 +473,15 @@ Defensive : ELK Stack, Suricata IDS/IPS, Linux Kernel Hardening, GPO`, 'text-gra
 - Cyber Job Simulation (Deloitte Australia)
 - Cybersecurity Analyst IAM (TCS)
 - Critical Infrastructure Protection (OPSWAT)
-- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-amber-300');
+- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-[#ff003c]');
                     break;
 
                 case 'contact':
+                case 'uplink':
                     this.appendHistory(`Email    : d33kshith@proton.me
 GitHub   : github.com/28d33
 LinkedIn : linkedin.com/in/d33kshithanand
-Location : Bangalore, India`, 'text-[#d8f34c]');
+Uplink   : SECURE_SOCKET_OPEN`, 'text-[#00e5ff]');
                     break;
 
                 case 'clear':
@@ -509,18 +496,17 @@ Location : Bangalore, India`, 'text-[#d8f34c]');
                     break;
 
                 default:
-                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for options.`, 'text-rose-400');
+                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for command list.`, 'text-[#ff003c]');
                     break;
             }
         }
     }
 
     /* ==========================================================================
-       7. INITIALIZATION ON WINDOW LOAD
+       7. BOOT ON WINDOW LOAD
        ========================================================================== */
     window.addEventListener('load', () => {
-        initGsapAnimations();
-        initThreeJS();
+        initAnimations();
         initMobileMenu();
         new InteractiveTerminalDrawer();
     });

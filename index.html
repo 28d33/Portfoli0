@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth bg-black text-white">
+<html lang="en" class="scroll-smooth bg-[#020202] text-white">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deekshith (D33) | Advanced 3D Motion Portfolio & Cybersecurity Engineer</title>
-    <meta name="description" content="Portfolio of Deekshith (D33) — Cybersecurity Engineer, Penetration Tester, Cryptographic & Systems Developer.">
-    <meta name="keywords" content="Deekshith, D33, Cybersecurity, Penetration Testing, C, C++, Three.js, GSAP, WebGL, InfoSec">
+    <title>DEEKSHITH (D33) // SYSTEM BREACH & OFFENSIVE SECURITY ARCHITECT</title>
+    <meta name="description" content="Portfolio of Deekshith (D33) — Cybersecurity Engineer, Penetration Tester, Cryptographic Systems Developer.">
+    <meta name="keywords" content="Deekshith, D33, Cybersecurity, Penetration Testing, C, C++, Three.js, GSAP, WebGL, ctOS, InfoSec, Cryptography">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Tailwind CSS -->
@@ -14,7 +14,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rajdhani:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -28,472 +28,408 @@
 
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased selection:bg-[#d8f34c] selection:text-black">
+<body class="antialiased selection:bg-[#00e5ff] selection:text-black">
 
-    <!-- Preloader Screen -->
-    <div id="loader">
-        <div class="loader-text font-display text-4xl md:text-7xl font-bold tracking-tighter flex overflow-hidden">
-            <span class="char opacity-0 translate-y-full inline-block">D</span>
-            <span class="char opacity-0 translate-y-full inline-block">E</span>
-            <span class="char opacity-0 translate-y-full inline-block">E</span>
-            <span class="char opacity-0 translate-y-full inline-block">K</span>
-            <span class="char opacity-0 translate-y-full inline-block">S</span>
-            <span class="char opacity-0 translate-y-full inline-block">H</span>
-            <span class="char opacity-0 translate-y-full inline-block">I</span>
-            <span class="char opacity-0 translate-y-full inline-block">T</span>
-            <span class="char opacity-0 translate-y-full inline-block">H</span>
-            <span class="char opacity-0 translate-y-full inline-block text-[#d8f34c]">.</span>
+    <!-- Terminal Boot Sequence -->
+    <div id="terminal-loader">
+        <div class="max-w-2xl w-full">
+            <p class="log-line">>> INITIALIZING ctOS v4.1.0-SEC_KERNEL...</p>
+            <p class="log-line">>> ESTABLISHING QUANTUM ENCRYPTED TUNNEL [NODE_0x9A4]...</p>
+            <p class="log-line">>> BYPASSING FIREWALL PROXIES [████████░░]</p>
+            <p class="log-line">>> MOUNTING DEEKSHITH_OPERATOR_ROOT_FS...</p>
+            <p class="log-line text-[#ff003c]">>> WARNING: ROOT PRIVILEGES ELEVATED</p>
+            <p class="log-line text-[#00e5ff] text-2xl mt-4 font-bold tracking-wider">>> ACCESS GRANTED // WELCOME OPERATOR D33.</p>
         </div>
-        <div class="w-56 h-[1.5px] bg-white/20 mt-6 relative overflow-hidden rounded-full">
-            <div id="loader-progress" class="absolute top-0 left-0 h-full w-0 bg-[#d8f34c]"></div>
-        </div>
-        <p class="font-mono text-xs text-gray-400 mt-4 tracking-widest uppercase">Initializing Quantum Core...</p>
     </div>
 
-    <!-- Custom Smooth Cursor -->
-    <div id="cursor-dot"></div>
-    <div id="cursor-circle"></div>
+    <!-- Custom Crosshair Cursor & Overlays -->
+    <div id="cursor-crosshair"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
 
-    <!-- 3D Canvas Background & Noise Overlay -->
+    <!-- 3D WebGL Canvas -->
     <canvas id="webgl-canvas"></canvas>
-    <div class="noise-overlay"></div>
 
-    <!-- Top Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-40 p-6 mix-blend-difference">
-        <div class="max-w-screen-2xl mx-auto flex justify-between items-center">
-            <a href="#home" class="font-display text-2xl font-bold tracking-tighter hoverable flex items-center gap-1.5">
-                <span>D33</span><span class="text-[#d8f34c]">.</span>
-                <span class="font-mono text-[10px] text-gray-400 font-normal tracking-widest uppercase ml-1">CYBERSEC</span>
+    <!-- Main UI Container (Sits above canvas) -->
+    <div id="main-ui" class="relative z-10 opacity-0 min-h-screen flex flex-col">
+        
+        <!-- Navbar -->
+        <nav class="w-full p-5 md:px-12 flex justify-between items-center border-b border-[#00e5ff]/20 bg-black/60 backdrop-blur-md fixed top-0 z-40">
+            <a href="#home" class="flex items-center gap-3 hoverable group">
+                <div class="w-8 h-8 border border-[#00e5ff] flex items-center justify-center group-hover:border-[#ff003c] transition-colors">
+                    <div class="w-4 h-4 bg-[#00e5ff] group-hover:bg-[#ff003c] animate-pulse"></div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-2xl tracking-widest text-[#00e5ff] glitch-text" data-text="D33.SEC_OP">D33.SEC_OP</span>
+                    <span class="text-[9px] font-mono text-gray-400 tracking-widest -mt-1 uppercase">SECURITY_ARCHITECT</span>
+                </div>
             </a>
             
-            <div class="hidden md:flex items-center gap-8 font-medium text-sm tracking-wide">
-                <a href="#home" class="hoverable hover:text-[#d8f34c] transition-colors">Home</a>
-                <a href="#work" class="hoverable hover:text-[#d8f34c] transition-colors">Selected Work</a>
-                <a href="#expertise" class="hoverable hover:text-[#d8f34c] transition-colors">Expertise</a>
-                <a href="#certs" class="hoverable hover:text-[#d8f34c] transition-colors">Credentials</a>
-                <a href="#contact" class="hoverable hover:text-[#d8f34c] transition-colors">Contact</a>
+            <div class="hidden md:flex gap-8 text-xs tracking-widest text-gray-300">
+                <a href="#home" class="hoverable data-glitch-hover">[ OVERVIEW ]</a>
+                <a href="#targets" class="hoverable data-glitch-hover">[ DATABASE_RECORDS ]</a>
+                <a href="#specs" class="hoverable data-glitch-hover">[ SYSTEM_CAPABILITIES ]</a>
+                <a href="#credentials" class="hoverable data-glitch-hover">[ ACCREDITATIONS ]</a>
+                <a href="#uplink" class="hoverable data-glitch-hover">[ ESTABLISH_UPLINK ]</a>
             </div>
 
-            <div class="hidden md:flex items-center gap-4">
-                <button id="terminalToggleBtn" class="hoverable text-xs font-mono border border-white/20 hover:border-[#d8f34c] text-gray-300 hover:text-[#d8f34c] px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5">
+            <div class="hidden md:flex items-center gap-3">
+                <button id="terminalToggleBtn" class="hoverable cyber-border px-3.5 py-1.5 text-xs text-[#00e5ff] font-mono hover:text-[#ff003c] transition-colors flex items-center gap-1.5">
                     <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                    <span>Terminal [~]</span>
+                    <span>CLI [~]</span>
                 </button>
-                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="hoverable text-xs font-mono bg-white text-black hover:bg-[#d8f34c] px-4 py-1.5 rounded-full font-semibold transition-all">
+                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="hoverable text-xs font-mono bg-[#00e5ff] hover:bg-[#ff003c] text-black font-bold px-4 py-1.5 transition-colors uppercase">
                     Resume
                 </a>
             </div>
 
-            <button id="mobileMenuBtn" class="md:hidden hoverable text-white p-2">
+            <button id="mobileMenuBtn" class="md:hidden hoverable text-[#00e5ff] p-2">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
-        </div>
+        </nav>
 
         <!-- Mobile Drawer -->
-        <div id="mobileMenu" class="hidden md:hidden glass-panel mt-4 p-6 rounded-2xl flex flex-col gap-4 border border-white/10">
-            <a href="#home" class="mobile-nav-link text-gray-200 hover:text-[#d8f34c] py-2 text-base font-medium">Home</a>
-            <a href="#work" class="mobile-nav-link text-gray-200 hover:text-[#d8f34c] py-2 text-base font-medium">Selected Work</a>
-            <a href="#expertise" class="mobile-nav-link text-gray-200 hover:text-[#d8f34c] py-2 text-base font-medium">Expertise</a>
-            <a href="#certs" class="mobile-nav-link text-gray-200 hover:text-[#d8f34c] py-2 text-base font-medium">Credentials</a>
-            <a href="#contact" class="mobile-nav-link text-gray-200 hover:text-[#d8f34c] py-2 text-base font-medium">Contact</a>
+        <div id="mobileMenu" class="hidden md:hidden fixed top-[73px] left-0 w-full bg-black/95 border-b border-[#00e5ff]/30 p-6 flex flex-col gap-4 z-40">
+            <a href="#home" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-sm tracking-widest">[ OVERVIEW ]</a>
+            <a href="#targets" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-sm tracking-widest">[ DATABASE_RECORDS ]</a>
+            <a href="#specs" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-sm tracking-widest">[ SYSTEM_CAPABILITIES ]</a>
+            <a href="#credentials" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-sm tracking-widest">[ ACCREDITATIONS ]</a>
+            <a href="#uplink" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-sm tracking-widest">[ ESTABLISH_UPLINK ]</a>
             <div class="pt-3 border-t border-white/10 flex justify-between items-center">
-                <button id="mobileTerminalBtn" class="text-xs font-mono text-[#d8f34c] flex items-center gap-2">
+                <button id="mobileTerminalBtn" class="text-xs font-mono text-[#00e5ff] flex items-center gap-2">
                     <i data-lucide="terminal" class="w-4 h-4"></i>
-                    <span>Launch Terminal</span>
+                    <span>LAUNCH TERMINAL</span>
                 </button>
-                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="text-xs font-mono bg-white text-black px-3 py-1 rounded-full font-semibold">
-                    Resume
+                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="text-xs font-mono bg-[#00e5ff] text-black font-bold px-3 py-1">
+                    RESUME
                 </a>
             </div>
         </div>
-    </nav>
 
-    <!-- Main Content Wrapper for Smooth Scroll & Entrance Animations -->
-    <div id="main-content" class="relative z-10 opacity-0">
-        
         <!-- Hero Section -->
-        <header id="home" class="min-h-screen flex items-center pt-28 pb-16 px-6 max-w-screen-2xl mx-auto">
-            <div class="w-full">
-                <!-- Status Pill -->
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#d8f34c]/30 bg-[#d8f34c]/10 text-[#d8f34c] text-xs font-mono uppercase tracking-widest mb-6 hero-elem">
-                    <span class="relative flex h-2 w-2">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d8f34c] opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-[#d8f34c]"></span>
-                    </span>
-                    Available for Penetration Testing & Systems Engineering
+        <header id="home" class="min-h-screen flex flex-col justify-center px-6 md:px-20 max-w-screen-2xl mx-auto w-full pt-28 pb-16">
+            <div class="border-l-2 border-[#00e5ff] pl-6 py-2 mb-8 gs-reveal">
+                <p class="text-[#00e5ff] text-xs md:text-sm tracking-[0.3em] uppercase animate-pulse">
+                    Connection Established // Node 0x9A4 // Deekshith (D33)
+                </p>
+            </div>
+            
+            <h1 class="font-display font-bold text-6xl sm:text-7xl md:text-[8.5vw] leading-[0.88] tracking-tighter uppercase mb-6">
+                <div class="overflow-hidden"><span class="block gs-title-line text-white">Offensive</span></div>
+                <div class="overflow-hidden"><span class="block glitch-text gs-title-line text-white" data-text="ARCHITECT">ARCHITECT</span></div>
+            </h1>
+            
+            <div class="flex flex-col md:flex-row gap-8 items-start md:items-center mt-6 gs-reveal">
+                <div class="max-w-xl text-gray-300 text-sm md:text-base leading-relaxed border border-white/15 p-5 bg-black/60 backdrop-blur-sm">
+                    <p class="mb-3">
+                        Cybersecurity Engineer & Systems Developer based in <span class="text-white font-bold">Bangalore, India</span>. Specializing in low-level cryptographic engineering in C/C++, full-scope penetration testing, and real-time digital forensics.
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-400">
+                        <span class="border border-[#00e5ff]/30 px-2 py-0.5 text-[#00e5ff]">> 50+ CTF FLAGS</span>
+                        <span class="border border-[#ff003c]/30 px-2 py-0.5 text-[#ff003c]">> ZERO-TRUST DMZ</span>
+                        <span class="border border-white/20 px-2 py-0.5 text-gray-300">> AES-256 / RSA-2048</span>
+                    </div>
                 </div>
 
-                <!-- Massive Kinetic Display Headline -->
-                <h1 class="font-display font-bold text-[13vw] sm:text-[11vw] leading-[0.85] tracking-tighter uppercase mb-8">
-                    <div class="overflow-hidden"><span class="hero-line block translate-y-full text-white">Security</span></div>
-                    <div class="overflow-hidden"><span class="hero-line block translate-y-full text-outline hoverable cursor-pointer">Alchemist</span></div>
-                </h1>
-
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 mt-8 hero-elem">
-                    <div class="space-y-4 max-w-xl">
-                        <p class="text-gray-300 text-lg md:text-xl font-light leading-relaxed">
-                            Hi, I'm <span class="text-white font-medium">Deekshith (D33)</span>. I forge hardened digital defenses and cryptographic systems by bridging low-level C/C++ engineering, adversarial penetration testing, and real-time forensics.
-                        </p>
-                        <div class="flex flex-wrap gap-3 pt-2">
-                            <span class="glass-panel text-xs font-mono text-gray-300 px-3 py-1 rounded-full border border-white/10">Bangalore, India</span>
-                            <span class="glass-panel text-xs font-mono text-[#d8f34c] px-3 py-1 rounded-full border border-[#d8f34c]/20">50+ CTF Flags</span>
-                            <span class="glass-panel text-xs font-mono text-sky-400 px-3 py-1 rounded-full border border-sky-400/20">OpenSSL / AES-256</span>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                        <a href="#work" class="hoverable flex items-center justify-center gap-3 border border-white/20 rounded-full px-8 py-4 hover:bg-white hover:text-black transition-all duration-500 group">
-                            <span class="font-medium">Explore Arsenal</span>
-                            <i data-lucide="arrow-down-right" class="w-5 h-5 group-hover:rotate-[-45deg] transition-transform duration-300"></i>
-                        </a>
-                        <a href="#contact" class="hoverable flex items-center justify-center gap-2 bg-[#d8f34c] text-black font-semibold rounded-full px-8 py-4 hover:bg-white transition-all duration-300">
-                            <span>Let's Talk</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#targets" class="hoverable cyber-border px-8 py-4 text-[#00e5ff] font-bold tracking-widest uppercase flex items-center gap-3 group">
+                        <span>Execute Sequence</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform"></i>
+                    </a>
+                    <a href="#uplink" class="hoverable border border-white/20 px-8 py-4 text-white font-mono hover:bg-white hover:text-black transition-colors uppercase tracking-wider text-sm flex items-center justify-center">
+                        Contact Operator
+                    </a>
                 </div>
             </div>
         </header>
 
-        <!-- Selected Work Section -->
-        <section id="work" class="py-32 px-6">
-            <div class="max-w-screen-2xl mx-auto">
-                <div class="overflow-hidden mb-20">
-                    <h2 class="section-title font-display text-5xl md:text-7xl font-bold tracking-tighter translate-y-full">Selected <span class="text-outline">Work</span></h2>
+        <!-- Target Profiles (Projects Database) -->
+        <section id="targets" class="py-32 px-6 md:px-20 max-w-screen-2xl mx-auto w-full">
+            <div class="flex items-center gap-4 mb-16 gs-section-header">
+                <div class="h-px bg-[#00e5ff] flex-1"></div>
+                <h2 class="font-display text-3xl md:text-4xl font-bold tracking-widest text-[#00e5ff]">[ DATABASE_RECORDS ]</h2>
+                <div class="h-px bg-[#00e5ff] flex-1"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Project 1: E-D--Crypto -->
+                <div class="cyber-border group hoverable p-6 cursor-none gs-project">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-xs text-[#ff003c] tracking-[0.2em] border border-[#ff003c] px-2 py-1">CLASSIFIED // PRODUCTION</span>
+                        <span class="text-gray-500 font-mono text-xs">ID: 0x11A_CRYPTO</span>
+                    </div>
+                    <div class="aspect-video bg-zinc-950 mb-6 overflow-hidden relative border border-white/15 flex items-center justify-center p-6">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-black opacity-80 group-hover:scale-105 transition-all duration-700"></div>
+                        <div class="absolute inset-0 bg-[#00e5ff] mix-blend-overlay opacity-0 group-hover:opacity-25 transition-opacity"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-2">
+                            <i data-lucide="key-round" class="w-12 h-12 text-[#00e5ff] group-hover:scale-110 transition-transform"></i>
+                            <span class="font-mono text-xs text-gray-300">AES-256-CBC + RSA-2048</span>
+                        </div>
+                    </div>
+                    <h3 class="font-display text-3xl font-bold mb-2 group-hover:text-[#00e5ff] transition-colors">E-D--Crypto</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">High-performance cryptographic file encryption system written in pure C utilizing OpenSSL EVP interfaces, zero-padding guards, and hybrid asymmetric key encapsulation.</p>
+                    <div class="flex flex-wrap gap-3 text-xs text-gray-500 font-mono mb-4">
+                        <span class="text-[#00e5ff]">> C / C++</span>
+                        <span class="text-[#00e5ff]">> OPENSSL</span>
+                        <span class="text-[#00e5ff]">> HYBRID CRYPTOGRAPHY</span>
+                    </div>
+                    <a href="https://github.com/28d33/E-D--Crypto" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#00e5ff] uppercase tracking-wider">
+                        <span>ACCESS REPOSITORY</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </a>
                 </div>
 
-                <div class="flex flex-col gap-32">
-                    
-                    <!-- Project 1: E-D--Crypto -->
-                    <div class="project-card group relative grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                        <div class="md:col-span-7 overflow-hidden rounded-2xl glass-panel relative aspect-video border border-white/10 hoverable">
-                            <div class="parallax-img w-full h-full scale-125 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-950 absolute inset-0 flex items-center justify-center">
-                                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#d8f34c] via-transparent to-transparent mix-blend-overlay"></div>
-                                <div class="flex flex-col items-center justify-center gap-3">
-                                    <i data-lucide="key-round" class="w-16 h-16 text-[#d8f34c]/60 group-hover:scale-110 transition-transform duration-500"></i>
-                                    <span class="font-mono text-xs text-gray-400">AES-256-CBC + RSA-2048</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="md:col-span-5 md:pl-10 space-y-6">
-                            <span class="text-[#d8f34c] text-sm tracking-widest font-mono uppercase">01 // Cryptography</span>
-                            <h3 class="font-display text-3xl md:text-4xl font-bold text-white">E-D--Crypto</h3>
-                            <p class="text-gray-400 font-light leading-relaxed">High-performance cryptographic file encryption system written in pure C. Leverages OpenSSL EVP interfaces, custom padding guards, and hybrid asymmetric key encapsulation.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">C / C++</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-[#d8f34c]">OpenSSL</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">Hybrid RSA</span>
-                            </div>
-                            <a href="https://github.com/28d33/E-D--Crypto" target="_blank" rel="noopener noreferrer" class="hoverable inline-flex items-center gap-2 text-sm font-mono text-white hover:text-[#d8f34c] pt-2 transition-colors">
-                                <span>View Source Repository</span>
-                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                            </a>
+                <!-- Project 2: Perimeter Security & SIEM -->
+                <div class="cyber-border group hoverable p-6 cursor-none gs-project md:mt-12">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-xs text-[#00e5ff] tracking-[0.2em] border border-[#00e5ff] px-2 py-1">DEFENSE // ACTIVE</span>
+                        <span class="text-gray-500 font-mono text-xs">ID: 0x11B_SIEM</span>
+                    </div>
+                    <div class="aspect-video bg-zinc-950 mb-6 overflow-hidden relative border border-white/15 flex items-center justify-center p-6">
+                        <div class="absolute inset-0 bg-gradient-to-bl from-zinc-950 via-zinc-900 to-black opacity-80 group-hover:scale-105 transition-all duration-700"></div>
+                        <div class="absolute inset-0 bg-[#ff003c] mix-blend-overlay opacity-0 group-hover:opacity-25 transition-opacity"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-2">
+                            <i data-lucide="shield-alert" class="w-12 h-12 text-[#ff003c] group-hover:scale-110 transition-transform"></i>
+                            <span class="font-mono text-xs text-gray-300">SURICATA IDS + ELK STACK</span>
                         </div>
                     </div>
-
-                    <!-- Project 2: Perimeter Security & SIEM -->
-                    <div class="project-card group relative grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                        <div class="md:col-span-5 md:pr-10 space-y-6 order-2 md:order-1 text-left md:text-right flex flex-col md:items-end">
-                            <span class="text-[#d8f34c] text-sm tracking-widest font-mono uppercase">02 // Threat Intelligence</span>
-                            <h3 class="font-display text-3xl md:text-4xl font-bold text-white">Perimeter Defense & SIEM</h3>
-                            <p class="text-gray-400 font-light leading-relaxed max-w-lg">Multi-tier DMZ defense architecture integrating Suricata IDS/IPS, IPTables kernel firewall filtering, and unified ELK telemetry for live automated attack correlation.</p>
-                            <div class="flex flex-wrap gap-2 justify-start md:justify-end">
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">ELK Stack</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-[#d8f34c]">Suricata</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">Zero-Trust</span>
-                            </div>
-                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="hoverable inline-flex items-center gap-2 text-sm font-mono text-white hover:text-[#d8f34c] pt-2 transition-colors">
-                                <span>Architecture Specs</span>
-                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                            </a>
-                        </div>
-                        <div class="md:col-span-7 overflow-hidden rounded-2xl glass-panel relative aspect-video order-1 md:order-2 border border-white/10 hoverable">
-                            <div class="parallax-img w-full h-full scale-125 bg-gradient-to-bl from-zinc-950 via-zinc-900 to-zinc-950 absolute inset-0 flex items-center justify-center">
-                                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-sky-400 via-transparent to-transparent mix-blend-overlay"></div>
-                                <div class="flex flex-col items-center justify-center gap-3">
-                                    <i data-lucide="shield-alert" class="w-16 h-16 text-sky-400/60 group-hover:scale-110 transition-transform duration-500"></i>
-                                    <span class="font-mono text-xs text-gray-400">Zero-Trust Telemetry</span>
-                                </div>
-                            </div>
-                        </div>
+                    <h3 class="font-display text-3xl font-bold mb-2 group-hover:text-[#00e5ff] transition-colors">Perimeter Defense & SIEM</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Multi-tier DMZ defense architecture integrating Suricata IDS/IPS, IPTables kernel firewall rules, and unified ELK telemetry for live automated attack correlation.</p>
+                    <div class="flex flex-wrap gap-3 text-xs text-gray-500 font-mono mb-4">
+                        <span class="text-[#ff003c]">> ELK SIEM</span>
+                        <span class="text-[#ff003c]">> SURICATA</span>
+                        <span class="text-[#ff003c]">> ZERO-TRUST DMZ</span>
                     </div>
-
-                    <!-- Project 3: Automated Security Audit Framework -->
-                    <div class="project-card group relative grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                        <div class="md:col-span-7 overflow-hidden rounded-2xl glass-panel relative aspect-video border border-white/10 hoverable">
-                            <div class="parallax-img w-full h-full scale-125 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-950 absolute inset-0 flex items-center justify-center">
-                                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-rose-500 via-transparent to-transparent mix-blend-overlay"></div>
-                                <div class="flex flex-col items-center justify-center gap-3">
-                                    <i data-lucide="binary" class="w-16 h-16 text-rose-400/60 group-hover:scale-110 transition-transform duration-500"></i>
-                                    <span class="font-mono text-xs text-gray-400">SAST + DAST Automation</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="md:col-span-5 md:pl-10 space-y-6">
-                            <span class="text-[#d8f34c] text-sm tracking-widest font-mono uppercase">03 // DevSecOps</span>
-                            <h3 class="font-display text-3xl md:text-4xl font-bold text-white">Full-Scope Security Audit</h3>
-                            <p class="text-gray-400 font-light leading-relaxed">Automated vulnerability assessment framework chaining Bandit static analysis, OWASP ZAP dynamic scans, and policy gating to prevent OWASP Top 10 flaws from reaching production.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">Python</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-[#d8f34c]">OWASP ZAP</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">CI/CD Gating</span>
-                            </div>
-                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="hoverable inline-flex items-center gap-2 text-sm font-mono text-white hover:text-[#d8f34c] pt-2 transition-colors">
-                                <span>Audit Pipeline</span>
-                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project 4: Enterprise Data Security -->
-                    <div class="project-card group relative grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                        <div class="md:col-span-5 md:pr-10 space-y-6 order-2 md:order-1 text-left md:text-right flex flex-col md:items-end">
-                            <span class="text-[#d8f34c] text-sm tracking-widest font-mono uppercase">04 // High-Throughput Systems</span>
-                            <h3 class="font-display text-3xl md:text-4xl font-bold text-white">Data Stream Masking</h3>
-                            <p class="text-gray-400 font-light leading-relaxed max-w-lg">Ultra-low latency C++20 data sanitization engine performing on-the-fly tokenization of financial records and sensitive PII payloads with sub-millisecond overhead.</p>
-                            <div class="flex flex-wrap gap-2 justify-start md:justify-end">
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">C++20</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-[#d8f34c]">Data Masking</span>
-                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">DPDK</span>
-                            </div>
-                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="hoverable inline-flex items-center gap-2 text-sm font-mono text-white hover:text-[#d8f34c] pt-2 transition-colors">
-                                <span>Benchmark Report</span>
-                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                            </a>
-                        </div>
-                        <div class="md:col-span-7 overflow-hidden rounded-2xl glass-panel relative aspect-video order-1 md:order-2 border border-white/10 hoverable">
-                            <div class="parallax-img w-full h-full scale-125 bg-gradient-to-bl from-zinc-950 via-zinc-900 to-zinc-950 absolute inset-0 flex items-center justify-center">
-                                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-violet-500 via-transparent to-transparent mix-blend-overlay"></div>
-                                <div class="flex flex-col items-center justify-center gap-3">
-                                    <i data-lucide="database-zap" class="w-16 h-16 text-violet-400/60 group-hover:scale-110 transition-transform duration-500"></i>
-                                    <span class="font-mono text-xs text-gray-400">Real-Time Tokenizer</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#ff003c] uppercase tracking-wider">
+                        <span>ACCESS SPECS</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </a>
                 </div>
+
+                <!-- Project 3: Automated Security Audit -->
+                <div class="cyber-border group hoverable p-6 cursor-none gs-project">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-xs text-[#00e5ff] tracking-[0.2em] border border-[#00e5ff] px-2 py-1">AUTOMATION // AUDIT</span>
+                        <span class="text-gray-500 font-mono text-xs">ID: 0x11C_SAST</span>
+                    </div>
+                    <div class="aspect-video bg-zinc-950 mb-6 overflow-hidden relative border border-white/15 flex items-center justify-center p-6">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-black opacity-80 group-hover:scale-105 transition-all duration-700"></div>
+                        <div class="absolute inset-0 bg-[#00e5ff] mix-blend-overlay opacity-0 group-hover:opacity-25 transition-opacity"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-2">
+                            <i data-lucide="binary" class="w-12 h-12 text-[#00e5ff] group-hover:scale-110 transition-transform"></i>
+                            <span class="font-mono text-xs text-gray-300">SAST + DAST PIPELINE</span>
+                        </div>
+                    </div>
+                    <h3 class="font-display text-3xl font-bold mb-2 group-hover:text-[#00e5ff] transition-colors">Automated Security Audit</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Automated vulnerability assessment framework chaining Bandit static analysis, OWASP ZAP dynamic scans, and policy gating to prevent zero-days from deploy.</p>
+                    <div class="flex flex-wrap gap-3 text-xs text-gray-500 font-mono mb-4">
+                        <span class="text-[#00e5ff]">> PYTHON</span>
+                        <span class="text-[#00e5ff]">> OWASP ZAP</span>
+                        <span class="text-[#00e5ff]">> BANDIT SAST</span>
+                    </div>
+                    <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#00e5ff] uppercase tracking-wider">
+                        <span>ACCESS ENGINE</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
+
+                <!-- Project 4: Data Stream Masking -->
+                <div class="cyber-border group hoverable p-6 cursor-none gs-project md:mt-12">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-xs text-[#ff003c] tracking-[0.2em] border border-[#ff003c] px-2 py-1">CORE // HIGH-PERF</span>
+                        <span class="text-gray-500 font-mono text-xs">ID: 0x11D_MASK</span>
+                    </div>
+                    <div class="aspect-video bg-zinc-950 mb-6 overflow-hidden relative border border-white/15 flex items-center justify-center p-6">
+                        <div class="absolute inset-0 bg-gradient-to-bl from-zinc-950 via-zinc-900 to-black opacity-80 group-hover:scale-105 transition-all duration-700"></div>
+                        <div class="absolute inset-0 bg-[#ff003c] mix-blend-overlay opacity-0 group-hover:opacity-25 transition-opacity"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-2">
+                            <i data-lucide="database-zap" class="w-12 h-12 text-[#ff003c] group-hover:scale-110 transition-transform"></i>
+                            <span class="font-mono text-xs text-gray-300">C++20 STREAM TOKENIZER</span>
+                        </div>
+                    </div>
+                    <h3 class="font-display text-3xl font-bold mb-2 group-hover:text-[#00e5ff] transition-colors">Data Stream Masking</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Ultra-low latency C++20 data sanitization microservice performing on-the-fly tokenization of financial records and sensitive PII payloads with sub-millisecond guarantees.</p>
+                    <div class="flex flex-wrap gap-3 text-xs text-gray-500 font-mono mb-4">
+                        <span class="text-[#ff003c]">> C++20</span>
+                        <span class="text-[#ff003c]">> DATA PRIVACY</span>
+                        <span class="text-[#ff003c]">> DPDK</span>
+                    </div>
+                    <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#ff003c] uppercase tracking-wider">
+                        <span>ACCESS BENCHMARKS</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
+
             </div>
         </section>
 
-        <!-- Expertise Section -->
-        <section id="expertise" class="py-32 px-6 relative">
-            <div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
-                <div class="md:sticky md:top-32 h-fit">
-                    <span class="text-[#d8f34c] text-xs font-mono uppercase tracking-widest block mb-3">Core Specializations</span>
-                    <h2 class="font-display text-5xl md:text-7xl font-bold tracking-tighter mb-6">Technical<br><span class="text-[#d8f34c]">Artistry.</span></h2>
-                    <p class="text-gray-400 text-lg md:text-xl font-light leading-relaxed max-w-md mb-8">
-                        Bridging hardcore low-level systems programming with offensive cyber operations. Engineered to resist real-world adversarial attacks.
-                    </p>
-                    <div class="space-y-4 max-w-md">
-                        <div>
-                            <div class="flex justify-between text-xs font-mono mb-1.5">
-                                <span class="text-white">Offensive Security & Exploit Research</span>
-                                <span class="text-[#d8f34c]">95%</span>
-                            </div>
-                            <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                                <div class="h-full bg-[#d8f34c] w-[95%]"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs font-mono mb-1.5">
-                                <span class="text-white">Low-Level Cryptography (C / C++ / ASM)</span>
-                                <span class="text-sky-400">92%</span>
-                            </div>
-                            <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                                <div class="h-full bg-sky-400 w-[92%]"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs font-mono mb-1.5">
-                                <span class="text-white">Defensive Forensics & Threat Hunting</span>
-                                <span class="text-violet-400">88%</span>
-                            </div>
-                            <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                                <div class="h-full bg-violet-400 w-[88%]"></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- System Capabilities (Skills) -->
+        <section id="specs" class="py-32 px-6 md:px-20 max-w-screen-2xl mx-auto w-full">
+            <div class="flex items-center gap-4 mb-16 gs-section-header">
+                <div class="h-px bg-[#00e5ff] w-12"></div>
+                <h2 class="font-display text-3xl md:text-4xl font-bold tracking-widest text-[#00e5ff]">[ SYSTEM_CAPABILITIES ]</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 border-l-2 border-white/20 hover:border-[#00e5ff] transition-colors bg-white/5 gs-skill hoverable">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-[#00e5ff] mb-4"></i>
+                    <h3 class="font-display text-2xl font-bold mb-4 text-white">Offensive Pen-Testing</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 font-mono">
+                        <li>> Web Exploitation (OWASP Top 10)</li>
+                        <li>> Active Directory Domain Escalation</li>
+                        <li>> Network Reconnaissance (Nmap / Metasploit)</li>
+                        <li>> Burp Suite Pro & API Fuzzing</li>
+                    </ul>
                 </div>
                 
-                <div class="space-y-6">
-                    <div class="expertise-card p-8 rounded-2xl glass-panel group hoverable border border-white/5 hover:border-[#d8f34c]/30 transition-all">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-display text-2xl font-bold text-white group-hover:text-[#d8f34c] transition-colors">Offensive Prowess</h3>
-                            <i data-lucide="shield" class="text-gray-500 group-hover:text-[#d8f34c] transition-colors"></i>
-                        </div>
-                        <p class="text-gray-400 font-light leading-relaxed">Black-box & white-box security auditing, privilege escalation vectors, Active Directory penetration testing, and web app exploit chaining (OWASP Top 10).</p>
-                    </div>
+                <div class="p-6 border-l-2 border-white/20 hover:border-[#ff003c] transition-colors bg-white/5 gs-skill hoverable">
+                    <i data-lucide="lock" class="w-8 h-8 text-[#ff003c] mb-4"></i>
+                    <h3 class="font-display text-2xl font-bold mb-4 text-white">Cryptographic Systems</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 font-mono">
+                        <li>> C / C++20 Systems Programming</li>
+                        <li>> OpenSSL EVP & Custom Cipher Suites</li>
+                        <li>> x86_64 Assembly & Reverse Eng</li>
+                        <li>> Key Encapsulation (RSA / ECC / AES)</li>
+                    </ul>
+                </div>
 
-                    <div class="expertise-card p-8 rounded-2xl glass-panel group hoverable border border-white/5 hover:border-[#d8f34c]/30 transition-all">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-display text-2xl font-bold text-white group-hover:text-[#d8f34c] transition-colors">Cryptographic Systems</h3>
-                            <i data-lucide="lock" class="text-gray-500 group-hover:text-[#d8f34c] transition-colors"></i>
-                        </div>
-                        <p class="text-gray-400 font-light leading-relaxed">Low-level cryptographic algorithms in C/C++, OpenSSL integration, symmetric/asymmetric cipher suites, key management lifecycle, and memory safety.</p>
-                    </div>
-
-                    <div class="expertise-card p-8 rounded-2xl glass-panel group hoverable border border-white/5 hover:border-[#d8f34c]/30 transition-all">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-display text-2xl font-bold text-white group-hover:text-[#d8f34c] transition-colors">Memory & Artifact Forensics</h3>
-                            <i data-lucide="cpu" class="text-gray-500 group-hover:text-[#d8f34c] transition-colors"></i>
-                        </div>
-                        <p class="text-gray-400 font-light leading-relaxed">Volatility 3 memory extraction, DLL injection detection, rootkit analysis, timeline reconstruction, and automated YARA threat rule creation.</p>
-                    </div>
-
-                    <div class="expertise-card p-8 rounded-2xl glass-panel group hoverable border border-white/5 hover:border-[#d8f34c]/30 transition-all">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-display text-2xl font-bold text-white group-hover:text-[#d8f34c] transition-colors">Hardened Architecture</h3>
-                            <i data-lucide="server" class="text-gray-500 group-hover:text-[#d8f34c] transition-colors"></i>
-                        </div>
-                        <p class="text-gray-400 font-light leading-relaxed">Zero-trust segmentation, Linux kernel sysctl hardening, DMZ isolation, Active Directory GPO enforcement, and ISO 27001 compliance scripting.</p>
-                    </div>
+                <div class="p-6 border-l-2 border-white/20 hover:border-[#00e5ff] transition-colors bg-white/5 gs-skill hoverable">
+                    <i data-lucide="database" class="w-8 h-8 text-[#00e5ff] mb-4"></i>
+                    <h3 class="font-display text-2xl font-bold mb-4 text-white">Defensive & Forensics</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 font-mono">
+                        <li>> Volatility 3 Memory Extraction</li>
+                        <li>> ELK Stack SIEM & Suricata IDS</li>
+                        <li>> YARA Malware Signatures</li>
+                        <li>> ISO 27001 & NIST 800-171 GPO</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Verified Credentials Section -->
-        <section id="certs" class="py-32 px-6 border-t border-white/5">
-            <div class="max-w-screen-2xl mx-auto">
-                <div class="overflow-hidden mb-16">
-                    <span class="text-[#d8f34c] text-xs font-mono uppercase tracking-widest block mb-2">Industry Credentials</span>
-                    <h2 class="section-title font-display text-5xl md:text-7xl font-bold tracking-tighter translate-y-full">Verified <span class="text-outline">Recognitions</span></h2>
+        <!-- Verified Accreditations Section -->
+        <section id="credentials" class="py-32 px-6 md:px-20 max-w-screen-2xl mx-auto w-full border-t border-[#00e5ff]/20">
+            <div class="flex items-center gap-4 mb-16 gs-section-header">
+                <div class="h-px bg-[#00e5ff] w-12"></div>
+                <h2 class="font-display text-3xl md:text-4xl font-bold tracking-widest text-[#00e5ff]">[ VERIFIED_ACCREDITATIONS ]</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> ACAD_01</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">Ethical Hacking</h3>
+                    <p class="text-xs font-mono text-[#00e5ff] mb-2">IISc Bangalore</p>
+                    <p class="text-xs text-gray-400">Network exploitation, system defense & cryptographic algorithms.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-[#d8f34c]/10 flex items-center justify-center text-[#d8f34c] mb-4">
-                            <i data-lucide="award" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">Ethical Hacking</h3>
-                        <p class="text-xs font-mono text-[#d8f34c] mb-2">IISc Bangalore</p>
-                        <p class="text-xs text-gray-400">Network exploitation, system defense & cryptographic algorithms.</p>
-                    </div>
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> ACAD_02</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">Cybersecurity Course</h3>
+                    <p class="text-xs font-mono text-[#00e5ff] mb-2">IIT Guwahati</p>
+                    <p class="text-xs text-gray-400">Threat modeling, vulnerability assessment & defense in depth.</p>
+                </div>
 
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">Cybersecurity Course</h3>
-                        <p class="text-xs font-mono text-sky-400 mb-2">IIT Guwahati</p>
-                        <p class="text-xs text-gray-400">Threat modeling, vulnerability assessment & defense in depth.</p>
-                    </div>
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#ff003c] font-mono text-xs mb-2">>> CORP_01</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">Ethical Hacker</h3>
+                    <p class="text-xs font-mono text-[#ff003c] mb-2">Cisco</p>
+                    <p class="text-xs text-gray-400">Enterprise network reconnaissance and perimeter auditing.</p>
+                </div>
 
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4">
-                            <i data-lucide="check-circle" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">Ethical Hacker</h3>
-                        <p class="text-xs font-mono text-emerald-400 mb-2">Cisco</p>
-                        <p class="text-xs text-gray-400">Enterprise network reconnaissance and perimeter auditing.</p>
-                    </div>
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#ff003c] font-mono text-xs mb-2">>> CORP_02</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">Presecurity Certified</h3>
+                    <p class="text-xs font-mono text-[#ff003c] mb-2">TryHackMe</p>
+                    <p class="text-xs text-gray-400">Offensive methodologies, Linux security & web attack vectors.</p>
+                </div>
 
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-4">
-                            <i data-lucide="terminal" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">Presecurity Certified</h3>
-                        <p class="text-xs font-mono text-violet-400 mb-2">TryHackMe</p>
-                        <p class="text-xs text-gray-400">Offensive methodologies, Linux security & web attack vectors.</p>
-                    </div>
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> CORP_03</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">Cyber Job Simulation</h3>
+                    <p class="text-xs font-mono text-[#00e5ff] mb-2">Deloitte Australia</p>
+                    <p class="text-xs text-gray-400">Incident response triage, governance & forensic reporting.</p>
+                </div>
 
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400 mb-4">
-                            <i data-lucide="briefcase" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">Cyber Job Simulation</h3>
-                        <p class="text-xs font-mono text-rose-400 mb-2">Deloitte Australia</p>
-                        <p class="text-xs text-gray-400">Incident response triage, governance & forensic reporting.</p>
-                    </div>
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> CORP_04</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">Cyber Analyst IAM</h3>
+                    <p class="text-xs font-mono text-[#00e5ff] mb-2">Tata Consultancy Services</p>
+                    <p class="text-xs text-gray-400">Identity and Access Management, RBAC & compliance audits.</p>
+                </div>
 
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4">
-                            <i data-lucide="lock" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">Cyber Analyst IAM</h3>
-                        <p class="text-xs font-mono text-amber-400 mb-2">Tata Consultancy Services</p>
-                        <p class="text-xs text-gray-400">Identity and Access Management, RBAC & compliance audits.</p>
-                    </div>
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#ff003c] font-mono text-xs mb-2">>> CIP_01</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">CIP Associate</h3>
+                    <p class="text-xs font-mono text-[#ff003c] mb-2">OPSWAT</p>
+                    <p class="text-xs text-gray-400">Critical Infrastructure Protection & supply chain defense.</p>
+                </div>
 
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-4">
-                            <i data-lucide="server" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">CIP Associate</h3>
-                        <p class="text-xs font-mono text-cyan-400 mb-2">OPSWAT</p>
-                        <p class="text-xs text-gray-400">Critical Infrastructure Protection & supply chain defense.</p>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-[#d8f34c]/30 transition-all hoverable">
-                        <div class="w-10 h-10 rounded-xl bg-[#d8f34c]/10 flex items-center justify-center text-[#d8f34c] mb-4">
-                            <i data-lucide="flag" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white">50+ CTF Flags</h3>
-                        <p class="text-xs font-mono text-[#d8f34c] mb-2">PBCTF / IDEEEAS / Triwizard</p>
-                        <p class="text-xs text-gray-400">Reverse engineering, binary exploitation & cryptography.</p>
-                    </div>
+                <div class="cyber-border p-5 hoverable">
+                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> CTF_CAPTURE</div>
+                    <h3 class="font-display text-xl font-bold text-white mb-1">50+ CTF Flags</h3>
+                    <p class="text-xs font-mono text-[#00e5ff] mb-2">PBCTF / IDEEEAS / Triwizard</p>
+                    <p class="text-xs text-gray-400">Binary exploitation, reverse engineering & cryptography.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Footer / Contact -->
-        <footer id="contact" class="py-32 px-6 border-t border-white/10 mt-20 relative overflow-hidden">
-            <!-- Massive background text -->
-            <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none overflow-hidden select-none">
-                <span class="font-display font-bold text-[32vw] whitespace-nowrap leading-none tracking-tighter">D33</span>
+        <!-- Footer / Contact Uplink -->
+        <footer id="uplink" class="py-24 px-6 md:px-20 mt-auto border-t border-[#00e5ff]/30 bg-black/90 relative overflow-hidden">
+            <div class="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+                
+                <div>
+                    <p class="text-[#ff003c] font-mono text-xs tracking-widest mb-2 animate-pulse">>> STATUS: READY TO UPLINK // SECURE_SOCKET_OPEN</p>
+                    <h2 class="font-display text-5xl md:text-7xl font-bold uppercase hoverable">
+                        Initiate <br><span class="text-[#00e5ff] glitch-text" data-text="Connection.">Connection.</span>
+                    </h2>
+                </div>
+
+                <div class="flex flex-col items-start md:items-end gap-6">
+                    <a href="mailto:d33kshith@proton.me?subject=Security%20Inquiry%20from%20Portfolio" class="hoverable border border-[#00e5ff] px-8 py-4 text-white font-mono hover:bg-[#00e5ff] hover:text-black transition-all flex items-center gap-3 group text-sm tracking-wider">
+                        <i data-lucide="mail" class="w-4 h-4 text-[#00e5ff] group-hover:text-black"></i>
+                        d33kshith@proton.me
+                    </a>
+                    <div class="flex gap-6 text-gray-400">
+                        <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="hoverable hover:text-[#00e5ff] transition-colors p-2 border border-white/10 hover:border-[#00e5ff]" aria-label="GitHub">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/d33kshithanand" target="_blank" rel="noopener noreferrer" class="hoverable hover:text-[#00e5ff] transition-colors p-2 border border-white/10 hover:border-[#00e5ff]" aria-label="LinkedIn">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
             
-            <div class="max-w-screen-2xl mx-auto relative z-10 flex flex-col items-center text-center">
-                <p class="text-[#d8f34c] tracking-widest uppercase text-xs font-mono mb-6">Initiate Connection</p>
-                <h2 class="font-display text-5xl md:text-8xl font-bold tracking-tighter mb-10 hoverable cursor-pointer hover:text-outline transition-all duration-300">
-                    Let's Build It.
-                </h2>
-                
-                <a href="mailto:d33kshith@proton.me?subject=Security%20Inquiry%20from%20Portfolio" class="hoverable text-xl md:text-3xl font-light border-b border-white/20 pb-2 hover:border-[#d8f34c] hover:text-[#d8f34c] transition-all">
-                    d33kshith@proton.me
-                </a>
-                
-                <div class="flex gap-6 mt-20">
-                    <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="hoverable w-12 h-12 rounded-full glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:border-[#d8f34c] transition-all" aria-label="GitHub">
-                        <i data-lucide="github" class="w-5 h-5"></i>
-                    </a>
-                    <a href="https://linkedin.com/in/d33kshithanand" target="_blank" rel="noopener noreferrer" class="hoverable w-12 h-12 rounded-full glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:border-[#d8f34c] transition-all" aria-label="LinkedIn">
-                        <i data-lucide="linkedin" class="w-5 h-5"></i>
-                    </a>
-                    <a href="mailto:d33kshith@proton.me" class="hoverable w-12 h-12 rounded-full glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:border-[#d8f34c] transition-all" aria-label="Email">
-                        <i data-lucide="mail" class="w-5 h-5"></i>
-                    </a>
-                </div>
-                
-                <p class="text-gray-500 text-xs mt-12 font-mono uppercase tracking-widest">
-                    &copy; 2026 DEEKSHITH (D33). Engineered with WebGL, Three.js & GSAP.
-                </p>
+            <div class="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center text-xs font-mono text-gray-500 gap-4">
+                <span>&copy; 2026 DEEKSHITH (D33). ctOS KERNEL // WEBGL & GSAP ENGINE.</span>
+                <span class="text-[#00e5ff]">LOCATION: BANGALORE, INDIA [12.9716° N, 77.5946° E]</span>
             </div>
+            
+            <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent opacity-60"></div>
         </footer>
     </div>
 
-    <!-- Interactive Terminal Modal -->
-    <div id="terminalModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="w-full max-w-2xl glass-panel rounded-2xl border border-[#d8f34c]/30 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="px-4 py-3 bg-zinc-900/90 border-b border-white/10 flex items-center justify-between">
+    <!-- Interactive Terminal Drawer Modal -->
+    <div id="terminalModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-2xl cyber-border bg-black/95 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] border-[#00e5ff]/40">
+            <div class="px-4 py-3 bg-zinc-950 border-b border-[#00e5ff]/20 flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
-                    <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
-                    <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
-                    <span class="text-xs font-mono text-gray-400 ml-2">d33@quantum-core-v4:~</span>
+                    <span class="w-2.5 h-2.5 bg-[#ff003c] inline-block animate-pulse"></span>
+                    <span class="text-xs font-mono text-[#00e5ff] ml-2">d33@ctOS-node-0x9A4:~#</span>
                 </div>
-                <button id="closeTerminalBtn" class="text-gray-400 hover:text-white transition-colors">
+                <button id="closeTerminalBtn" class="text-gray-400 hover:text-[#ff003c] transition-colors">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
             <div id="terminalBody" class="p-4 overflow-y-auto flex-1 font-mono text-xs space-y-2 text-gray-300">
-                <div class="text-[#d8f34c]">=== DEEKSHITH (D33) QUANTUM TERMINAL v4.0 ===</div>
-                <div class="text-gray-400">Type <span class="text-[#d8f34c] font-semibold">help</span> to view available commands. Press <span class="text-amber-400">ESC</span> to close.</div>
+                <div class="text-[#00e5ff] font-bold">=== ctOS v4.1 SECURITY OPERATOR CONSOLE [D33] ===</div>
+                <div class="text-gray-400">Type <span class="text-[#00e5ff] font-semibold">help</span> for commands. Press <span class="text-[#ff003c]">ESC</span> to abort.</div>
                 <div id="terminalHistory"></div>
             </div>
-            <div class="p-3 bg-zinc-900/80 border-t border-white/10 flex items-center gap-2">
-                <span class="text-[#d8f34c] font-mono text-xs">d33:~$</span>
-                <input id="terminalInput" type="text" class="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none" placeholder="Type a command (whoami, projects, certs, skills)..." autocomplete="off" spellcheck="false">
+            <div class="p-3 bg-zinc-950 border-t border-[#00e5ff]/20 flex items-center gap-2">
+                <span class="text-[#00e5ff] font-mono text-xs">d33:root#</span>
+                <input id="terminalInput" type="text" class="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none" placeholder="Enter security command (whoami, projects, certs, specs)..." autocomplete="off" spellcheck="false">
             </div>
         </div>
     </div>
