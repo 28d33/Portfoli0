@@ -68,16 +68,27 @@ body {
     overflow-x: hidden;
 }
 
-/* Subtle Canvas Background */
-.bg-canvas {
+/* Procedural ASCII Flow Background Engine */
+#ascii-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    pointer-events: none;
     z-index: 0;
-    opacity: 0.12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 14px;
+    white-space: pre;
+    overflow: hidden;
+    user-select: none;
+    opacity: 0.75;
+    pointer-events: none;
+    mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0.2) 100%);
+    -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0.2) 100%);
 }
 
 .container {

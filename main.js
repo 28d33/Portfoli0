@@ -1,184 +1,134 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — CLEAN CYBER PORTFOLIO & ASCII MOTION GRAPHICS ENGINE
+   1. PROCEDURAL ASCII FLOW BACKGROUND ENGINE (Wave Scale=10, Speed=1.3, Complexity=1.0)
    ========================================================================== */
+class ProceduralAsciiFlowEngine {
+    constructor() {
+        this.container = document.getElementById('ascii-background');
+        if (!this.container) return;
 
-(function () {
-    'use strict';
+        // Character set mapped from darkest to lightest value
+        this.chars = " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+        this.charLen = this.chars.length;
 
-    /* ==========================================================================
-       1. LANDING STAGE: DYNAMIC ASCII MOTION GRAPHICS ENGINE
-       ========================================================================== */
-    class AsciiMotionGraphicsEngine {
-        constructor() {
-            this.canvas = document.getElementById('asciiMotionCanvas');
-            if (!this.canvas) return;
+        // Configuration with user requested parameters
+        this.config = {
+            fontSize: 14,
+            density: 10,       // Wave Scale = 10
+            speed: 1.3,        // Time Multiplier = 1.3
+            complexity: 1.0,   // Interference = 1.0
+            theme: 'ghost',    // Default clean theme
+            mouseX: -0.2,
+            mouseY: -0.2,
+            targetMouseX: 0,
+            targetMouseY: 0
+        };
 
-            this.ctx = this.canvas.getContext('2d');
-            this.fontSize = 12;
-            this.cols = 0;
-            this.rows = 0;
+        this.cols = 0;
+        this.rows = 0;
+        this.time = 0;
 
-            // Geometry angles
-            this.A = 0;
-            this.B = 0;
-            this.C = 0;
-
-            // Mouse parallax
-            this.mouseX = 0;
-            this.mouseY = 0;
-            this.targetMouseX = 0;
-            this.targetMouseY = 0;
-
-            // Particles
-            this.particles = [];
-            this.numParticles = 40;
-
-            // ASCII character ramp
-            this.chars = ' .,-~:;=!*#$@';
-
-            this.resize();
-            this.initParticles();
-            this.bindEvents();
-            this.startLoop();
-        }
-
-        resize() {
-            const parent = this.canvas.parentElement;
-            this.canvas.width = parent ? parent.clientWidth : window.innerWidth;
-            this.canvas.height = parent ? parent.clientHeight : window.innerHeight;
-            this.cols = Math.floor(this.canvas.width / 11);
-            this.rows = Math.floor(this.canvas.height / (this.fontSize + 3));
-        }
-
-        initParticles() {
-            this.particles = [];
-            for (let i = 0; i < this.numParticles; i++) {
-                this.particles.push({
-                    x: Math.random() * (this.canvas.width || 800),
-                    y: Math.random() * (this.canvas.height || 600),
-                    vx: (Math.random() - 0.5) * 0.6,
-                    vy: (Math.random() - 0.5) * 0.6,
-                    char: ['+', 'x', '.', ':', '*', '#'][Math.floor(Math.random() * 6)],
-                    alpha: 0.1 + Math.random() * 0.3
-                });
-            }
-        }
-
-        bindEvents() {
-            window.addEventListener('resize', () => {
-                this.resize();
-                this.initParticles();
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                this.targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-                this.targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-            });
-        }
-
-        startLoop() {
-            const renderFrame = () => {
-                requestAnimationFrame(renderFrame);
-                this.render();
-            };
-            requestAnimationFrame(renderFrame);
-        }
-
-        render() {
-            const ctx = this.ctx;
-            const w = this.canvas.width;
-            const h = this.canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-            ctx.font = `${this.fontSize}px 'JetBrains Mono', monospace`;
-            ctx.textBaseline = 'top';
-
-            // Smooth mouse follow
-            this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
-            this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
-
-            this.A += 0.018 + this.mouseY * 0.01;
-            this.B += 0.012 + this.mouseX * 0.01;
-            this.C += 0.008;
-
-            // 1. Draw floating ambient ASCII cyber particles
-            for (let i = 0; i < this.particles.length; i++) {
-                const p = this.particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0) p.x = w;
-                if (p.x > w) p.x = 0;
-                if (p.y < 0) p.y = h;
-                if (p.y > h) p.y = 0;
-
-                ctx.fillStyle = `rgba(16, 185, 129, ${p.alpha})`;
-                ctx.fillText(p.char, p.x, p.y);
-            }
-
-            // 2. Render 3D Rotating ASCII Torus Knot / Cyber Sphere
-            const torusCols = Math.min(50, Math.floor(this.cols * 0.55));
-            const torusRows = Math.min(24, Math.floor(this.rows * 0.65));
-            const b = [];
-            const z = [];
-            for (let k = 0; k < torusCols * torusRows; k++) {
-                b[k] = ' ';
-                z[k] = 0;
-            }
-
-            const R1 = 1.1;
-            const R2 = 2.2;
-            const K2 = 5;
-
-            for (let j = 0; j < 6.28; j += 0.28) {
-                for (let i = 0; i < 6.28; i += 0.12) {
-                    const c = Math.sin(i);
-                    const d = Math.cos(j);
-                    const e = Math.sin(this.A);
-                    const f = Math.sin(j);
-                    const g = Math.cos(this.A);
-                    const h = d + R2;
-                    const D = 1 / (c * h * e + f * g + K2);
-                    const l = Math.cos(i);
-                    const m = Math.cos(this.B);
-                    const n = Math.sin(this.B);
-                    const torusT = c * h * g - f * e;
-
-                    const x = Math.floor(torusCols / 2 + 32 * D * (l * h * m - torusT * n));
-                    const y = Math.floor(torusRows / 2 + 16 * D * (l * h * n + torusT * m));
-                    const o = x + torusCols * y;
-                    const N = Math.floor(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n));
-
-                    if (y >= 0 && y < torusRows && x >= 0 && x < torusCols && D > z[o]) {
-                        z[o] = D;
-                        b[o] = this.chars[Math.max(0, Math.min(this.chars.length - 1, N > 0 ? N : 0))];
-                    }
-                }
-            }
-
-            // Position torus on the right side of the landing screen
-            const startX = Math.max(20, w - torusCols * 11 - 50);
-            const startY = Math.max(40, Math.floor((h - torusRows * (this.fontSize + 2)) / 2));
-
-            ctx.fillStyle = 'rgba(16, 185, 129, 0.45)';
-            for (let ty = 0; ty < torusRows; ty++) {
-                for (let tx = 0; tx < torusCols; tx++) {
-                    const char = b[tx + torusCols * ty];
-                    if (char && char !== ' ') {
-                        // Alternate subtle cyan/emerald tone
-                        ctx.fillStyle = (tx + ty) % 4 === 0 ? 'rgba(14, 165, 233, 0.55)' : 'rgba(16, 185, 129, 0.45)';
-                        ctx.fillText(char, startX + tx * 11, startY + ty * (this.fontSize + 2));
-                    }
-                }
-            }
-        }
+        this.calculateGrid();
+        this.bindEvents();
+        this.startLoop();
     }
 
-    new AsciiMotionGraphicsEngine();
+    calculateGrid() {
+        const charWidth = this.config.fontSize * 0.6;
+        const charHeight = this.config.fontSize;
+        this.cols = Math.ceil(window.innerWidth / charWidth);
+        this.rows = Math.ceil(window.innerHeight / charHeight);
+    }
 
-    /* ==========================================================================
-       2. TYPEWRITER EFFECT FOR LANDING COMMAND
-       ========================================================================== */
+    bindEvents() {
+        window.addEventListener('resize', () => this.calculateGrid());
+
+        window.addEventListener('mousemove', (e) => {
+            this.config.targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            this.config.targetMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                this.config.targetMouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+                this.config.targetMouseY = (e.touches[0].clientY / window.innerHeight) * 2 - 1;
+            }
+        }, { passive: true });
+    }
+
+    calculateIntensity(x, y, t) {
+        const aspectRatio = this.rows / (this.cols || 1);
+        const nx = (x / this.cols - 0.5) * this.config.density;
+        const ny = (y / this.rows - 0.5) * (this.config.density * aspectRatio);
+
+        const dx = nx - (this.config.mouseX * (this.config.density / 3));
+        const dy = ny - (this.config.mouseY * (this.config.density / 3));
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // 1. Base ripple expanding from center
+        let value = Math.sin(distance - t);
+
+        // 2. Overlapping sine/cosine waves for complexity/interference
+        value += Math.sin(nx * (this.config.complexity / 2) + t * 0.7);
+        value += Math.cos(ny * (this.config.complexity / 2) - t * 0.5);
+
+        // 3. Rotational swirling influence
+        const angle = Math.atan2(dy, dx);
+        value += Math.sin(angle * 3 + t * 0.8) * 0.5;
+
+        // Normalize combined wave value
+        value = (value + 3.5) / 7;
+
+        // Subtle vignette effect
+        const edgeDistance = Math.sqrt(Math.pow((x / this.cols) - 0.5, 2) + Math.pow((y / this.rows) - 0.5, 2));
+        const vignette = Math.max(0, 1 - (edgeDistance * 1.5));
+        value = value * vignette;
+
+        return Math.max(0, Math.min(0.999, value));
+    }
+
+    updateThemeVisuals() {
+        const xPos = ((this.config.mouseX + 1) / 2) * 100;
+        const yPos = ((this.config.mouseY + 1) / 2) * 100;
+
+        // Spotlight gradient effect
+        this.container.style.color = 'rgba(148, 163, 184, 0.35)';
+        this.container.style.backgroundImage = `radial-gradient(circle at ${xPos}% ${yPos}%, #ffffff 0%, rgba(52, 211, 153, 0.4) 30%, rgba(14, 165, 233, 0.2) 50%, transparent 75%)`;
+        this.container.style.webkitBackgroundClip = 'text';
+        this.container.style.webkitTextFillColor = 'transparent';
+    }
+
+    startLoop() {
+        const render = () => {
+            this.config.mouseX += (this.config.targetMouseX - this.config.mouseX) * 0.05;
+            this.config.mouseY += (this.config.targetMouseY - this.config.mouseY) * 0.05;
+
+            this.time += 0.05 * this.config.speed;
+
+            let outputString = '';
+            for (let y = 0; y < this.rows; y++) {
+                for (let x = 0; x < this.cols; x++) {
+                    const intensity = this.calculateIntensity(x, y, this.time);
+                    const charIndex = Math.floor(intensity * this.charLen);
+                    outputString += this.chars[charIndex];
+                }
+                outputString += '\n';
+            }
+
+            this.container.innerText = outputString;
+            this.updateThemeVisuals();
+
+            requestAnimationFrame(render);
+        };
+
+        requestAnimationFrame(render);
+    }
+}
+
+new ProceduralAsciiFlowEngine();
+
+/* ==========================================================================
+   2. TYPEWRITER EFFECT FOR LANDING COMMAND
+   ========================================================================== */
     const typingEl = document.getElementById('landingCommandTyping');
     if (typingEl) {
         const fullText = './boot_system.sh --operator=DEEKSHITH --mode=PRO';
