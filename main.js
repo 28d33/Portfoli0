@@ -461,52 +461,52 @@
     // --- 8. PROJECT INSPECTION MODAL ---
     const projectData = {
         crypto: {
-            tag: "CRYPTOGRAPHIC SUITE // C++20",
-            title: "E-D--Crypto Engine",
-            desc: "High-performance symmetric and asymmetric cryptographic engine implementing AES-256 (CBC/GCM) and RSA-2048 key exchange for ultra-secure payload transmission and hardened memory storage.",
+            tag: "CRYPTOGRAPHIC UTILITY // C & OpenSSL",
+            title: "E-D-Crypto Utility",
+            desc: "Developed a C-based file encryption/decryption utility using AES-256-CBC, RSA-2048 (OAEP), and SHA-256 integrity checks via OpenSSL.",
             specs: [
-                "SIMD AVX-512 acceleration reaching 1.4 GB/s throughput",
-                "Argon2id and PBKDF2 key derivation with zero memory leaks",
-                "Constant-time arithmetic implementations to eliminate side-channel timing attacks",
-                "Full integration with OpenSSL and custom low-level C bit-rotation routines"
+                "AES-256-CBC and RSA-2048 (OAEP) implementation",
+                "SHA-256 integrity verification",
+                "OpenSSL integration for robust security",
+                "Designed for secure file storage and transfer"
             ],
-            link: "https://github.com/28d33"
+            link: "https://github.com/28d33/E-D--Crypto"
         },
         siem: {
-            tag: "DEFENSIVE PIPELINE // IDS & SIEM",
-            title: "Perimeter Defense & SIEM Pipeline",
-            desc: "Distributed real-time intrusion detection pipeline integrating custom Suricata IDS rulesets, packet sniffing hooks, and elastic search ingestion for enterprise threat intelligence.",
+            tag: "ZERO-TRUST NETWORK // ELK STACK",
+            title: "Perimeter Security Architecture",
+            desc: "Redesigned a zero-trust network architecture for a cryptocurrency exchange with multi-zone segmentation and DMZ. Implemented continuous security monitoring using the ELK Stack for real-time threat detection and response.",
             specs: [
-                "Real-time packet filtering processing 10Gbps line rate",
-                "Automated alert correlation with Elasticsearch & Kibana dashboards",
-                "Signature-based and heuristic anomaly detection with sub-millisecond alerting",
-                "Custom Lua scripts for dynamic payload inspection"
+                "Zero-trust network architecture design",
+                "Multi-zone segmentation and DMZ implementation",
+                "Continuous security monitoring using ELK Stack",
+                "Real-time threat detection and response"
             ],
-            link: "https://github.com/28d33"
+            link: "https://github.com/28d33/Perimeter_Security"
         },
         sast: {
-            tag: "AUTOMATED VULNERABILITY TRIAGE",
-            title: "Automated Security Audit Engine",
-            desc: "Continuous SAST / DAST scanning orchestration engine combining Bandit, Semgrep, and OWASP ZAP crawlers with automated CVSS v3.1 scoring and issue remediation workflows.",
+            tag: "SECURITY AUDIT // SAST & DAST",
+            title: "Security Assessment",
+            desc: "Conducted a strategic security audit integrating Secure SDLC practices with SAST/DAST testing methodologies. Implemented CI/CD security layers to enforce code integrity and vulnerability detection throughout the pipeline.",
             specs: [
-                "Unified AST parsing engine across Python, C/C++, and Go codebases",
-                "Automated OWASP Top 10 dynamic crawling with headless browser injection",
-                "Zero false-positive threshold tuning with rule-based heuristics",
-                "Automated Jira / GitHub Security Advisories webhook pipeline"
+                "Secure SDLC practices integration",
+                "SAST/DAST testing methodologies",
+                "CI/CD security layers implementation",
+                "Strategic security audit and vulnerability detection"
             ],
-            link: "https://github.com/28d33"
+            link: "https://github.com/28d33/Security_Assessment"
         },
         stream: {
-            tag: "HIGH-THROUGHPUT TOKENIZATION // C++20",
-            title: "Data Stream Masking Protocol",
-            desc: "Ultra-low latency memory-mapped data stream masking protocol designed for zero-leak data ingestion pipelines in banking and healthcare infrastructures.",
+            tag: "DATA SECURITY // C++ & COMPLIANCE",
+            title: "Data Security Framework",
+            desc: "Built a data security framework using custom C++ scripts implementing AES/RSA encryption and SHA-256 integrity verification. Applied data masking techniques to ensure compliance with relevant regulatory requirements.",
             specs: [
-                "Zero-copy memory mapped I/O processing millions of records per second",
-                "Format-Preserving Encryption (FPE) with deterministic irreversible pseudonymization",
-                "Lock-free ring buffers for multi-threaded consumer-producer streams",
-                "Full compliance validation for GDPR and HIPAA data handling"
+                "Custom C++ scripts for AES/RSA encryption",
+                "SHA-256 integrity verification",
+                "Data masking techniques application",
+                "Compliance with regulatory requirements"
             ],
-            link: "https://github.com/28d33"
+            link: "https://github.com/28d33/Data_Security"
         }
     };
 
@@ -592,31 +592,31 @@
 - clear       : Wipe terminal output buffer`,
 
         whoami: () => `IDENTITY: Deekshith (D33)
-ROLE: Offensive Security Architect & Low-Level Systems Developer
+ROLE: Cybersecurity Intern, Red Team, Social Engineering, Forensics
 LOCATION: Bangalore, India
-STACK: C/C++20, x86_64 Assembly, Cryptography, 10k Particle WebGL`,
+STATUS: Open to Opportunities`,
 
         skills: () => `CORE CAPABILITIES:
-- Languages   : C, C++20, x86_64 Assembly, Python, JavaScript, GLSL
-- Security    : Reverse Engineering, Exploitation, Cryptography (AES/RSA), SIEM (Suricata/ELK)
-- Forensics   : GDB, Ghidra, Wireshark, Burp Suite, Bandit, OWASP ZAP`,
+- Security    : Penetration Testing, Web App Sec, Network Exploitation, Red Teaming, Digital Forensics, SIEM
+- Languages   : Python, Bash Scripting, C/C++, x86 Assembly, JavaScript
+- Tools       : Kali Linux, Burp Suite, Metasploit, Nmap, Wireshark, ELK Stack`,
 
         projects: () => `DEPLOYED REPOSITORIES:
-[01] E-D--Crypto Engine        (AES-256-GCM / RSA-2048 Suite)
-[02] Perimeter Defense & SIEM  (Suricata IDS Pipeline)
-[03] Automated Security Audit  (SAST/DAST Triage Engine)
-[04] Data Stream Masking       (Zero-Copy C++20 Tokenizer)`,
+[01] E-D-Crypto Utility        (AES-256-CBC / RSA-2048)
+[02] Perimeter Security Arch   (Zero-Trust / ELK Stack)
+[03] Security Assessment       (SAST/DAST / Secure SDLC)
+[04] Data Security Framework   (C++ / AES / RSA / SHA-256)`,
 
         matrix: () => `VERIFIED CLEARANCE:
-- IISc Bangalore & IIT Guwahati (Network Defense Research)
-- Cisco Certified Network Security Associate
-- TryHackMe Global Top 1% (50+ CTF Flag Captures)
-- Deloitte & TCS Cyber Defense Governance`,
+- CPENT: Certified Penetration Testing Professional
+- IIT Guwahati: Cybersecurity Course
+- TryHackMe: Jr Penetration Tester / PreSecurity
+- Cisco: Ethical Hacker & Cybersecurity Essentials`,
 
         contact: () => `SECURE CHANNELS:
-- Email   : deekshith.d33@gmail.com
+- Email   : d33kshith@proton.me
 - GitHub  : https://github.com/28d33
-- LinkedIn: https://linkedin.com`,
+- LinkedIn: https://linkedin.com/in/d33kshithanand`,
 
         clear: () => {
             if (terminalLogs) terminalLogs.innerHTML = '';
@@ -657,7 +657,7 @@ STACK: C/C++20, x86_64 Assembly, Cryptography, 10k Particle WebGL`,
 
     // --- 10. COPY EMAIL HELPER ---
     window.copyContactEmail = function() {
-        const email = "deekshith.d33@gmail.com";
+        const email = "d33kshith@proton.me";
         navigator.clipboard.writeText(email).then(() => {
             const btn = document.getElementById('copy-email-btn');
             if (btn) {
