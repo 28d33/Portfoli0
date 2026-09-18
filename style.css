@@ -50,31 +50,31 @@ body::-webkit-scrollbar {
 }
 
 .fluid-section-title {
-    font-size: clamp(1.85rem, 4.5vw, 4.25rem);
-    line-height: 1.12;
+    font-size: clamp(1.75rem, 3.2vw, 3.25rem);
+    line-height: 1.1;
     letter-spacing: -0.025em;
 }
 
 .fluid-card-title {
-    font-size: clamp(1.15rem, 2vw, 1.85rem);
+    font-size: clamp(1.15rem, 1.8vw, 1.65rem);
     line-height: 1.3;
     letter-spacing: -0.02em;
 }
 
 .fluid-body-text {
-    font-size: clamp(0.85rem, 1.15vw, 1.05rem);
+    font-size: clamp(0.85rem, 1.1vw, 1.05rem);
     line-height: 1.7;
 }
 
 /* Fluid Showcase Card Dimensions (Clean breathing room on all resolutions) */
 .showcase-card {
-    width: clamp(300px, 80vw, 540px);
+    width: clamp(300px, 80vw, 520px);
     min-height: min(480px, 76vh);
     flex-shrink: 0;
 }
 
 .showcase-intro-card {
-    width: clamp(280px, 75vw, 460px);
+    width: clamp(320px, 34vw, 480px);
     flex-shrink: 0;
 }
 
