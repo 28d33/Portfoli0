@@ -98,6 +98,22 @@ body::-webkit-scrollbar {
     pointer-events: none;
 }
 
+/* Loading Screen (v5 Architecture) */
+#loader {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loader-text {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
 #ui-layer {
     position: relative;
     z-index: 10;

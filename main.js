@@ -142,40 +142,51 @@
     }
 
 
-    // --- 5. PRELOADER SEQUENCE (v5 Landing Feature) ---
-    const preloader = document.getElementById('preloader');
-    const preloaderCount = document.getElementById('preloader-count');
-    const preloaderBar = document.getElementById('preloader-bar');
+    // --- 5. PRELOADER & HERO ENTRANCE SEQUENCE (Exact v5 Architecture) ---
+    function initPreloaderAndHero() {
+        if (typeof gsap === 'undefined') return;
 
-    let loadVal = { val: 0 };
-    gsap.to(loadVal, {
-        val: 100,
-        duration: 1.8,
-        ease: "power3.inOut",
-        onUpdate: () => {
-            const current = Math.floor(loadVal.val);
-            if (preloaderCount) preloaderCount.innerText = current.toString().padStart(2, '0');
-            if (preloaderBar) preloaderBar.style.width = `${current}%`;
-        },
-        onComplete: () => {
-            gsap.to(preloader, {
-                opacity: 0,
-                duration: 0.7,
-                ease: "power2.inOut",
-                onComplete: () => {
-                    if (preloader) preloader.style.display = 'none';
-                    revealHero();
-                }
-            });
-        }
-    });
+        const tl = gsap.timeline();
 
-    function revealHero() {
-        gsap.fromTo(".hero-anim", 
-            { opacity: 0, y: 35 },
-            { opacity: 1, y: 0, duration: 1.1, stagger: 0.1, ease: "power4.out" }
+        tl.to("#loader-progress", {
+            width: "100%",
+            duration: 1.4,
+            ease: "power3.inOut"
+        })
+        .to(".loader-text .char", {
+            y: "0%",
+            opacity: 1,
+            stagger: 0.04,
+            duration: 0.7,
+            ease: "power4.out"
+        }, "-=0.4")
+        .to("#loader", {
+            yPercent: -100,
+            duration: 0.9,
+            ease: "power4.inOut",
+            delay: 0.15,
+            onComplete: () => {
+                const loaderEl = document.getElementById('loader');
+                if (loaderEl) loaderEl.style.display = 'none';
+            }
+        })
+        .to("#ui-layer", {
+            opacity: 1,
+            duration: 0.1
+        }, "-=0.9")
+        .to(".hero-line", {
+            y: "0%",
+            duration: 1.1,
+            stagger: 0.12,
+            ease: "power4.out"
+        }, "-=0.4")
+        .fromTo(".hero-elem", 
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: "power3.out" },
+            "-=0.7"
         );
     }
+    initPreloaderAndHero();
 
 
     // --- 6. AUTO-ADJUSTING 10,000 PARTICLE MORPHING THREE.JS BACKGROUND ---

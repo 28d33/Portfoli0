@@ -38,26 +38,24 @@
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
 
-    <!-- GSAP Preloader Sequence (v5 Landing Page) -->
-    <div id="preloader" class="fixed inset-0 z-[100] bg-[#050507] flex flex-col justify-between p-6 sm:p-10 md:p-16 select-none pointer-events-auto">
-        <div class="flex justify-between items-center font-mono text-[10px] sm:text-xs text-white/50">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-[#ccff00] animate-ping"></span>
-                <span>D33 // SEC_OS BOOTLOADER</span>
-            </div>
-            <span>BANGALORE, IN</span>
+    <!-- Preloader Screen (Exact v5 Architecture) -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-[#050507] flex flex-col justify-center items-center select-none pointer-events-auto">
+        <div class="loader-text font-syne text-5xl sm:text-7xl md:text-8xl font-bold tracking-tighter flex overflow-hidden">
+            <span class="char opacity-0 translate-y-full inline-block">D</span>
+            <span class="char opacity-0 translate-y-full inline-block">E</span>
+            <span class="char opacity-0 translate-y-full inline-block">E</span>
+            <span class="char opacity-0 translate-y-full inline-block">K</span>
+            <span class="char opacity-0 translate-y-full inline-block">S</span>
+            <span class="char opacity-0 translate-y-full inline-block">H</span>
+            <span class="char opacity-0 translate-y-full inline-block">I</span>
+            <span class="char opacity-0 translate-y-full inline-block">T</span>
+            <span class="char opacity-0 translate-y-full inline-block">H</span>
+            <span class="char opacity-0 translate-y-full inline-block text-[#ccff00]">.</span>
         </div>
-
-        <div class="max-w-4xl">
-            <div class="font-mono text-[10px] sm:text-xs text-[#ccff00] uppercase tracking-widest mb-3 sm:mb-4">> INITIALIZING 10,000 PARTICLE MORPHING CORE...</div>
-            <div class="font-syne text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter leading-none text-white">
-                <span id="preloader-count">00</span><span class="text-[#ccff00]">%</span>
-            </div>
+        <div class="w-56 max-w-[70vw] h-[2px] bg-white/20 mt-6 relative overflow-hidden rounded-full">
+            <div id="loader-progress" class="absolute top-0 left-0 h-full w-0 bg-[#ccff00]"></div>
         </div>
-
-        <div class="w-full bg-white/10 h-[2px] relative overflow-hidden rounded-full">
-            <div id="preloader-bar" class="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-[#06b6d4] via-[#ccff00] to-white transition-all"></div>
-        </div>
+        <p class="font-mono text-xs text-gray-400 mt-4 tracking-widest uppercase">Initializing Quantum Core...</p>
     </div>
 
     <!-- 10,000 Particle Morphing WebGL Background (v8.5 Engine) -->
@@ -65,7 +63,7 @@
     <div class="vignette-overlay"></div>
 
     <!-- Main UI Content Layer -->
-    <div id="ui-layer" class="relative z-10 w-full">
+    <div id="ui-layer" class="relative z-10 w-full opacity-0">
 
         <!-- Sticky Navigation Bar -->
         <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 px-4 sm:px-8 md:px-16 py-4 md:py-5 flex justify-between items-center pointer-events-none">
@@ -131,30 +129,32 @@
             </div>
         </div>
 
-        <!-- ================= HERO SECTION (Auto-Adjusted Fluid Typography & Centered Composition) ================= -->
+        <!-- ================= HERO SECTION (v5 Exact Kinetic Animation & Typography) ================= -->
         <section id="hero" class="min-h-[100dvh] w-full flex flex-col justify-center items-center px-4 sm:px-8 md:px-16 pt-24 pb-16 relative text-center">
             <div class="max-w-6xl mx-auto w-full flex flex-col items-center justify-center z-10">
                 
-                <!-- Live Telemetry Status Pill (Centered) -->
-                <div class="inline-flex items-center gap-2 sm:gap-3 px-4 py-1.5 rounded-full glass-panel border border-white/15 mb-6 text-[10px] sm:text-xs font-mono tracking-wider text-white/80 hero-anim max-w-full overflow-hidden text-ellipsis shadow-lg">
-                    <span class="w-2 h-2 flex-shrink-0 rounded-full bg-[#ccff00] animate-pulse"></span>
-                    <span class="truncate">BANGALORE, IN • OFFENSIVE SECURITY ARCHITECT • 10K PARTICLE CORE</span>
+                <!-- Status Pill -->
+                <div class="inline-flex items-center gap-2 sm:gap-3 px-4 py-1.5 rounded-full border border-[#ccff00]/30 bg-[#ccff00]/10 text-[#ccff00] text-[10px] sm:text-xs font-mono uppercase tracking-widest mb-6 hero-elem shadow-lg">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ccff00] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-[#ccff00]"></span>
+                    </span>
+                    <span>Available for Penetration Testing & Systems Engineering</span>
                 </div>
 
-                <!-- Fluid Auto-Adjusted Headline -->
-                <h1 class="font-syne font-extrabold fluid-hero-title uppercase mb-6 sm:mb-8 break-words text-center">
-                    <div class="overflow-hidden"><span class="block hero-anim">ENGINEERING</span></div>
-                    <div class="overflow-hidden"><span class="block hero-anim text-outline text-[#ccff00]/90">ZERO-TRUST</span></div>
-                    <div class="overflow-hidden"><span class="block hero-anim">ARCHITECTURES</span></div>
+                <!-- Massive Kinetic Display Headline (Exact v5 kinetic reveal) -->
+                <h1 class="font-syne font-extrabold text-[13vw] sm:text-[11vw] lg:text-[8.5vw] leading-[0.88] tracking-tighter uppercase mb-6 sm:mb-8 text-center">
+                    <div class="overflow-hidden"><span class="hero-line block translate-y-full text-white">Security</span></div>
+                    <div class="overflow-hidden"><span class="hero-line block translate-y-full text-outline hoverable cursor-pointer">Alchemist</span></div>
                 </h1>
 
                 <!-- Subheadline & Mission Statement -->
-                <p class="fluid-body-text text-white/70 max-w-2xl mx-auto font-light leading-relaxed mb-8 sm:mb-10 hero-anim text-center">
-                    Bridging adversarial cybersecurity research, low-level systems programming (C/C++20, x86 Assembly), high-throughput cryptographic engines, and real-time 3D WebGL motion mathematics.
+                <p class="fluid-body-text text-white/70 max-w-2xl mx-auto font-light leading-relaxed mb-8 sm:mb-10 hero-elem text-center">
+                    Hi, I'm <span class="text-white font-medium">Deekshith (D33)</span>. Bridging adversarial cybersecurity research, low-level systems programming (C/C++20, x86 Assembly), high-throughput cryptographic engines, and real-time 3D WebGL motion mathematics.
                 </p>
 
                 <!-- Action CTA Buttons (Centered) -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto hero-anim">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto hero-elem">
                     <div class="magnetic-wrap hoverable w-full sm:w-auto">
                         <div class="magnetic-area"></div>
                         <a href="#horizontal-work" class="magnetic-content w-full sm:w-auto text-center px-8 py-4 rounded-full bg-[#ccff00] text-black font-syne font-bold text-xs tracking-widest uppercase hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#ccff00]/20">
@@ -172,7 +172,7 @@
             </div>
 
             <!-- Centered Scroll Indicator -->
-            <div class="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] text-white/50 tracking-widest uppercase">
+            <div class="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] text-white/50 tracking-widest uppercase hero-elem">
                 <span>SCROLL TO ADVANCE</span>
                 <div class="w-[1px] h-10 bg-white/20 relative overflow-hidden">
                     <div class="w-full h-full bg-[#ccff00] absolute top-0 left-0 -translate-y-full animate-[scroll_2s_ease-in-out_infinite]"></div>
