@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-[#050505] text-white overflow-x-hidden">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEEKSHITH // D33 — Offensive Security Architect & Systems Developer</title>
-    <meta name="description" content="Offensive Security Architect & Low-Level Systems Developer based in Bangalore, India. High-throughput cryptography, reverse engineering, and zero-trust infrastructure.">
+    <title>DEEKSHITH // D33 — Offensive Security & ASCII Procedural Architecture</title>
+    <meta name="description" content="Offensive Security Architect & Low-Level Systems Developer based in Bangalore, India. Real-time procedural ASCII motion design, cryptography, and zero-trust engineering.">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -12,286 +12,259 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Syncopate (Headers) & Manrope (Body) & JetBrains Mono (Code/Terminal) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Manrope:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Three.js for 3D rendering -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <!-- GSAP & ScrollTrigger for advanced animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-    <!-- Lenis for buttery smooth scrolling -->
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0a0a0b',
+                        light: '#f4f4f5',
+                        brand: '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
 
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased selection:bg-white selection:text-black">
+<body class="theme-ghost">
 
-    <!-- Custom Physics Dual Cursor -->
-    <div id="cursor-dot"></div>
-    <div id="cursor-ring"></div>
-
-    <!-- Preloader -->
-    <div id="loader">
-        <div class="loader-bar-container">
-            <div id="loader-bar"></div>
-        </div>
-        <div class="font-display text-2xl md:text-4xl tracking-[0.2em] text-mask overflow-hidden text-center">
-            <span id="loader-text">SYNCHRONIZING CORE</span>
-        </div>
-        <div id="loader-percent" class="mt-6 font-mono text-[11px] text-white/40 tracking-widest">00.00%</div>
-        <div class="mt-2 font-mono text-[9px] text-white/20 tracking-widest uppercase">INITIALIZING TORUS KNOT // 3D VERTICAL KINETIC MESH</div>
+    <!-- Intro Skull Sequence Screen -->
+    <div id="intro-screen" class="fixed inset-0 z-[100] bg-[#0a0a0b] flex items-center justify-center overflow-hidden transition-opacity duration-1000">
+        <pre id="intro-skull" class="font-mono text-[6px] sm:text-[8px] md:text-[10px] lg:text-xs font-bold leading-[1.1] text-center select-none pointer-events-none">
+             _,.-------.,_
+         ,;~'             '~;,
+       ,;                     ;,
+      ;                         ;
+     ,'                         ',
+    ,;                           ;,
+    ; ;      .           .      ; ;
+    | ;   ______       ______   ; |
+    |  `/~"     ~" . "~     "~\'  |
+    |  ~  ,-~~~^~, | ,~^~~~-,  ~  |
+     |   |        }:{        |   |
+     |   l       / | \       !   |
+     .~  (__,.--" .^. "--.,__)  ~.
+     |     ---;' / | \ `;---     |
+      \__.       \/^\/       .__/
+       V| \                 / |V
+        | |T~\___!___!___/~T| |
+        | |`IIII_I_I_I_IIII'| |
+        |  \,III I I I III,/  |
+         \   `~~~~~~~~~~'    /
+           \   .       .   /
+             \.    ^    ./
+               ^~~~^~~~^
+        </pre>
     </div>
 
-    <!-- 3D WebGL Canvas -->
-    <canvas id="webgl-canvas"></canvas>
-    <div class="vignette-overlay"></div>
+    <!-- Procedural ASCII Background Container -->
+    <div id="ascii-container">
+        <div id="ascii-output"></div>
+    </div>
+    <div class="vignette"></div>
 
-    <!-- Main Content Layer -->
-    <main id="ui-layer" class="w-full">
+    <!-- Main UI Layer -->
+    <div id="ui-layer" class="min-h-screen flex flex-col font-sans">
         
-        <!-- Sticky Navigation Bar -->
-        <nav class="fixed top-0 w-full p-6 md:px-16 md:py-8 flex justify-between items-center z-50 pointer-events-none">
-            <div class="flex items-center gap-3 pointer-events-auto hover-target cursor-pointer mix-diff" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <div class="w-2.5 h-2.5 rounded-full bg-[#06b6d4] animate-pulse"></div>
-                <div class="font-display font-bold text-lg md:text-xl tracking-widest">
-                    DEEKSHITH<span class="text-white/30"> // D33®</span>
+        <!-- Sticky Navigation -->
+        <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 py-4 px-6 md:px-12">
+            <div id="navbar-inner" class="max-w-7xl mx-auto flex justify-between items-center transition-all duration-300 rounded-2xl px-6 py-3">
+                <div class="flex items-center gap-2.5 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <i data-lucide="waves" class="w-5 h-5 text-white"></i>
+                    <span class="font-bold text-lg tracking-tight font-mono">D33<span class="text-white/40">::ASCII_FLOW</span></span>
                 </div>
-            </div>
-
-            <div class="flex items-center gap-6 md:gap-8 text-[10px] md:text-xs font-semibold tracking-[0.2em] uppercase pointer-events-auto mix-diff">
-                <div class="magnetic-wrap hover-target">
-                    <div class="magnetic-area"></div>
-                    <a href="#about" class="magnetic-content block transition-transform duration-300">Profile</a>
+                <div class="hidden md:flex gap-8 text-xs font-mono uppercase tracking-wider text-white/70">
+                    <a href="#features" class="hover:text-white transition-colors">Architecture</a>
+                    <a href="#projects" class="hover:text-white transition-colors">Archive</a>
+                    <a href="#interactive" class="hover:text-white transition-colors">Engine Controls</a>
+                    <a href="#credentials" class="hover:text-white transition-colors">Matrix</a>
+                    <a href="#contact" class="hover:text-white transition-colors">Contact</a>
                 </div>
-                <div class="magnetic-wrap hover-target">
-                    <div class="magnetic-area"></div>
-                    <a href="#work" class="magnetic-content block transition-transform duration-300">Archive</a>
+                <div class="flex items-center gap-3">
+                    <button id="nav-terminal-btn" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 glass hover:border-white text-[10px] font-mono tracking-widest text-white/80 transition-all">
+                        <i data-lucide="terminal" class="w-3 h-3 text-[#3b82f6]"></i>
+                        <span>TERM [~]</span>
+                    </button>
+                    <a href="#interactive" class="bg-white text-dark px-5 py-2 rounded-full text-xs font-bold font-mono tracking-wider hover:bg-white/90 transition-transform hover:scale-105 inline-block">
+                        LAUNCH ENGINE
+                    </a>
                 </div>
-                <div class="magnetic-wrap hover-target hidden md:block">
-                    <div class="magnetic-area"></div>
-                    <a href="#credentials" class="magnetic-content block transition-transform duration-300">Matrix</a>
-                </div>
-                <div class="magnetic-wrap hover-target">
-                    <div class="magnetic-area"></div>
-                    <a href="#contact" class="magnetic-content block transition-transform duration-300">Communicate</a>
-                </div>
-
-                <!-- Terminal Launcher Button -->
-                <button id="nav-terminal-btn" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 glass-panel hover-target hover:border-white text-[9px] tracking-widest uppercase transition-all duration-300">
-                    <i data-lucide="terminal" class="w-3 h-3 text-[#06b6d4]"></i>
-                    <span>TERM [~]</span>
-                </button>
             </div>
         </nav>
 
-        <!-- Hero Section (Scroll Phase 0) -->
-        <section class="h-screen w-full flex flex-col justify-center px-6 md:px-20 relative pointer-events-none">
-            <div class="z-10 w-full max-w-screen-2xl mx-auto flex flex-col items-start">
-                
-                <!-- Live Telemetry Pill -->
-                <div class="flex items-center gap-3 px-3.5 py-1.5 rounded-full glass-panel border border-white/10 mb-6 text-mask mix-diff">
-                    <span class="hero-reveal flex items-center gap-2 text-[9px] md:text-[10px] font-mono tracking-widest text-white/70 uppercase">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                        BANGALORE, IN • THREAT LEVEL: NOMINAL • LATENCY: 12ms
-                    </span>
+        <!-- Hero Section -->
+        <main class="flex-grow flex flex-col justify-center items-center text-center px-4 pt-36 pb-20 relative">
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 text-xs font-mono text-white/80">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>DEEKSHITH // OFFENSIVE SECURITY ARCHITECT • PROCEDURAL ENGINE v1.0</span>
                 </div>
 
-                <p class="text-[10px] md:text-xs tracking-[0.4em] text-white/50 mb-4 uppercase text-mask font-semibold mix-diff">
-                    <span class="hero-reveal">Offensive Security Architect & Systems Dev</span>
-                </p>
-
-                <h1 class="font-display text-[11vw] md:text-[7.5vw] font-bold leading-[0.88] tracking-tighter relative z-10 mix-diff uppercase">
-                    <div class="text-mask"><span class="hero-reveal">ENGINEERING</span></div><br>
-                    <div class="text-mask"><span class="hero-reveal text-outline md:pl-20">ZERO-TRUST</span></div><br>
-                    <div class="text-mask"><span class="hero-reveal">SYSTEMS</span></div>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter leading-[1.05] mb-6">
+                    Zero-Trust Systems <br>
+                    <span class="animated-text-gradient font-mono font-normal tracking-tight">rendered in procedural ASCII.</span>
                 </h1>
 
-                <div class="mt-8 flex items-center gap-4 pointer-events-auto mix-diff">
-                    <div class="magnetic-wrap hover-target">
-                        <div class="magnetic-area"></div>
-                        <a href="#work" class="magnetic-content px-6 py-3 rounded-full bg-white text-black font-semibold text-xs tracking-[0.2em] uppercase hover:bg-[#06b6d4] transition-colors duration-300 flex items-center gap-2">
-                            Explore Archive
-                            <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-                    <a href="resume.pdf" target="_blank" class="hover-target px-5 py-3 rounded-full glass-panel border border-white/15 text-xs tracking-[0.2em] uppercase font-semibold text-white/80 hover:text-white hover:border-white transition-all duration-300 flex items-center gap-2">
-                        <i data-lucide="file-text" class="w-3.5 h-3.5 text-[#4F46E5]"></i>
+                <p class="text-base md:text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+                    Transforming deterministic mathematics, cryptographic algorithms, and kernel telemetry into kinetic typography. Native 60 FPS computation with zero external dependencies.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="#interactive" class="glass px-8 py-4 rounded-xl font-bold font-mono text-xs tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-white/10 transition-all border border-white/20">
+                        <i data-lucide="settings-2" class="w-4 h-4 text-brand"></i>
+                        Tune Mathematical Parameters
+                    </a>
+                    <a href="#projects" class="px-8 py-4 rounded-xl font-bold font-mono text-xs tracking-wider uppercase flex items-center justify-center gap-2 bg-white text-dark hover:bg-white/90 transition-transform hover:scale-105">
+                        <i data-lucide="shield" class="w-4 h-4 text-dark"></i>
+                        Explore Security Deployments
+                    </a>
+                    <a href="resume.pdf" target="_blank" class="px-6 py-4 rounded-xl font-bold font-mono text-xs tracking-wider uppercase flex items-center justify-center gap-2 text-white/70 hover:text-white transition-colors">
+                        <i data-lucide="file-text" class="w-4 h-4 text-white/60"></i>
                         Resume
                     </a>
                 </div>
             </div>
-            
+
             <!-- Scroll Indicator -->
-            <div class="absolute bottom-12 right-6 md:right-20 flex flex-col items-center gap-4 mix-diff">
-                <span class="text-[9px] uppercase tracking-[0.3em] font-bold text-white/60">Scroll</span>
-                <div class="w-[1px] h-16 bg-white/20 relative overflow-hidden">
-                    <div class="w-full h-full bg-white absolute top-0 left-0 -translate-y-full animate-[scroll_2s_ease-in-out_infinite]"></div>
-                </div>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce">
+                <span class="text-[10px] uppercase tracking-widest font-mono text-white/70">Scroll Down</span>
+                <i data-lucide="arrow-down" class="w-4 h-4 text-white/70"></i>
             </div>
-        </section>
+        </main>
 
-        <!-- About Section (Scroll Phase 1: Camera z:12, Core x:6 Cyan/Indigo) -->
-        <section id="about" class="min-h-screen w-full flex items-center py-32 px-6 md:px-20 relative z-10 pointer-events-none">
-            <div class="grid grid-cols-1 lg:grid-cols-12 w-full max-w-screen-2xl mx-auto gap-12 lg:gap-24">
-                
-                <div class="lg:col-span-5 flex flex-col justify-start">
-                    <p class="font-display text-[10px] tracking-[0.3em] text-[#06b6d4] mb-4 mix-diff">[ SYSTEM.PROFILE // 01 ]</p>
-                    <h2 class="font-display text-4xl md:text-6xl font-bold leading-[1] tracking-tighter mix-diff">
-                        <div class="text-mask"><span class="about-reveal">ARCHITECTED</span></div>
-                        <div class="text-mask"><span class="about-reveal text-white/20">AT THE</span></div>
-                        <div class="text-mask"><span class="about-reveal">KERNEL LEVEL</span></div>
-                    </h2>
+        <!-- Features / Architecture Section -->
+        <section id="features" class="py-24 px-6 md:px-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-12">
+                    <p class="text-xs font-mono text-brand uppercase tracking-widest mb-2">[ CORE.CAPABILITIES ]</p>
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight">Engineering at the Machine Level</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
-                    <div class="mt-8 font-mono text-xs text-white/40 leading-relaxed mix-diff">
-                        <p class="mb-2">> SPECIALIZATION: Cryptography, Memory Exploitation, Zero-Trust</p>
-                        <p class="mb-2">> ARTIFACT: High-Throughput AES-256 Engine & SIEM Ingestion</p>
-                        <p>> CLEARANCE: Tier-1 Security Verification</p>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-7 flex flex-col justify-center pointer-events-auto relative">
-                    <!-- Glass panel background for text readability over complex 3D -->
-                    <div class="glass-panel p-8 md:p-12 rounded-3xl relative overflow-hidden group gs-fade">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#06b6d4] to-transparent opacity-60"></div>
-                        
-                        <p class="text-lg md:text-2xl leading-relaxed text-white/90 font-light mb-6">
-                            I exist at the intersection of low-level systems execution, mathematical cryptography, and adversarial vulnerability research.
-                        </p>
-                        <p class="text-sm md:text-base leading-relaxed text-white/60 font-light mb-8">
-                            By discarding conventional black-box security paradigms, I build deterministic defenses from the kernel up. From building custom AES-256 and ChaCha20 encryption suites in pure C/C++ to designing real-time SIEM perimeter defense pipelines with Suricata IDS, every architecture is built to withstand hostile environments.
-                        </p>
-
-                        <!-- Key Capabilities Badges -->
-                        <div class="pt-6 border-t border-white/10 flex flex-wrap gap-2.5">
-                            <span class="px-4 py-2 glass-panel rounded-full text-[10px] font-mono tracking-widest uppercase hover-target hover:bg-white hover:text-black transition-colors duration-300">C / C++20 & Assembly</span>
-                            <span class="px-4 py-2 glass-panel rounded-full text-[10px] font-mono tracking-widest uppercase hover-target hover:bg-white hover:text-black transition-colors duration-300">AES-256 / RSA-2048</span>
-                            <span class="px-4 py-2 glass-panel rounded-full text-[10px] font-mono tracking-widest uppercase hover-target hover:bg-white hover:text-black transition-colors duration-300">Suricata IDS & SIEM</span>
-                            <span class="px-4 py-2 glass-panel rounded-full text-[10px] font-mono tracking-widest uppercase hover-target hover:bg-white hover:text-black transition-colors duration-300">Memory Forensics (GDB/Ghidra)</span>
-                            <span class="px-4 py-2 glass-panel rounded-full text-[10px] font-mono tracking-widest uppercase hover-target hover:bg-white hover:text-black transition-colors duration-300">OWASP SAST/DAST</span>
-                            <span class="px-4 py-2 glass-panel rounded-full text-[10px] font-mono tracking-widest uppercase hover-target hover:bg-white hover:text-black transition-colors duration-300">Three.js / WebGL Shaders</span>
+                    <div class="glass-panel p-8 group hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20 text-blue-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="cpu" class="w-6 h-6"></i>
                         </div>
+                        <h3 class="text-xl font-bold mb-3 font-mono">Low-Level Computation</h3>
+                        <p class="text-sm text-white/60 leading-relaxed font-light">Custom AES-256 and ChaCha20 encryption suites engineered in pure C/C++20 with AVX-512 SIMD vectorization for multi-gigabit throughput.</p>
                     </div>
-                </div>
 
+                    <div class="glass-panel p-8 group hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20 text-purple-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 font-mono">Perimeter Defense & SIEM</h3>
+                        <p class="text-sm text-white/60 leading-relaxed font-light">Real-time deep packet inspection pipelines with Suricata IDS, eBPF network hooks, and Elasticsearch telemetry streaming.</p>
+                    </div>
+
+                    <div class="glass-panel p-8 group hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20 text-emerald-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="terminal-square" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 font-mono">Reverse Engineering</h3>
+                        <p class="text-sm text-white/60 leading-relaxed font-light">Adversarial binary analysis, memory corruption mitigation, GDB / Ghidra disassembly, and automated SAST/DAST triage pipelines.</p>
+                    </div>
+
+                </div>
             </div>
         </section>
 
-        <!-- Work Section (Scroll Phase 2: Camera Plunge z:-5, Core x:-8, y:-2 Ghostly White) -->
-        <section id="work" class="min-h-[160vh] w-full py-32 relative z-10 pointer-events-none">
-            <div class="px-6 md:px-20 max-w-screen-2xl mx-auto sticky top-28">
-                
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 mix-diff">
+        <!-- Selected Projects / Deployments Section -->
+        <section id="projects" class="py-24 px-6 md:px-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                     <div>
-                        <p class="font-display text-[10px] tracking-[0.3em] text-[#06b6d4] mb-3">[ SELECTED.ARCHIVE // 02 ]</p>
-                        <h2 class="font-display text-3xl md:text-5xl font-bold uppercase tracking-tighter">Security Deployments</h2>
+                        <p class="text-xs font-mono text-brand uppercase tracking-widest mb-2">[ SELECTED.ARCHIVE ]</p>
+                        <h2 class="text-3xl md:text-5xl font-bold tracking-tight">Security Repositories</h2>
                     </div>
-                    <p class="font-mono text-xs text-white/40 mt-4 md:mt-0 tracking-wider">CLICK ROW TO EXECUTE INSPECTION // REPO UPLINKS</p>
+                    <p class="text-xs font-mono text-white/40 mt-4 md:mt-0 tracking-wider">CLICK ANY DEPLOYMENT FOR DEEP INSPECTION</p>
                 </div>
-                
-                <div class="flex flex-col w-full pointer-events-auto">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
-                    <!-- Project 01 -->
-                    <div class="project-row group border-b border-white/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center hover-target cursor-pointer relative overflow-hidden" onclick="openProjectModal('crypto')">
-                        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-[#06b6d4]/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out z-0"></div>
-                        
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-4 md:gap-12 w-full">
-                            <span class="font-mono text-xs text-white/30 group-hover:text-[#06b6d4] transition-colors duration-500 w-8">01</span>
-                            <div class="flex-1">
-                                <h3 class="font-display text-2xl md:text-5xl font-bold uppercase tracking-tighter group-hover:text-outline transition-all duration-500">E-D--Crypto</h3>
-                                <p class="text-white/40 mt-2 font-mono text-[10px] md:text-xs tracking-[0.15em] uppercase">High-Performance AES-256 / RSA-2048 Cryptographic Engine in C/C++</p>
-                            </div>
-                            <div class="hidden lg:flex items-center gap-2">
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">C++20</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">OpenSSL</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">SIMD AVX-512</span>
-                            </div>
+                    <!-- Project 1 -->
+                    <div class="glass-panel p-8 group hover:border-brand/50 transition-all duration-300 cursor-pointer" onclick="openProjectModal('crypto')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-mono text-brand">[ REPO_01 // C++20 ]</span>
+                            <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/40 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
                         </div>
-
-                        <div class="relative z-10 mt-6 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-4 group-hover:translate-x-0 transform">
-                            <div class="w-12 h-12 rounded-full border border-[#06b6d4]/50 flex items-center justify-center bg-[#06b6d4]/10">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </div>
+                        <h3 class="text-2xl font-bold mb-2 font-mono">E-D--Crypto</h3>
+                        <p class="text-sm text-white/60 font-light mb-6">
+                            High-throughput cryptographic engine implementing AES-256 (CBC/GCM) and RSA-2048 key exchange with zero memory leakage.
+                        </p>
+                        <div class="flex flex-wrap gap-2 text-[10px] font-mono text-white/50">
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">C++20</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">OpenSSL</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">SIMD AVX-512</span>
                         </div>
                     </div>
 
-                    <!-- Project 02 -->
-                    <div class="project-row group border-b border-white/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center hover-target cursor-pointer relative overflow-hidden" onclick="openProjectModal('siem')">
-                        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-[#4F46E5]/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out z-0"></div>
-                        
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-4 md:gap-12 w-full">
-                            <span class="font-mono text-xs text-white/30 group-hover:text-[#4F46E5] transition-colors duration-500 w-8">02</span>
-                            <div class="flex-1">
-                                <h3 class="font-display text-2xl md:text-5xl font-bold uppercase tracking-tighter group-hover:text-outline transition-all duration-500">Perimeter Defense & SIEM</h3>
-                                <p class="text-white/40 mt-2 font-mono text-[10px] md:text-xs tracking-[0.15em] uppercase">Real-Time Intrusion Detection Pipeline & Threat Intelligence Ingestion</p>
-                            </div>
-                            <div class="hidden lg:flex items-center gap-2">
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">Suricata IDS</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">ELK Stack</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">Packet Filter</span>
-                            </div>
+                    <!-- Project 2 -->
+                    <div class="glass-panel p-8 group hover:border-brand/50 transition-all duration-300 cursor-pointer" onclick="openProjectModal('siem')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-mono text-brand">[ REPO_02 // SIEM ]</span>
+                            <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/40 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
                         </div>
-
-                        <div class="relative z-10 mt-6 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-4 group-hover:translate-x-0 transform">
-                            <div class="w-12 h-12 rounded-full border border-[#4F46E5]/50 flex items-center justify-center bg-[#4F46E5]/10">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </div>
+                        <h3 class="text-2xl font-bold mb-2 font-mono">Perimeter Defense & SIEM</h3>
+                        <p class="text-sm text-white/60 font-light mb-6">
+                            Distributed real-time intrusion detection pipeline integrating custom Suricata IDS rulesets and Elasticsearch telemetry.
+                        </p>
+                        <div class="flex flex-wrap gap-2 text-[10px] font-mono text-white/50">
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">Suricata IDS</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">ELK Stack</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">Packet Filter</span>
                         </div>
                     </div>
 
-                    <!-- Project 03 -->
-                    <div class="project-row group border-b border-white/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center hover-target cursor-pointer relative overflow-hidden" onclick="openProjectModal('sast')">
-                        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-[#06b6d4]/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out z-0"></div>
-                        
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-4 md:gap-12 w-full">
-                            <span class="font-mono text-xs text-white/30 group-hover:text-[#06b6d4] transition-colors duration-500 w-8">03</span>
-                            <div class="flex-1">
-                                <h3 class="font-display text-2xl md:text-5xl font-bold uppercase tracking-tighter group-hover:text-outline transition-all duration-500">Automated Security Audit</h3>
-                                <p class="text-white/40 mt-2 font-mono text-[10px] md:text-xs tracking-[0.15em] uppercase">Dynamic SAST / DAST Vulnerability Triage & CVSS Scoring Suite</p>
-                            </div>
-                            <div class="hidden lg:flex items-center gap-2">
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">Bandit SAST</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">OWASP ZAP</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">Python SDK</span>
-                            </div>
+                    <!-- Project 3 -->
+                    <div class="glass-panel p-8 group hover:border-brand/50 transition-all duration-300 cursor-pointer" onclick="openProjectModal('sast')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-mono text-brand">[ REPO_03 // TRIAGE ]</span>
+                            <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/40 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
                         </div>
-
-                        <div class="relative z-10 mt-6 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-4 group-hover:translate-x-0 transform">
-                            <div class="w-12 h-12 rounded-full border border-[#06b6d4]/50 flex items-center justify-center bg-[#06b6d4]/10">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </div>
+                        <h3 class="text-2xl font-bold mb-2 font-mono">Automated Security Audit</h3>
+                        <p class="text-sm text-white/60 font-light mb-6">
+                            Dynamic SAST/DAST vulnerability scanning orchestration combining Bandit, Semgrep, and OWASP ZAP with automated CVSS scoring.
+                        </p>
+                        <div class="flex flex-wrap gap-2 text-[10px] font-mono text-white/50">
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">Bandit SAST</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">OWASP ZAP</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">Python SDK</span>
                         </div>
                     </div>
 
-                    <!-- Project 04 -->
-                    <div class="project-row group border-b border-white/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center hover-target cursor-pointer relative overflow-hidden" onclick="openProjectModal('stream')">
-                        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-[#4F46E5]/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out z-0"></div>
-                        
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-4 md:gap-12 w-full">
-                            <span class="font-mono text-xs text-white/30 group-hover:text-[#4F46E5] transition-colors duration-500 w-8">04</span>
-                            <div class="flex-1">
-                                <h3 class="font-display text-2xl md:text-5xl font-bold uppercase tracking-tighter group-hover:text-outline transition-all duration-500">Data Stream Masking</h3>
-                                <p class="text-white/40 mt-2 font-mono text-[10px] md:text-xs tracking-[0.15em] uppercase">High-Throughput Tokenization Protocol for Zero-Leak Data Ingestion</p>
-                            </div>
-                            <div class="hidden lg:flex items-center gap-2">
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">C++20</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">Memory Mapped I/O</span>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-mono bg-white/5 border border-white/10 text-white/60">Zero-Copy</span>
-                            </div>
+                    <!-- Project 4 -->
+                    <div class="glass-panel p-8 group hover:border-brand/50 transition-all duration-300 cursor-pointer" onclick="openProjectModal('stream')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-mono text-brand">[ REPO_04 // TOKENIZATION ]</span>
+                            <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/40 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
                         </div>
-
-                        <div class="relative z-10 mt-6 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-4 group-hover:translate-x-0 transform">
-                            <div class="w-12 h-12 rounded-full border border-[#4F46E5]/50 flex items-center justify-center bg-[#4F46E5]/10">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </div>
+                        <h3 class="text-2xl font-bold mb-2 font-mono">Data Stream Masking</h3>
+                        <p class="text-sm text-white/60 font-light mb-6">
+                            Ultra-low latency memory-mapped data stream masking protocol designed for zero-leak data ingestion pipelines.
+                        </p>
+                        <div class="flex flex-wrap gap-2 text-[10px] font-mono text-white/50">
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">C++20</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">Memory Mapped I/O</span>
+                            <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10">Zero-Copy</span>
                         </div>
                     </div>
 
@@ -299,105 +272,177 @@
             </div>
         </section>
 
-        <!-- Tactical Matrix & Credentials Section -->
-        <section id="credentials" class="min-h-screen w-full py-32 px-6 md:px-20 relative z-10 pointer-events-none">
-            <div class="max-w-screen-2xl mx-auto pointer-events-auto">
-                <div class="mb-16 mix-diff">
-                    <p class="font-display text-[10px] tracking-[0.3em] text-[#06b6d4] mb-3">[ TACTICAL.MATRIX // 03 ]</p>
-                    <h2 class="font-display text-3xl md:text-6xl font-bold uppercase tracking-tighter">Verified Credentials</h2>
+        <!-- Interactive Control Panel Section -->
+        <section id="interactive" class="py-24 px-6 md:px-12 min-h-screen flex items-center">
+            <div class="max-w-4xl mx-auto w-full">
+                
+                <div class="text-center mb-12">
+                    <p class="text-xs font-mono text-brand uppercase tracking-widest mb-2">[ LIVE.INTERACTIVE.TELEMETRY ]</p>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Tune ASCII Motion Parameters</h2>
+                    <p class="text-white/60 text-sm max-w-xl mx-auto">Tweak the underlying procedural wave functions, interference multipliers, character density, and chromatic styling in real-time.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass-panel p-6 md:p-10 border-t-4 border-t-brand">
                     
-                    <!-- Card 1 -->
-                    <div class="glass-panel p-8 rounded-3xl border border-white/10 hover:border-[#06b6d4]/50 transition-all duration-500 gs-fade group">
-                        <div class="flex justify-between items-start mb-6">
-                            <i data-lucide="shield-check" class="w-8 h-8 text-[#06b6d4] group-hover:scale-110 transition-transform"></i>
-                            <span class="font-mono text-[9px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[#06b6d4]">ACADEMIC EXCELLENCE</span>
-                        </div>
-                        <h4 class="font-display text-lg font-bold uppercase tracking-tight mb-2">IISc Bangalore & IIT Guwahati</h4>
-                        <p class="text-xs text-white/50 leading-relaxed font-light mb-4">
-                            Advanced Network Security, Deep Packet Analysis, and Mathematical Cryptosystems Research.
-                        </p>
-                        <div class="font-mono text-[9px] text-white/30">> STATUS: VERIFIED SCHOLAR</div>
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <!-- Left Col: Sliders -->
+                        <div class="space-y-8">
+                            
+                            <!-- Scale / Density -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="text-sm font-mono text-white/80 flex items-center gap-2">
+                                        <i data-lucide="scaling" class="w-4 h-4 text-brand"></i> Wave Scale
+                                    </label>
+                                    <span id="val-scale" class="text-xs text-white/50 font-mono">0.05</span>
+                                </div>
+                                <input type="range" id="ctrl-scale" min="0.01" max="0.15" step="0.01" value="0.05">
+                                <p class="text-[10px] text-white/40 mt-1">Adjusts the zoom frequency of the mathematical noise.</p>
+                            </div>
 
-                    <!-- Card 2 -->
-                    <div class="glass-panel p-8 rounded-3xl border border-white/10 hover:border-[#4F46E5]/50 transition-all duration-500 gs-fade group">
-                        <div class="flex justify-between items-start mb-6">
-                            <i data-lucide="award" class="w-8 h-8 text-[#4F46E5] group-hover:scale-110 transition-transform"></i>
-                            <span class="font-mono text-[9px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[#4F46E5]">INDUSTRY CLEARANCE</span>
-                        </div>
-                        <h4 class="font-display text-lg font-bold uppercase tracking-tight mb-2">Cisco & TryHackMe Top 1%</h4>
-                        <p class="text-xs text-white/50 leading-relaxed font-light mb-4">
-                            Certified Network Security Associate & Top-tier global standing across 50+ CTF machine captures.
-                        </p>
-                        <div class="font-mono text-[9px] text-white/30">> STATUS: ACTIVE RED-TEAMER</div>
-                    </div>
+                            <!-- Speed -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="text-sm font-mono text-white/80 flex items-center gap-2">
+                                        <i data-lucide="timer" class="w-4 h-4 text-brand"></i> Time Multiplier
+                                    </label>
+                                    <span id="val-speed" class="text-xs text-white/50 font-mono">1.0</span>
+                                </div>
+                                <input type="range" id="ctrl-speed" min="0.1" max="5.0" step="0.1" value="1.0">
+                                <p class="text-[10px] text-white/40 mt-1">Controls the rate at which time flows through the equation.</p>
+                            </div>
 
-                    <!-- Card 3 -->
-                    <div class="glass-panel p-8 rounded-3xl border border-white/10 hover:border-[#06b6d4]/50 transition-all duration-500 gs-fade group">
-                        <div class="flex justify-between items-start mb-6">
-                            <i data-lucide="cpu" class="w-8 h-8 text-[#06b6d4] group-hover:scale-110 transition-transform"></i>
-                            <span class="font-mono text-[9px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[#06b6d4]">CYBER DEFENSE</span>
-                        </div>
-                        <h4 class="font-display text-lg font-bold uppercase tracking-tight mb-2">Deloitte & TCS Security</h4>
-                        <p class="text-xs text-white/50 leading-relaxed font-light mb-4">
-                            Threat Hunting, Cyber Governance Frameworks, Incident Triage, and Critical Infrastructure Protection.
-                        </p>
-                        <div class="font-mono text-[9px] text-white/30">> STATUS: DEPLOYED SPECIALIST</div>
-                    </div>
+                            <!-- Complexity -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="text-sm font-mono text-white/80 flex items-center gap-2">
+                                        <i data-lucide="activity" class="w-4 h-4 text-brand"></i> Interference
+                                    </label>
+                                    <span id="val-complex" class="text-xs text-white/50 font-mono">2.0</span>
+                                </div>
+                                <input type="range" id="ctrl-complex" min="0.5" max="5.0" step="0.1" value="2.0">
+                                <p class="text-[10px] text-white/40 mt-1">Adds secondary harmonic waves to create chaotic interference patterns.</p>
+                            </div>
 
+                        </div>
+
+                        <!-- Right Col: Themes & Charset -->
+                        <div class="space-y-8 border-t md:border-t-0 md:border-l border-white/10 pt-8 md:pt-0 md:pl-12">
+                            
+                            <!-- Themes -->
+                            <div>
+                                <label class="text-sm font-mono text-white/80 mb-4 block flex items-center gap-2">
+                                    <i data-lucide="paintbrush" class="w-4 h-4 text-brand"></i> Visual Theme
+                                </label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button class="theme-btn active glass py-2 px-3 rounded-lg text-xs font-bold font-mono hover:bg-white/10 border border-white/20 transition-all text-left" data-theme="theme-ghost">
+                                        <span class="w-2 h-2 inline-block rounded-full bg-gray-400 mr-2"></span>Ghost
+                                    </button>
+                                    <button class="theme-btn py-2 px-3 rounded-lg text-xs font-bold font-mono hover:bg-white/5 border border-transparent transition-all text-left" data-theme="theme-synthwave">
+                                        <span class="w-2 h-2 inline-block rounded-full bg-pink-500 mr-2"></span>Synthwave
+                                    </button>
+                                    <button class="theme-btn py-2 px-3 rounded-lg text-xs font-bold font-mono hover:bg-white/5 border border-transparent transition-all text-left" data-theme="theme-terminal">
+                                        <span class="w-2 h-2 inline-block rounded-full bg-green-500 mr-2"></span>Terminal
+                                    </button>
+                                    <button class="theme-btn py-2 px-3 rounded-lg text-xs font-bold font-mono hover:bg-white/5 border border-transparent transition-all text-left" data-theme="theme-lava">
+                                        <span class="w-2 h-2 inline-block rounded-full bg-orange-500 mr-2"></span>Lava
+                                    </button>
+                                    <button class="theme-btn py-2 px-3 rounded-lg text-xs font-bold font-mono hover:bg-white/5 border border-transparent transition-all text-left" data-theme="theme-ocean">
+                                        <span class="w-2 h-2 inline-block rounded-full bg-sky-500 mr-2"></span>Ocean
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Charset Toggle -->
+                            <div class="pt-4 border-t border-white/5">
+                                <label class="text-sm font-mono text-white/80 mb-3 block flex items-center gap-2">
+                                    <i data-lucide="type" class="w-4 h-4 text-brand"></i> Character Density Map
+                                </label>
+                                <select id="ctrl-charset" class="w-full bg-black/60 border border-white/20 text-sm rounded-lg p-2.5 outline-none focus:border-brand transition-colors text-white font-mono">
+                                    <option value="standard">Standard: .:-=+*#%@</option>
+                                    <option value="binary">Binary: 01</option>
+                                    <option value="blocks">Blocks: ░▒▓█</option>
+                                    <option value="matrix">Matrix: ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿ</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section (Scroll Phase 3: Camera z:30 y:10 Swirl, Indigo Core) -->
-        <section id="contact" class="h-screen w-full flex flex-col justify-center items-center relative z-10 pointer-events-none">
-            <div class="text-center w-full px-6 flex flex-col items-center pointer-events-auto">
-                <p class="font-display text-[10px] tracking-[0.3em] text-[#06b6d4] mb-8 uppercase gs-fade mix-diff">[ INITIATE.SECURE.COMMUNICATION ]</p>
-                
-                <div class="magnetic-wrap hover-target">
-                    <div class="magnetic-area w-[150%] h-[150%] -left-1/4 -top-1/4"></div>
-                    <a href="mailto:deekshith.d33@gmail.com" class="magnetic-content block group text-center mix-diff">
-                        <h2 class="font-display text-[13vw] md:text-[9.5vw] font-bold uppercase tracking-tighter leading-[0.85] text-outline group-hover:text-white transition-all duration-500">
-                            LET'S TALK
-                        </h2>
-                    </a>
+        <!-- Credentials / Accreditations Section -->
+        <section id="credentials" class="py-24 px-6 md:px-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-12">
+                    <p class="text-xs font-mono text-brand uppercase tracking-widest mb-2">[ TACTICAL.MATRIX ]</p>
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight">Verified Institutional Clearance</h2>
                 </div>
 
-                <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 gs-fade mix-diff">
-                    <button onclick="copyContactEmail()" id="copy-email-btn" class="hover-target px-6 py-3 rounded-full glass-panel border border-white/20 text-xs font-mono tracking-widest text-white/80 hover:text-white hover:border-white transition-all duration-300 flex items-center gap-2">
-                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-8">
+                        <div class="text-xs font-mono text-brand mb-2">> ACADEMIC RESEARCH</div>
+                        <h4 class="text-xl font-bold mb-2 font-mono">IISc Bangalore & IIT Guwahati</h4>
+                        <p class="text-sm text-white/60 font-light">Deep packet inspection, network defense, and applied cryptosystems research.</p>
+                    </div>
+                    <div class="glass-panel p-8">
+                        <div class="text-xs font-mono text-purple-400 mb-2">> INDUSTRY CLEARANCE</div>
+                        <h4 class="text-xl font-bold mb-2 font-mono">Cisco & TryHackMe Top 1%</h4>
+                        <p class="text-sm text-white/60 font-light">Certified Network Security Associate & top-ranking CTF machine capture record.</p>
+                    </div>
+                    <div class="glass-panel p-8">
+                        <div class="text-xs font-mono text-emerald-400 mb-2">> ENTERPRISE DEFENSE</div>
+                        <h4 class="text-xl font-bold mb-2 font-mono">Deloitte & TCS Security</h4>
+                        <p class="text-sm text-white/60 font-light">Threat hunting, security governance frameworks, and critical infrastructure protection.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact / Secure Uplink Section -->
+        <section id="contact" class="py-24 px-6 md:px-12 min-h-[70vh] flex flex-col justify-center items-center text-center">
+            <div class="max-w-4xl mx-auto">
+                <p class="text-xs font-mono text-brand uppercase tracking-widest mb-4">[ INITIATE.COMMUNICATION ]</p>
+                <h2 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-8">
+                    Let's Build <br>
+                    <span class="animated-text-gradient font-mono">Resilient Systems.</span>
+                </h2>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                    <button onclick="copyContactEmail()" id="copy-email-btn" class="glass px-8 py-4 rounded-xl font-mono text-xs tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-white/10 transition-all border border-white/20">
+                        <i data-lucide="copy" class="w-4 h-4 text-brand"></i>
                         <span>deekshith.d33@gmail.com</span>
                     </button>
-                    <a href="https://github.com/28d33" target="_blank" class="hover-target px-6 py-3 rounded-full bg-white text-black font-semibold text-xs tracking-widest uppercase hover:bg-[#06b6d4] transition-all duration-300 flex items-center gap-2">
-                        <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                    <a href="https://github.com/28d33" target="_blank" class="px-8 py-4 rounded-xl font-mono text-xs tracking-wider uppercase flex items-center justify-center gap-2 bg-white text-dark hover:bg-white/90 transition-transform hover:scale-105 font-bold">
+                        <i data-lucide="github" class="w-4 h-4"></i>
                         GitHub Profile
                     </a>
                 </div>
-            </div>
 
-            <!-- Footer -->
-            <footer class="absolute bottom-8 w-full px-6 md:px-16 flex flex-col md:flex-row justify-between items-center text-[9px] md:text-[10px] text-white/30 font-semibold uppercase tracking-[0.2em] gs-fade pointer-events-auto mix-diff">
-                <p class="mb-4 md:mb-0">© 2026 DEEKSHITH (D33). SYSTEMS NOMINAL.</p>
-                <div class="flex gap-8">
-                    <a href="https://github.com/28d33" target="_blank" class="hover-target hover:text-white transition-colors">Github // 28d33</a>
-                    <a href="https://linkedin.com" target="_blank" class="hover-target hover:text-white transition-colors">LinkedIn</a>
-                    <a href="https://tryhackme.com" target="_blank" class="hover-target hover:text-white transition-colors">TryHackMe</a>
-                    <a href="#" class="hover-target hover:text-white transition-colors">PGP Key</a>
+                <div class="flex gap-8 justify-center text-xs font-mono text-white/40">
+                    <a href="https://github.com/28d33" target="_blank" class="hover:text-white transition-colors">GitHub</a>
+                    <a href="https://linkedin.com" target="_blank" class="hover:text-white transition-colors">LinkedIn</a>
+                    <a href="https://tryhackme.com" target="_blank" class="hover:text-white transition-colors">TryHackMe</a>
+                    <a href="mailto:deekshith.d33@gmail.com" class="hover:text-white transition-colors">Email</a>
                 </div>
-            </footer>
+            </div>
         </section>
-    </main>
+
+        <!-- Footer -->
+        <footer class="py-8 border-t border-white/10 text-center text-xs font-mono text-white/40">
+            <p>© 2026 DEEKSHITH (D33). PROCEDURAL ASCII FLOW ENGINE. SYSTEMS NOMINAL.</p>
+        </footer>
+
+    </div>
 
     <!-- Project Inspection Modal -->
     <div id="project-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-6">
         <div class="glass-panel w-full max-w-2xl rounded-3xl border border-white/20 p-8 relative overflow-hidden">
             <div class="flex justify-between items-start mb-6">
                 <div>
-                    <span id="modal-tag" class="font-mono text-[9px] px-3 py-1 rounded-full bg-[#06b6d4]/10 border border-[#06b6d4]/30 text-[#06b6d4] uppercase">CRYPTOGRAPHIC SUITE</span>
-                    <h3 id="modal-title" class="font-display text-2xl md:text-3xl font-bold uppercase tracking-tight mt-3">E-D--Crypto</h3>
+                    <span id="modal-tag" class="font-mono text-[10px] px-3 py-1 rounded-full bg-brand/10 border border-brand/30 text-brand uppercase">CRYPTOGRAPHIC SUITE</span>
+                    <h3 id="modal-title" class="font-mono text-2xl font-bold uppercase tracking-tight mt-3">E-D--Crypto</h3>
                 </div>
                 <button onclick="closeProjectModal()" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
                     <i data-lucide="x" class="w-4 h-4"></i>
@@ -418,21 +463,20 @@
             </div>
 
             <div class="flex items-center justify-between pt-6 border-t border-white/10">
-                <a id="modal-link" href="https://github.com/28d33" target="_blank" class="px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs tracking-widest uppercase hover:bg-[#06b6d4] transition-colors flex items-center gap-2">
+                <a id="modal-link" href="https://github.com/28d33" target="_blank" class="px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs tracking-widest uppercase hover:bg-brand hover:text-white transition-colors flex items-center gap-2">
                     <i data-lucide="github" class="w-3.5 h-3.5"></i>
                     View Source Code
                 </a>
-                <span class="font-mono text-[10px] text-white/40">STATUS: DEPLOYED & TESTED</span>
+                <span class="font-mono text-[10px] text-white/40">STATUS: DEPLOYED</span>
             </div>
         </div>
     </div>
 
-    <!-- Interactive Tactical Terminal Drawer -->
-    <div id="terminal-drawer" class="fixed bottom-0 right-0 w-full sm:w-[540px] h-[400px] z-50 bg-[#07070a]/95 backdrop-blur-xl border-t sm:border-l border-white/20 transform translate-y-full transition-transform duration-500 ease-in-out flex flex-col font-mono text-xs">
-        <!-- Terminal Header -->
+    <!-- Interactive Terminal Drawer -->
+    <div id="terminal-drawer" class="fixed bottom-0 right-0 w-full sm:w-[540px] h-[380px] z-50 bg-[#07070a]/95 backdrop-blur-xl border-t sm:border-l border-white/20 transform translate-y-full transition-transform duration-500 ease-in-out flex flex-col font-mono text-xs">
         <div class="p-3 bg-white/5 border-b border-white/10 flex justify-between items-center select-none">
             <div class="flex items-center gap-2 text-white/70">
-                <i data-lucide="terminal" class="w-3.5 h-3.5 text-[#06b6d4]"></i>
+                <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
                 <span class="text-[10px] tracking-widest font-bold uppercase">D33 // SEC_OS CONSOLE</span>
             </div>
             <div class="flex items-center gap-2">
@@ -440,25 +484,19 @@
                 <button id="close-terminal-btn" class="w-5 h-5 rounded hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white">✕</button>
             </div>
         </div>
-        <!-- Terminal Body -->
         <div id="terminal-logs" class="flex-1 p-4 overflow-y-auto space-y-2 text-[11px] text-white/80 scrollbar-thin">
-            <div class="text-[#06b6d4]">╔════════════════════════════════════════════════════════╗</div>
-            <div class="text-[#06b6d4]">║ DEEKSHITH SEC_OS v9.4 // LOW-LEVEL INTERFACE LOADED    ║</div>
-            <div class="text-[#06b6d4]">╚════════════════════════════════════════════════════════╝</div>
-            <div class="text-white/40">Type <span class="text-white font-bold">'help'</span> for available operational commands.</div>
+            <div class="text-brand">╔════════════════════════════════════════════════════════╗</div>
+            <div class="text-brand">║ DEEKSHITH SEC_OS // ASCII PROCEDURAL INTERFACE LOADED  ║</div>
+            <div class="text-brand">╚════════════════════════════════════════════════════════╝</div>
+            <div class="text-white/40">Type <span class="text-white font-bold">'help'</span> for operational directives.</div>
         </div>
-        <!-- Terminal Input Line -->
         <div class="p-3 bg-black/40 border-t border-white/10 flex items-center gap-2">
-            <span class="text-[#06b6d4] font-bold">d33@uplink:~$</span>
+            <span class="text-brand font-bold">d33@uplink:~$</span>
             <input id="terminal-input" type="text" class="flex-1 bg-transparent border-none outline-none text-white font-mono text-xs" autocomplete="off" spellcheck="false" placeholder="Enter command...">
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Main JavaScript File -->
     <script src="main.js"></script>
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-    </script>
 </body>
 </html>
