@@ -181,15 +181,15 @@
         </section>
 
         <!-- ================= SYSTEM MANIFESTO SECTION (Scroll Phase 1: Morph to Helix) ================= -->
-        <section id="about" class="min-h-[100dvh] w-full py-20 sm:py-32 px-4 sm:px-8 md:px-16 relative flex items-center">
-            <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <section id="about" class="min-h-screen w-full py-24 sm:py-32 px-4 sm:px-8 md:px-16 relative flex items-center">
+            <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
                 
-                <div class="lg:col-span-5">
-                    <p class="font-mono text-xs text-[#ccff00] tracking-widest uppercase mb-3">[ SYSTEM.MANIFESTO // 01 ]</p>
-                    <h2 class="font-syne fluid-section-title font-extrabold uppercase tracking-tight leading-none mb-6">
+                <div class="lg:col-span-5 space-y-4">
+                    <p class="font-mono text-xs text-[#ccff00] tracking-widest uppercase mb-2">[ SYSTEM.MANIFESTO // 01 ]</p>
+                    <h2 class="font-syne fluid-section-title font-extrabold uppercase tracking-tight">
                         Kernel-Level <br><span class="text-white/40">Precision.</span>
                     </h2>
-                    <div class="font-mono text-xs text-white/40 space-y-2 border-l-2 border-[#ccff00]/40 pl-4">
+                    <div class="font-mono text-xs text-white/50 space-y-2 border-l-2 border-[#ccff00]/40 pl-4 mt-6">
                         <p>> DOMAIN: Offensive Security & Kernel Development</p>
                         <p>> TELEMETRY: 10,000 Particles morphing to Twisted Helix</p>
                         <p>> CLEARANCE: Tier-1 Security Verification</p>
@@ -197,24 +197,24 @@
                 </div>
 
                 <div class="lg:col-span-7">
-                    <div class="glass-panel p-6 sm:p-8 md:p-12 rounded-3xl border border-white/10 relative overflow-hidden group">
+                    <div class="glass-panel p-6 sm:p-8 md:p-10 rounded-3xl border border-white/10 relative overflow-hidden group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ccff00] to-transparent opacity-60"></div>
                         
-                        <p class="fluid-card-title text-white font-light leading-relaxed mb-6">
+                        <p class="text-lg sm:text-xl md:text-2xl text-white font-light leading-relaxed mb-6">
                             "Security is not a layer applied on top of software; it is a mathematical property designed into the foundational architecture."
                         </p>
-                        <p class="fluid-body-text text-white/60 font-light leading-relaxed mb-8">
+                        <p class="text-sm sm:text-base text-white/60 font-light leading-relaxed mb-8">
                             Specializing in low-level memory vulnerability analysis, constant-time cryptographic primitives, and enterprise SIEM perimeter detection. By discarding conventional black-box assumptions, I engineer deterministic systems capable of withstanding state-sponsored adversarial conditions.
                         </p>
 
                         <!-- Tech Badges -->
-                        <div class="flex flex-wrap gap-2 pt-6 border-t border-white/10 font-mono text-[10px] text-white/70">
-                            <span class="px-3 py-1.5 rounded-full glass-panel hoverable hover:bg-white hover:text-black transition-colors">C / C++20 (AVX-512)</span>
-                            <span class="px-3 py-1.5 rounded-full glass-panel hoverable hover:bg-white hover:text-black transition-colors">x86_64 Assembly</span>
-                            <span class="px-3 py-1.5 rounded-full glass-panel hoverable hover:bg-white hover:text-black transition-colors">AES-256 / RSA / ChaCha20</span>
-                            <span class="px-3 py-1.5 rounded-full glass-panel hoverable hover:bg-white hover:text-black transition-colors">Suricata IDS / eBPF</span>
-                            <span class="px-3 py-1.5 rounded-full glass-panel hoverable hover:bg-white hover:text-black transition-colors">GDB / Ghidra / SAST</span>
-                            <span class="px-3 py-1.5 rounded-full glass-panel hoverable hover:bg-white hover:text-black transition-colors">Three.js / WebGL Shaders</span>
+                        <div class="flex flex-wrap gap-2.5 pt-6 border-t border-white/10 font-mono text-[11px] text-white/75">
+                            <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hoverable hover:bg-white hover:text-black transition-colors">C / C++20 (AVX-512)</span>
+                            <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hoverable hover:bg-white hover:text-black transition-colors">x86_64 Assembly</span>
+                            <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hoverable hover:bg-white hover:text-black transition-colors">AES-256 / RSA / ChaCha20</span>
+                            <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hoverable hover:bg-white hover:text-black transition-colors">Suricata IDS / eBPF</span>
+                            <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hoverable hover:bg-white hover:text-black transition-colors">GDB / Ghidra / SAST</span>
+                            <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hoverable hover:bg-white hover:text-black transition-colors">Three.js / WebGL Shaders</span>
                         </div>
                     </div>
                 </div>
@@ -224,17 +224,17 @@
 
         <!-- ================= HORIZONTAL PINNED SHOWCASE SECTION (Fluid Auto-Adjusting Widths) ================= -->
         <section id="horizontal-work" class="relative overflow-hidden bg-black/40 backdrop-blur-sm border-t border-b border-white/10">
-            <div id="horizontal-track-container" class="h-screen w-full flex items-center overflow-hidden">
+            <div id="horizontal-track-container" class="min-h-screen h-[100dvh] w-full flex items-center overflow-hidden py-6 sm:py-8">
                 
-                <div id="horizontal-track" class="flex gap-6 sm:gap-10 px-4 sm:px-12 md:px-24 items-center flex-nowrap will-change-transform">
+                <div id="horizontal-track" class="flex gap-6 sm:gap-10 px-6 sm:px-12 md:px-24 items-center flex-nowrap will-change-transform">
                     
                     <!-- Showcase Intro Card -->
-                    <div class="showcase-intro-card flex flex-col justify-center pr-4 sm:pr-6">
+                    <div class="showcase-intro-card flex flex-col justify-center pr-4 sm:pr-8 flex-shrink-0">
                         <p class="text-[#ccff00] font-mono text-xs uppercase tracking-widest mb-3">[ 02 // PINNED SHOWCASE ]</p>
-                        <h2 class="font-syne fluid-section-title font-extrabold uppercase leading-[0.9] tracking-tight mb-4 sm:mb-6">
+                        <h2 class="font-syne fluid-section-title font-extrabold uppercase tracking-tight mb-4 sm:mb-6">
                             Selected <br><span class="text-outline text-[#ccff00]">Deployments</span>
                         </h2>
-                        <p class="text-white/60 fluid-body-text leading-relaxed mb-6 sm:mb-8 font-light">
+                        <p class="text-white/60 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 font-light">
                             Scroll down to navigate horizontally through active production security engines, cryptographic suites, and SIEM monitoring pipelines. Background particles morph into an undulating wave terrain.
                         </p>
                         <div class="flex items-center gap-3 text-xs font-mono text-[#ccff00]">
@@ -244,22 +244,22 @@
                     </div>
 
                     <!-- Project Card 1: E-D--Crypto -->
-                    <div class="showcase-card glass-panel p-5 sm:p-6 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between" onclick="openProjectModal('crypto')">
+                    <div class="showcase-card glass-panel p-6 sm:p-7 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between flex-shrink-0" onclick="openProjectModal('crypto')">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono mb-3 text-white/50">
                                 <span class="text-[#ccff00] font-bold">PROJECT_01 // CRYPTOGRAPHY</span>
                                 <span class="text-[10px] sm:text-xs">C++20 • SIMD AVX-512</span>
                             </div>
-                            <div class="h-28 sm:h-36 md:h-44 w-full bg-gradient-to-tr from-[#050507] via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-4 sm:mb-6 flex items-center justify-center p-4 border border-white/10">
-                                <i data-lucide="key-round" class="w-12 h-12 sm:w-14 sm:h-14 text-[#ccff00] group-hover:scale-110 transition-transform duration-500"></i>
-                                <div class="absolute bottom-3 right-3 font-mono text-[10px] sm:text-xs text-white/40">AES-256-CBC/GCM + RSA-2048</div>
+                            <div class="h-28 sm:h-32 md:h-36 w-full bg-gradient-to-tr from-[#050507] via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-4 flex items-center justify-center p-4 border border-white/10">
+                                <i data-lucide="key-round" class="w-10 h-10 sm:w-12 sm:h-12 text-[#ccff00] group-hover:scale-110 transition-transform duration-500"></i>
+                                <div class="absolute bottom-2.5 right-3 font-mono text-[10px] sm:text-xs text-white/40">AES-256-CBC/GCM + RSA-2048</div>
                             </div>
-                            <h3 class="font-syne fluid-card-title font-extrabold uppercase text-white group-hover:text-[#ccff00] transition-colors mb-2">E-D--Crypto Suite</h3>
-                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3 sm:line-clamp-none">
+                            <h3 class="font-syne text-xl sm:text-2xl font-extrabold uppercase text-white group-hover:text-[#ccff00] transition-colors leading-tight mb-2">E-D--Crypto Suite</h3>
+                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3">
                                 High-performance cryptographic file encryption system written in pure C/C++ utilizing OpenSSL EVP interfaces, zero-padding guards, and hybrid asymmetric key encapsulation.
                             </p>
                         </div>
-                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 sm:pt-4 border-t border-white/10 font-mono text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3.5 border-t border-white/10 font-mono text-xs">
                             <div class="flex gap-1.5 sm:gap-2 text-[10px]">
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">C++20</span>
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-[#ccff00]/10 border border-[#ccff00]/30 text-[#ccff00]">OpenSSL</span>
@@ -271,22 +271,22 @@
                     </div>
 
                     <!-- Project Card 2: Perimeter Defense & SIEM -->
-                    <div class="showcase-card glass-panel p-5 sm:p-6 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between" onclick="openProjectModal('siem')">
+                    <div class="showcase-card glass-panel p-6 sm:p-7 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between flex-shrink-0" onclick="openProjectModal('siem')">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono mb-3 text-white/50">
                                 <span class="text-[#06b6d4] font-bold">PROJECT_02 // PERIMETER DEFENSE</span>
                                 <span class="text-[10px] sm:text-xs">IDS / SIEM PIPELINE</span>
                             </div>
-                            <div class="h-28 sm:h-36 md:h-44 w-full bg-gradient-to-tr from-[#050507] via-cyan-950/30 to-black rounded-2xl relative overflow-hidden mb-4 sm:mb-6 flex items-center justify-center p-4 border border-white/10">
-                                <i data-lucide="shield-alert" class="w-12 h-12 sm:w-14 sm:h-14 text-[#06b6d4] group-hover:scale-110 transition-transform duration-500"></i>
-                                <div class="absolute bottom-3 right-3 font-mono text-[10px] sm:text-xs text-white/40">Suricata IDS + ELK Pipeline</div>
+                            <div class="h-28 sm:h-32 md:h-36 w-full bg-gradient-to-tr from-[#050507] via-cyan-950/30 to-black rounded-2xl relative overflow-hidden mb-4 flex items-center justify-center p-4 border border-white/10">
+                                <i data-lucide="shield-alert" class="w-10 h-10 sm:w-12 sm:h-12 text-[#06b6d4] group-hover:scale-110 transition-transform duration-500"></i>
+                                <div class="absolute bottom-2.5 right-3 font-mono text-[10px] sm:text-xs text-white/40">Suricata IDS + ELK Pipeline</div>
                             </div>
-                            <h3 class="font-syne fluid-card-title font-extrabold uppercase text-white group-hover:text-[#06b6d4] transition-colors mb-2">SIEM & Perimeter Defense</h3>
-                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3 sm:line-clamp-none">
+                            <h3 class="font-syne text-xl sm:text-2xl font-extrabold uppercase text-white group-hover:text-[#06b6d4] transition-colors leading-tight mb-2">SIEM & Perimeter Defense</h3>
+                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3">
                                 Enterprise-grade intrusion detection and threat monitoring infrastructure combining custom Suricata signatures, eBPF packet hooks, and Elasticsearch telemetry.
                             </p>
                         </div>
-                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 sm:pt-4 border-t border-white/10 font-mono text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3.5 border-t border-white/10 font-mono text-xs">
                             <div class="flex gap-1.5 sm:gap-2 text-[10px]">
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">Suricata</span>
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-[#06b6d4]/10 border border-[#06b6d4]/30 text-[#06b6d4]">ELK Stack</span>
@@ -298,22 +298,22 @@
                     </div>
 
                     <!-- Project Card 3: Automated Security Audit -->
-                    <div class="showcase-card glass-panel p-5 sm:p-6 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between" onclick="openProjectModal('sast')">
+                    <div class="showcase-card glass-panel p-6 sm:p-7 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between flex-shrink-0" onclick="openProjectModal('sast')">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono mb-3 text-white/50">
                                 <span class="text-purple-400 font-bold">PROJECT_03 // TRIAGE</span>
                                 <span class="text-[10px] sm:text-xs">SAST / DAST PIPELINE</span>
                             </div>
-                            <div class="h-28 sm:h-36 md:h-44 w-full bg-gradient-to-tr from-[#050507] via-purple-950/30 to-black rounded-2xl relative overflow-hidden mb-4 sm:mb-6 flex items-center justify-center p-4 border border-white/10">
-                                <i data-lucide="scan-search" class="w-12 h-12 sm:w-14 sm:h-14 text-purple-400 group-hover:scale-110 transition-transform duration-500"></i>
-                                <div class="absolute bottom-3 right-3 font-mono text-[10px] sm:text-xs text-white/40">Bandit + OWASP ZAP</div>
+                            <div class="h-28 sm:h-32 md:h-36 w-full bg-gradient-to-tr from-[#050507] via-purple-950/30 to-black rounded-2xl relative overflow-hidden mb-4 flex items-center justify-center p-4 border border-white/10">
+                                <i data-lucide="scan-search" class="w-10 h-10 sm:w-12 sm:h-12 text-purple-400 group-hover:scale-110 transition-transform duration-500"></i>
+                                <div class="absolute bottom-2.5 right-3 font-mono text-[10px] sm:text-xs text-white/40">Bandit + OWASP ZAP</div>
                             </div>
-                            <h3 class="font-syne fluid-card-title font-extrabold uppercase text-white group-hover:text-purple-400 transition-colors mb-2">Automated Security Audit</h3>
-                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3 sm:line-clamp-none">
+                            <h3 class="font-syne text-xl sm:text-2xl font-extrabold uppercase text-white group-hover:text-purple-400 transition-colors leading-tight mb-2">Automated Security Audit</h3>
+                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3">
                                 Continuous vulnerability scanning and automated remediation triage engine unifying static analysis AST parsing with dynamic web application security crawling.
                             </p>
                         </div>
-                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 sm:pt-4 border-t border-white/10 font-mono text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3.5 border-t border-white/10 font-mono text-xs">
                             <div class="flex gap-1.5 sm:gap-2 text-[10px]">
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">Python</span>
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400">OWASP ZAP</span>
@@ -325,22 +325,22 @@
                     </div>
 
                     <!-- Project Card 4: Data Stream Masking -->
-                    <div class="showcase-card glass-panel p-5 sm:p-6 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between" onclick="openProjectModal('stream')">
+                    <div class="showcase-card glass-panel p-6 sm:p-7 md:p-8 rounded-3xl border border-white/10 hoverable group transition-all flex flex-col justify-between flex-shrink-0" onclick="openProjectModal('stream')">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono mb-3 text-white/50">
                                 <span class="text-[#ccff00] font-bold">PROJECT_04 // TOKENIZER</span>
                                 <span class="text-[10px] sm:text-xs">ZERO-COPY C++20</span>
                             </div>
-                            <div class="h-28 sm:h-36 md:h-44 w-full bg-gradient-to-tr from-[#050507] via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-4 sm:mb-6 flex items-center justify-center p-4 border border-white/10">
-                                <i data-lucide="binary" class="w-12 h-12 sm:w-14 sm:h-14 text-[#ccff00] group-hover:scale-110 transition-transform duration-500"></i>
-                                <div class="absolute bottom-3 right-3 font-mono text-[10px] sm:text-xs text-white/40">Memory Mapped I/O</div>
+                            <div class="h-28 sm:h-32 md:h-36 w-full bg-gradient-to-tr from-[#050507] via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-4 flex items-center justify-center p-4 border border-white/10">
+                                <i data-lucide="binary" class="w-10 h-10 sm:w-12 sm:h-12 text-[#ccff00] group-hover:scale-110 transition-transform duration-500"></i>
+                                <div class="absolute bottom-2.5 right-3 font-mono text-[10px] sm:text-xs text-white/40">Memory Mapped I/O</div>
                             </div>
-                            <h3 class="font-syne fluid-card-title font-extrabold uppercase text-white group-hover:text-[#ccff00] transition-colors mb-2">Data Stream Masking</h3>
-                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3 sm:line-clamp-none">
+                            <h3 class="font-syne text-xl sm:text-2xl font-extrabold uppercase text-white group-hover:text-[#ccff00] transition-colors leading-tight mb-2">Data Stream Masking</h3>
+                            <p class="text-white/60 text-xs sm:text-sm font-light leading-relaxed mb-4 line-clamp-3">
                                 Ultra-low latency memory-mapped tokenization engine for streaming zero-leak data ingestion pipelines in banking and healthcare infrastructures.
                             </p>
                         </div>
-                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 sm:pt-4 border-t border-white/10 font-mono text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3.5 border-t border-white/10 font-mono text-xs">
                             <div class="flex gap-1.5 sm:gap-2 text-[10px]">
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">C++20</span>
                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-[#ccff00]/10 border border-[#ccff00]/30 text-[#ccff00]">Zero-Copy</span>
