@@ -1,26 +1,21 @@
-/* ==========================================================================
-   DEEKSHITH (D33) — 3D SPATIAL INTERACTIVE PORTFOLIO (v7.0)
-   Three.js Spatial Core + Lenis Smooth Scroll + Horizontal Pin Track + GSAP
-   ========================================================================== */
+// =========================================================================
+// DEEKSHITH (D33) — PORTFOLIO (v5 Hero + v8 Scroll + v8.5 10k Particles)
+// =========================================================================
 
 (function () {
     'use strict';
 
-    /* ==========================================================================
-       1. LUCIDE ICONS INITIALIZATION
-       ========================================================================== */
+    // --- 1. LUCIDE ICONS INITIALIZATION ---
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
 
-    /* ==========================================================================
-       2. LENIS SMOOTH SCROLLING SETUP
-       ========================================================================== */
+    // --- 2. LENIS SMOOTH VIRTUAL SCROLLING ---
     let lenis = null;
     if (typeof Lenis !== 'undefined') {
         lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
             direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
@@ -46,497 +41,570 @@
         }
     }
 
-    /* ==========================================================================
-       3. CUSTOM DUAL LERP CURSOR
-       ========================================================================== */
+    // --- 3. CUSTOM DUAL LERP CURSOR LOGIC ---
     const cursorDot = document.getElementById('cursor-dot');
-    const cursorOutline = document.getElementById('cursor-outline');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let dotPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let ringPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
-    if (cursorDot && cursorOutline && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-        let cursorX = window.innerWidth / 2;
-        let cursorY = window.innerHeight / 2;
-        let outlineX = cursorX;
-        let outlineY = cursorY;
+    let targetX = 0;
+    let targetY = 0;
 
-        window.addEventListener('mousemove', (e) => {
-            cursorX = e.clientX;
-            cursorY = e.clientY;
-        }, { passive: true });
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        
+        // Map to -1 to 1 for Three.js camera parallax
+        targetX = (e.clientX / window.innerWidth) * 2 - 1;
+        targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
 
-        const bindHoverables = () => {
-            const interactiveElements = document.querySelectorAll('a, button, input, .hoverable, .cursor-pointer');
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    function bindHoverTargets() {
+        const hoverables = document.querySelectorAll('.hoverable, button, a, .glass-panel');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+    }
+    bindHoverTargets();
+
+    function renderCursor() {
+        dotPos.x += (mouse.x - dotPos.x) * 0.35;
+        dotPos.y += (mouse.y - dotPos.y) * 0.35;
+        ringPos.x += (mouse.x - ringPos.x) * 0.15;
+        ringPos.y += (mouse.y - ringPos.y) * 0.15;
+        
+        if (cursorDot) cursorDot.style.transform = `translate(${dotPos.x}px, ${dotPos.y}px)`;
+        if (cursorRing) cursorRing.style.transform = `translate(${ringPos.x}px, ${ringPos.y}px)`;
+        
+        requestAnimationFrame(renderCursor);
+    }
+    renderCursor();
+
+    // Magnetic Buttons
+    function initMagneticButtons() {
+        const magnetics = document.querySelectorAll('.magnetic-wrap');
+        magnetics.forEach(wrap => {
+            const area = wrap.querySelector('.magnetic-area');
+            const content = wrap.querySelector('.magnetic-content');
+            if (!area || !content) return;
+            
+            area.addEventListener('mousemove', (e) => {
+                const rect = wrap.getBoundingClientRect();
+                const hx = rect.left + rect.width / 2;
+                const hy = rect.top + rect.height / 2;
+                const dx = (e.clientX - hx) * 0.4;
+                const dy = (e.clientY - hy) * 0.4;
+                gsap.to(content, { x: dx, y: dy, duration: 0.3, ease: "power2.out", overwrite: true });
             });
-        };
+            
+            area.addEventListener('mouseleave', () => {
+                gsap.to(content, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)", overwrite: true });
+            });
+        });
+    }
+    initMagneticButtons();
 
-        function animateCursor() {
-            outlineX += (cursorX - outlineX) * 0.18;
-            outlineY += (cursorY - outlineY) * 0.18;
-            
-            cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px) translate(-50%, -50%)`;
-            
-            requestAnimationFrame(animateCursor);
+
+    // --- 4. PRELOADER SEQUENCE (v5 Landing Feature) ---
+    const preloader = document.getElementById('preloader');
+    const preloaderCount = document.getElementById('preloader-count');
+    const preloaderBar = document.getElementById('preloader-bar');
+
+    let loadVal = { val: 0 };
+    gsap.to(loadVal, {
+        val: 100,
+        duration: 2.0,
+        ease: "power3.inOut",
+        onUpdate: () => {
+            const current = Math.floor(loadVal.val);
+            if (preloaderCount) preloaderCount.innerText = current.toString().padStart(2, '0');
+            if (preloaderBar) preloaderBar.style.width = `${current}%`;
+        },
+        onComplete: () => {
+            gsap.to(preloader, {
+                opacity: 0,
+                duration: 0.8,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    if (preloader) preloader.style.display = 'none';
+                    revealHero();
+                }
+            });
         }
+    });
 
-        bindHoverables();
-        requestAnimationFrame(animateCursor);
+    function revealHero() {
+        gsap.fromTo(".hero-anim", 
+            { opacity: 0, y: 40 },
+            { opacity: 1, y: 0, duration: 1.2, stagger: 0.12, ease: "power4.out" }
+        );
     }
 
-    /* ==========================================================================
-       4. THREE.JS 3D MULTILAYER SPATIAL CORE & GALAXY
-       ========================================================================== */
-    let scene, camera, renderer, coreGroup, innerMesh, outerMesh, particleSystem;
-    let dirLight1, dirLight2;
-    let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+
+    // --- 5. 10,000 PARTICLE MORPHING THREE.JS BACKGROUND (v8.5 Engine) ---
+    const particleCount = 10000;
+    const positionAttributes = {
+        shape1: new Float32Array(particleCount * 3), // Hero: Clustered Torus Knot
+        shape2: new Float32Array(particleCount * 3), // Manifesto: Twisted Helix Spindle
+        shape3: new Float32Array(particleCount * 3), // Pinned Showcase: Undulating Wave Grid
+        shape4: new Float32Array(particleCount * 3)  // Contact/Credentials: Cyber Matrix Vortex
+    };
+
+    function randomPointInSphere(radius) {
+        const u = Math.random();
+        const v = Math.random();
+        const theta = u * 2.0 * Math.PI;
+        const phi = Math.acos(2.0 * v - 1.0);
+        const r = Math.cbrt(Math.random()) * radius;
+        const sinPhi = Math.sin(phi);
+        return [
+            r * sinPhi * Math.cos(theta),
+            r * sinPhi * Math.sin(theta),
+            r * Math.cos(phi)
+        ];
+    }
+
+    // Generate Shape Coordinate Buffers
+    for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+
+        // SHAPE 1: Clustered Torus Knot (Hero)
+        const t = (i / particleCount) * Math.PI * 2 * 6;
+        const r1 = 10 + Math.sin(t * 3) * 3;
+        const x1 = Math.cos(t) * r1;
+        const y1 = Math.sin(t) * r1;
+        const z1 = Math.sin(t * 4) * 6;
+        positionAttributes.shape1[i3] = x1 + (Math.random() - 0.5) * 1.5;
+        positionAttributes.shape1[i3 + 1] = y1 + (Math.random() - 0.5) * 1.5;
+        positionAttributes.shape1[i3 + 2] = z1 + (Math.random() - 0.5) * 1.5;
+
+        // SHAPE 2: Twisted Helix (Manifesto)
+        const t2 = (i / particleCount) * Math.PI * 16;
+        const radius2 = 7 + (Math.random() - 0.5) * 2;
+        positionAttributes.shape2[i3] = Math.cos(t2) * radius2;
+        positionAttributes.shape2[i3 + 1] = ((i / particleCount) - 0.5) * 45;
+        positionAttributes.shape2[i3 + 2] = Math.sin(t2) * radius2;
+
+        // SHAPE 3: Undulating Wave Grid (Pinned Showcase)
+        const gridCols = Math.round(Math.sqrt(particleCount));
+        const col = i % gridCols;
+        const row = Math.floor(i / gridCols);
+        const spacing = 0.65;
+        const x3 = (col - gridCols / 2) * spacing;
+        const z3 = (row - gridCols / 2) * spacing;
+        positionAttributes.shape3[i3] = x3;
+        positionAttributes.shape3[i3 + 1] = Math.sin(x3 * 0.3) * Math.cos(z3 * 0.3) * 3;
+        positionAttributes.shape3[i3 + 2] = z3;
+
+        // SHAPE 4: Cyber Matrix Vortex (Contact)
+        const radius4 = 15 + Math.random() * 25;
+        const angle4 = Math.random() * Math.PI * 2;
+        const height4 = (Math.random() - 0.5) * 50;
+        positionAttributes.shape4[i3] = Math.cos(angle4) * radius4;
+        positionAttributes.shape4[i3 + 1] = height4;
+        positionAttributes.shape4[i3 + 2] = Math.sin(angle4) * radius4;
+    }
+
+    let particleSystem = null;
+    let particleGeometry = null;
+    let scrollProgress = 0;
 
     function initThreeJS() {
-        const canvas = document.getElementById('webgl-container');
+        const canvas = document.getElementById('webgl-canvas');
         if (!canvas || typeof THREE === 'undefined') return;
 
-        scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030303, 0.02);
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2('#050507', 0.02);
 
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 15);
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 32);
 
-        renderer = new THREE.WebGLRenderer({ 
-            canvas: canvas, 
-            alpha: true, 
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true,
             antialias: true,
             powerPreference: "high-performance"
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        scene.add(ambientLight);
+        // Vertex Colors: Electric Lime (#ccff00), Cyan (#06b6d4), Indigo (#4f46e5)
+        const colors = new Float32Array(particleCount * 3);
+        const c1 = new THREE.Color(0xccff00); // Electric Lime
+        const c2 = new THREE.Color(0x06b6d4); // Cyan
+        const c3 = new THREE.Color(0x4f46e5); // Indigo
 
-        dirLight1 = new THREE.DirectionalLight(0x4f46e5, 3);
-        dirLight1.position.set(5, 5, 5);
-        scene.add(dirLight1);
-
-        dirLight2 = new THREE.DirectionalLight(0x00f0ff, 2.5);
-        dirLight2.position.set(-5, -5, 2);
-        scene.add(dirLight2);
-
-        // Core Group
-        coreGroup = new THREE.Group();
-        scene.add(coreGroup);
-
-        // Layer 1: Inner Solid Metallic Icosahedron
-        const innerGeo = new THREE.IcosahedronGeometry(2, 1);
-        const innerMat = new THREE.MeshPhysicalMaterial({
-            color: 0x11141c,
-            metalness: 0.9,
-            roughness: 0.1,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
-            wireframe: false
-        });
-        innerMesh = new THREE.Mesh(innerGeo, innerMat);
-        coreGroup.add(innerMesh);
-
-        // Layer 2: Outer Glowing Wireframe Icosahedron
-        const outerGeo = new THREE.IcosahedronGeometry(2.5, 2);
-        const outerMat = new THREE.MeshStandardMaterial({
-            color: 0x4f46e5,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.4
-        });
-        outerMesh = new THREE.Mesh(outerGeo, outerMat);
-        coreGroup.add(outerMesh);
-
-        // Layer 3: Orbiting Spherical Particle Dust Galaxy (3,000 points)
-        const particlesGeo = new THREE.BufferGeometry();
-        const particlesCount = 3000;
-        const posArray = new Float32Array(particlesCount * 3);
-
-        for (let i = 0; i < particlesCount * 3; i += 3) {
-            const radius = 3 + Math.random() * 8;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(Math.random() * 2 - 1);
-            
-            posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
-            posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            posArray[i + 2] = radius * Math.cos(phi);
+        for (let i = 0; i < particleCount; i++) {
+            const i3 = i * 3;
+            const rand = Math.random();
+            const color = rand < 0.5 ? c1.clone().lerp(c2, rand * 2) : c2.clone().lerp(c3, (rand - 0.5) * 2);
+            colors[i3] = color.r;
+            colors[i3 + 1] = color.g;
+            colors[i3 + 2] = color.b;
         }
 
-        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMat = new THREE.PointsMaterial({
-            size: 0.025,
-            color: 0x00f0ff,
+        particleGeometry = new THREE.BufferGeometry();
+        // Initial buffer copies Shape 1
+        const currentPositions = new Float32Array(positionAttributes.shape1);
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        // Generative Circular Particle Texture
+        const createCircleTexture = () => {
+            const c = document.createElement('canvas');
+            c.width = 32; c.height = 32;
+            const ctx = c.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(16, 16, 14, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
+            return new THREE.CanvasTexture(c);
+        };
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.28,
+            vertexColors: true,
+            map: createCircleTexture(),
             transparent: true,
-            opacity: 0.65,
-            blending: THREE.AdditiveBlending
+            opacity: 0.75,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
         });
-        particleSystem = new THREE.Points(particlesGeo, particlesMat);
-        coreGroup.add(particleSystem);
 
-        // Mouse Listeners
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+        particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
 
-        window.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX);
-            mouseY = (event.clientY - windowHalfY);
-        }, { passive: true });
+        // Global Scroll Progress Tracking for Mathematical Morph
+        ScrollTrigger.create({
+            trigger: document.body,
+            start: "top top",
+            end: "bottom bottom",
+            onUpdate: (self) => {
+                scrollProgress = self.progress; // 0.0 to 1.0
+            }
+        });
 
-        // Window Resize
+        // Animation Render Loop
+        const clock = new THREE.Clock();
+        let camOffsetX = 0;
+        let camOffsetY = 0;
+
+        function animate() {
+            const time = clock.getElapsedTime();
+
+            // Calculate active morph phase based on scrollProgress
+            let fromShape, toShape, factor;
+            if (scrollProgress < 0.33) {
+                // Phase 1: Shape 1 (Hero Torus) -> Shape 2 (Helix)
+                fromShape = positionAttributes.shape1;
+                toShape = positionAttributes.shape2;
+                factor = scrollProgress / 0.33;
+            } else if (scrollProgress < 0.66) {
+                // Phase 2: Shape 2 (Helix) -> Shape 3 (Wave Grid)
+                fromShape = positionAttributes.shape2;
+                toShape = positionAttributes.shape3;
+                factor = (scrollProgress - 0.33) / 0.33;
+            } else {
+                // Phase 3: Shape 3 (Wave Grid) -> Shape 4 (Vortex)
+                fromShape = positionAttributes.shape3;
+                toShape = positionAttributes.shape4;
+                factor = (scrollProgress - 0.66) / 0.34;
+            }
+
+            factor = Math.max(0, Math.min(1, factor));
+
+            // Smoothly interpolate buffer positions
+            const posArray = particleGeometry.attributes.position.array;
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                // LERP position
+                const targetXVal = fromShape[i] + (toShape[i] - fromShape[i]) * factor;
+                const targetYVal = fromShape[i + 1] + (toShape[i + 1] - fromShape[i + 1]) * factor;
+                const targetZVal = fromShape[i + 2] + (toShape[i + 2] - fromShape[i + 2]) * factor;
+
+                // Add subtle harmonic breathing wave
+                const noise = Math.sin(time * 1.5 + posArray[i] * 0.2) * 0.08;
+
+                posArray[i] += (targetXVal - posArray[i]) * 0.06;
+                posArray[i + 1] += (targetYVal + noise - posArray[i + 1]) * 0.06;
+                posArray[i + 2] += (targetZVal - posArray[i + 2]) * 0.06;
+            }
+            particleGeometry.attributes.position.needsUpdate = true;
+
+            // Idle particle system rotation
+            particleSystem.rotation.y = time * 0.04;
+            particleSystem.rotation.x = Math.sin(time * 0.02) * 0.1;
+
+            // Mouse parallax
+            camOffsetX += (targetX * 3 - camOffsetX) * 0.05;
+            camOffsetY += (targetY * 3 - camOffsetY) * 0.05;
+            camera.position.x = camOffsetX;
+            camera.position.y = camOffsetY;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
         window.addEventListener('resize', () => {
-            if (!camera || !renderer) return;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
-        // Start Render Loop
-        const clock = new THREE.Clock();
-
-        function render() {
-            const elapsedTime = clock.getElapsedTime();
-
-            innerMesh.rotation.y += 0.002;
-            innerMesh.rotation.x += 0.001;
-            
-            outerMesh.rotation.y -= 0.003;
-            outerMesh.rotation.z += 0.002;
-
-            particleSystem.rotation.y = elapsedTime * 0.05;
-            outerMesh.scale.setScalar(1 + Math.sin(elapsedTime * 1.5) * 0.05);
-
-            // Parallax mouse follow
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
-            
-            coreGroup.rotation.y += 0.05 * (targetX - coreGroup.rotation.y);
-            coreGroup.rotation.x += 0.05 * (targetY - coreGroup.rotation.x);
-
-            renderer.render(scene, camera);
-            requestAnimationFrame(render);
-        }
-        
-        render();
     }
 
-    /* ==========================================================================
-       5. GSAP HORIZONTAL & VERTICAL SCROLL ANIMATIONS
-       ========================================================================== */
-    function initAnimations() {
-        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    // Initialize ThreeJS when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initThreeJS);
+    } else {
+        initThreeJS();
+    }
 
-        // Preloader Animation
-        gsap.to("#loader-progress", {
-            width: "100%",
-            duration: 1.2,
-            ease: "power2.inOut",
-            onComplete: () => {
-                gsap.to("#loader", {
-                    yPercent: -100,
-                    duration: 0.9,
-                    ease: "power4.inOut",
-                    onComplete: () => {
-                        const loader = document.getElementById('loader');
-                        if (loader) loader.style.display = 'none';
-                        startScrollOrchestration();
-                    }
-                });
+
+    // --- 6. GSAP HORIZONTAL PINNED SHOWCASE (v8 Major Scrolling Architecture) ---
+    function initHorizontalScroll() {
+        const horizontalSection = document.getElementById('horizontal-work');
+        const track = document.getElementById('horizontal-track');
+        if (!horizontalSection || !track) return;
+
+        // Calculate exact horizontal scroll width
+        const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + 120);
+
+        gsap.to(track, {
+            x: getScrollAmount,
+            ease: "none",
+            scrollTrigger: {
+                trigger: horizontalSection,
+                start: "top top",
+                end: () => `+=${track.scrollWidth}`,
+                pin: true,
+                scrub: 1.2,
+                invalidateOnRefresh: true,
+                anticipatePin: 1
             }
         });
-
-        function startScrollOrchestration() {
-            // Hero Text Reveal
-            gsap.fromTo(".gs-hero-reveal", 
-                { y: 50, opacity: 0 }, 
-                { y: 0, opacity: 1, duration: 1, stagger: 0.18, ease: "power3.out" }
-            );
-
-            // General section text reveals
-            gsap.utils.toArray('.gs-fade-up').forEach(element => {
-                gsap.fromTo(element, 
-                    { y: 50, opacity: 0 },
-                    {
-                        scrollTrigger: {
-                            trigger: element,
-                            start: "top 85%",
-                            toggleActions: "play none none reverse"
-                        },
-                        y: 0,
-                        opacity: 1,
-                        duration: 1,
-                        ease: "power3.out"
-                    }
-                );
-            });
-
-            // 1. Vertical 3D Choreography Timeline
-            if (coreGroup) {
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#ui-layer",
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 1
-                    }
-                });
-
-                // Section 1 (About) -> Shift Core to Left, zoom in slightly
-                tl.to(coreGroup.position, {
-                    x: window.innerWidth > 768 ? -4 : 0,
-                    y: 1,
-                    z: 2,
-                    ease: "none"
-                }, 0.1);
-                
-                if (dirLight1) tl.to(dirLight1.color, { r: 0, g: 1, b: 0.8 }, 0.1);
-                if (outerMesh) tl.to(outerMesh.material.color, { r: 0.3, g: 0.2, b: 1 }, 0.1);
-
-                // Section 2 (Horizontal Works) -> Center core, push back
-                tl.to(coreGroup.position, {
-                    x: 0,
-                    y: 0,
-                    z: -4,
-                    ease: "none"
-                }, 0.35);
-
-                // Section 3 (Capabilities) -> Lift core
-                tl.to(coreGroup.position, {
-                    x: window.innerWidth > 768 ? 3.5 : 0,
-                    y: -0.5,
-                    z: 0,
-                    ease: "none"
-                }, 0.65);
-
-                // Section 4 (Contact) -> Fly straight THROUGH the particle core
-                tl.to(coreGroup.position, {
-                    x: 0,
-                    y: -1.5,
-                    z: 12,
-                    ease: "none"
-                }, 0.9);
-
-                tl.to(coreGroup.rotation, {
-                    x: Math.PI * 2,
-                    y: Math.PI * 4,
-                    ease: "none"
-                }, 0);
-            }
-
-            // 2. PINNED HORIZONTAL SCROLL TRACK
-            const horizontalSection = document.getElementById('horizontal-work');
-            const track = document.getElementById('horizontal-track');
-
-            if (horizontalSection && track) {
-                const getScrollAmount = () => {
-                    return -(track.scrollWidth - window.innerWidth);
-                };
-
-                gsap.to(track, {
-                    x: getScrollAmount,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: horizontalSection,
-                        pin: true,
-                        start: "top top",
-                        end: () => `+=${track.scrollWidth - window.innerWidth}`,
-                        scrub: 1,
-                        invalidateOnRefresh: true
-                    }
-                });
-            }
-        }
     }
 
-    /* ==========================================================================
-       6. MOBILE MENU
-       ========================================================================== */
-    function initMobileMenu() {
-        const menuBtn = document.getElementById('mobileMenuBtn');
-        const menu = document.getElementById('mobileMenu');
-        const links = document.querySelectorAll('.mobile-nav-link');
-
-        if (menuBtn && menu) {
-            menuBtn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
-
-            links.forEach(l => {
-                l.addEventListener('click', () => {
-                    menu.classList.add('hidden');
-                });
-            });
-        }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHorizontalScroll);
+    } else {
+        initHorizontalScroll();
     }
 
-    /* ==========================================================================
-       7. INTERACTIVE TERMINAL DRAWER
-       ========================================================================== */
-    class InteractiveTerminalDrawer {
-        constructor() {
-            this.modal = document.getElementById('terminalModal');
-            this.openBtn = document.getElementById('terminalToggleBtn');
-            this.mobileOpenBtn = document.getElementById('mobileTerminalBtn');
-            this.closeBtn = document.getElementById('closeTerminalBtn');
-            this.input = document.getElementById('terminalInput');
-            this.history = document.getElementById('terminalHistory');
 
-            this.bindEvents();
+    // --- 7. PROJECT INSPECTION MODAL ---
+    const projectData = {
+        crypto: {
+            tag: "CRYPTOGRAPHIC SUITE // C++20",
+            title: "E-D--Crypto Engine",
+            desc: "High-performance symmetric and asymmetric cryptographic engine implementing AES-256 (CBC/GCM) and RSA-2048 key exchange for ultra-secure payload transmission and hardened memory storage.",
+            specs: [
+                "SIMD AVX-512 acceleration reaching 1.4 GB/s throughput",
+                "Argon2id and PBKDF2 key derivation with zero memory leaks",
+                "Constant-time arithmetic implementations to eliminate side-channel timing attacks",
+                "Full integration with OpenSSL and custom low-level C bit-rotation routines"
+            ],
+            link: "https://github.com/28d33"
+        },
+        siem: {
+            tag: "DEFENSIVE PIPELINE // IDS & SIEM",
+            title: "Perimeter Defense & SIEM Pipeline",
+            desc: "Distributed real-time intrusion detection pipeline integrating custom Suricata IDS rulesets, packet sniffing hooks, and elastic search ingestion for enterprise threat intelligence.",
+            specs: [
+                "Real-time packet filtering processing 10Gbps line rate",
+                "Automated alert correlation with Elasticsearch & Kibana dashboards",
+                "Signature-based and heuristic anomaly detection with sub-millisecond alerting",
+                "Custom Lua scripts for dynamic payload inspection"
+            ],
+            link: "https://github.com/28d33"
+        },
+        sast: {
+            tag: "AUTOMATED VULNERABILITY TRIAGE",
+            title: "Automated Security Audit Engine",
+            desc: "Continuous SAST / DAST scanning orchestration engine combining Bandit, Semgrep, and OWASP ZAP crawlers with automated CVSS v3.1 scoring and issue remediation workflows.",
+            specs: [
+                "Unified AST parsing engine across Python, C/C++, and Go codebases",
+                "Automated OWASP Top 10 dynamic crawling with headless browser injection",
+                "Zero false-positive threshold tuning with rule-based heuristics",
+                "Automated Jira / GitHub Security Advisories webhook pipeline"
+            ],
+            link: "https://github.com/28d33"
+        },
+        stream: {
+            tag: "HIGH-THROUGHPUT TOKENIZATION // C++20",
+            title: "Data Stream Masking Protocol",
+            desc: "Ultra-low latency memory-mapped data stream masking protocol designed for zero-leak data ingestion pipelines in banking and healthcare infrastructures.",
+            specs: [
+                "Zero-copy memory mapped I/O processing millions of records per second",
+                "Format-Preserving Encryption (FPE) with deterministic irreversible pseudonymization",
+                "Lock-free ring buffers for multi-threaded consumer-producer streams",
+                "Full compliance validation for GDPR and HIPAA data handling"
+            ],
+            link: "https://github.com/28d33"
         }
+    };
 
-        bindEvents() {
-            if (this.openBtn) this.openBtn.addEventListener('click', () => this.open());
-            if (this.mobileOpenBtn) this.mobileOpenBtn.addEventListener('click', () => this.open());
-            if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
+    window.openProjectModal = function(key) {
+        const data = projectData[key];
+        if (!data) return;
 
-            window.addEventListener('keydown', (e) => {
-                if ((e.key === '`' || e.key === '~') && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-                    e.preventDefault();
-                    this.toggle();
-                } else if (e.key === 'Escape' && this.modal && !this.modal.classList.contains('hidden')) {
-                    this.close();
-                }
-            });
+        document.getElementById('modal-tag').innerText = data.tag;
+        document.getElementById('modal-title').innerText = data.title;
+        document.getElementById('modal-desc').innerText = data.desc;
+        
+        const specsList = document.getElementById('modal-specs');
+        specsList.innerHTML = '';
+        data.specs.forEach(s => {
+            const li = document.createElement('li');
+            li.innerText = s;
+            specsList.appendChild(li);
+        });
 
-            if (this.input) {
-                this.input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        const cmd = this.input.value.trim();
-                        this.processCommand(cmd);
-                        this.input.value = '';
-                    }
-                });
-            }
+        document.getElementById('modal-link').href = data.link;
 
-            if (this.modal) {
-                this.modal.addEventListener('click', (e) => {
-                    if (e.target === this.modal) {
-                        this.close();
-                    }
-                });
-            }
+        const modal = document.getElementById('project-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    };
+
+    window.closeProjectModal = function() {
+        const modal = document.getElementById('project-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
+    };
 
-        open() {
-            if (this.modal) {
-                this.modal.classList.remove('hidden');
-                setTimeout(() => {
-                    if (this.input) this.input.focus();
-                }, 100);
-            }
-        }
-
-        close() {
-            if (this.modal) {
-                this.modal.classList.add('hidden');
-            }
-        }
-
-        toggle() {
-            if (!this.modal) return;
-            if (this.modal.classList.contains('hidden')) {
-                this.open();
-            } else {
-                this.close();
-            }
-        }
-
-        appendHistory(text, styleClass = 'text-gray-300') {
-            if (!this.history) return;
-            const div = document.createElement('div');
-            div.className = `${styleClass} whitespace-pre-wrap leading-relaxed font-mono`;
-            div.textContent = text;
-            this.history.appendChild(div);
-
-            const body = document.getElementById('terminalBody');
-            if (body) body.scrollTop = body.scrollHeight;
-        }
-
-        processCommand(rawCmd) {
-            const cmd = rawCmd.toLowerCase();
-            this.appendHistory(`d33:~$ ${rawCmd}`, 'text-cyan-400 font-bold');
-
-            switch (cmd) {
-                case 'help':
-                    this.appendHistory(`Available Commands:
-- whoami       : Operator profile & core credentials
-- projects     : Production engineering & security suites
-- skills       : Offensive & cryptographic toolsets
-- certs        : Verified industry accreditations
-- contact      : Direct communication coordinates
-- clear        : Clear console output
-- exit         : Close terminal`, 'text-cyan-400');
-                    break;
-
-                case 'whoami':
-                    this.appendHistory(`OPERATOR : DEEKSHITH (D33)
-ROLE     : Offensive Security Architect & Low-Level Systems Engineer
-LOCATION : Bangalore, Karnataka, India [12.9716° N, 77.5946° E]
-CORE     : Low-Level Cryptography (C/C++), Penetration Testing, Real-Time Forensics`, 'text-gray-200');
-                    break;
-
-                case 'projects':
-                case 'works':
-                    this.appendHistory(`1. E-D--Crypto         -> C / OpenSSL / AES-256-CBC / RSA-2048
-2. Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
-3. Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
-4. Data Stream Masking -> C++20 Real-Time Financial Tokenizer`, 'text-indigo-300');
-                    break;
-
-                case 'skills':
-                    this.appendHistory(`Offensive : Pen-Testing, OWASP Top 10, Active Directory, Reverse Engineering
-Languages : C, C++20, Python, Bash, x86_64 Assembly, SQL, JavaScript
-Tools     : OpenSSL, Burp Suite, Metasploit, Nmap, Wireshark, Volatility, YARA
-Defensive : ELK Stack, Suricata IDS/IPS, Linux Kernel Hardening, GPO`, 'text-gray-200');
-                    break;
-
-                case 'certs':
-                    this.appendHistory(`- Ethical Hacking (IISc Bangalore)
-- Cybersecurity Course (IIT Guwahati)
-- Ethical Hacker (Cisco)
-- Presecurity Certified (TryHackMe)
-- Cyber Job Simulation (Deloitte Australia)
-- Cybersecurity Analyst IAM (TCS)
-- Critical Infrastructure Protection (OPSWAT)
-- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-cyan-400');
-                    break;
-
-                case 'contact':
-                    this.appendHistory(`Email    : d33kshith@proton.me
-GitHub   : github.com/28d33
-LinkedIn : linkedin.com/in/d33kshithanand
-Location : Bangalore, India`, 'text-cyan-400');
-                    break;
-
-                case 'clear':
-                    if (this.history) this.history.innerHTML = '';
-                    break;
-
-                case 'exit':
-                    this.close();
-                    break;
-
-                case '':
-                    break;
-
-                default:
-                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for options.`, 'text-rose-400');
-                    break;
-            }
-        }
-    }
-
-    /* ==========================================================================
-       8. BOOTSTRAP ON WINDOW LOAD
-       ========================================================================== */
-    window.addEventListener('load', () => {
-        initThreeJS();
-        initAnimations();
-        initMobileMenu();
-        new InteractiveTerminalDrawer();
+    document.getElementById('project-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'project-modal') closeProjectModal();
     });
+
+
+    // --- 8. TACTICAL TERMINAL DRAWER ---
+    const terminalDrawer = document.getElementById('terminal-drawer');
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalLogs = document.getElementById('terminal-logs');
+    const navTerminalBtn = document.getElementById('nav-terminal-btn');
+    const closeTerminalBtn = document.getElementById('close-terminal-btn');
+
+    let isTerminalOpen = false;
+
+    function toggleTerminal(state) {
+        isTerminalOpen = state !== undefined ? state : !isTerminalOpen;
+        if (isTerminalOpen) {
+            terminalDrawer.classList.remove('translate-y-full');
+            terminalDrawer.classList.add('translate-y-0');
+            setTimeout(() => terminalInput?.focus(), 250);
+        } else {
+            terminalDrawer.classList.add('translate-y-full');
+            terminalDrawer.classList.remove('translate-y-0');
+        }
+    }
+
+    navTerminalBtn?.addEventListener('click', () => toggleTerminal());
+    closeTerminalBtn?.addEventListener('click', () => toggleTerminal(false));
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '`' || e.key === '~') {
+            e.preventDefault();
+            toggleTerminal();
+        }
+        if (e.key === 'Escape') {
+            closeProjectModal();
+            toggleTerminal(false);
+        }
+    });
+
+    const commands = {
+        help: () => `OPERATIONAL DIRECTIVES:
+- whoami      : Display operator identification & role
+- skills      : Capability matrix & security toolkit
+- projects    : List active security deployments
+- matrix      : Display verified institutional credentials
+- contact     : Reveal communication uplink channels
+- clear       : Wipe terminal output buffer`,
+
+        whoami: () => `IDENTITY: Deekshith (D33)
+ROLE: Offensive Security Architect & Low-Level Systems Developer
+LOCATION: Bangalore, India
+STACK: C/C++20, x86_64 Assembly, Cryptography, 10k Particle WebGL`,
+
+        skills: () => `CORE CAPABILITIES:
+- Languages   : C, C++20, x86_64 Assembly, Python, JavaScript, GLSL
+- Security    : Reverse Engineering, Exploitation, Cryptography (AES/RSA), SIEM (Suricata/ELK)
+- Forensics   : GDB, Ghidra, Wireshark, Burp Suite, Bandit, OWASP ZAP`,
+
+        projects: () => `DEPLOYED REPOSITORIES:
+[01] E-D--Crypto Engine        (AES-256-GCM / RSA-2048 Suite)
+[02] Perimeter Defense & SIEM  (Suricata IDS Pipeline)
+[03] Automated Security Audit  (SAST/DAST Triage Engine)
+[04] Data Stream Masking       (Zero-Copy C++20 Tokenizer)`,
+
+        matrix: () => `VERIFIED CLEARANCE:
+- IISc Bangalore & IIT Guwahati (Network Defense Research)
+- Cisco Certified Network Security Associate
+- TryHackMe Global Top 1% (50+ CTF Flag Captures)
+- Deloitte & TCS Cyber Defense Governance`,
+
+        contact: () => `SECURE CHANNELS:
+- Email   : deekshith.d33@gmail.com
+- GitHub  : https://github.com/28d33
+- LinkedIn: https://linkedin.com`,
+
+        clear: () => {
+            if (terminalLogs) terminalLogs.innerHTML = '';
+            return '';
+        }
+    };
+
+    terminalInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const raw = terminalInput.value.trim();
+            terminalInput.value = '';
+            if (!raw) return;
+
+            const cmd = raw.toLowerCase();
+
+            const line = document.createElement('div');
+            line.innerHTML = `<span class="text-[#ccff00]">d33@uplink:~$</span> <span class="text-white">${raw}</span>`;
+            terminalLogs.appendChild(line);
+
+            const resp = document.createElement('div');
+            resp.className = 'text-white/70 whitespace-pre-wrap';
+
+            if (commands[cmd]) {
+                const out = commands[cmd]();
+                if (out) {
+                    resp.innerText = out;
+                    terminalLogs.appendChild(resp);
+                }
+            } else {
+                resp.innerHTML = `<span class="text-rose-400">Command '${cmd}' not recognized. Type 'help' for directives.</span>`;
+                terminalLogs.appendChild(resp);
+            }
+
+            terminalLogs.scrollTop = terminalLogs.scrollHeight;
+        }
+    });
+
+
+    // --- 9. COPY EMAIL HELPER ---
+    window.copyContactEmail = function() {
+        const email = "deekshith.d33@gmail.com";
+        navigator.clipboard.writeText(email).then(() => {
+            const btn = document.getElementById('copy-email-btn');
+            if (btn) {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span class="text-emerald-400">COPIED TO CLIPBOARD</span>`;
+                if (window.lucide) lucide.createIcons();
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    if (window.lucide) lucide.createIcons();
+                }, 2000);
+            }
+        });
+    };
 
 })();
