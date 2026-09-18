@@ -1,6 +1,6 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — 3D SPATIAL INTERACTIVE PORTFOLIO (v7.0)
-   Three.js Spatial Core + Lenis Smooth Scroll + Horizontal Pin Track + GSAP
+   DEEKSHITH (D33) — 10,000 PARTICLE MORPHING ENGINE (v8.0)
+   Three.js Mathematical Morphing + Lenis Smooth Scroll + Terminal Console
    ========================================================================== */
 
 (function () {
@@ -19,8 +19,8 @@
     let lenis = null;
     if (typeof Lenis !== 'undefined') {
         lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
             direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
@@ -47,36 +47,41 @@
     }
 
     /* ==========================================================================
-       3. CUSTOM DUAL LERP CURSOR
+       3. CUSTOM DUAL LERP CURSOR LOGIC
        ========================================================================== */
     const cursorDot = document.getElementById('cursor-dot');
-    const cursorOutline = document.getElementById('cursor-outline');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let targetX = 0;
+    let targetY = 0;
 
-    if (cursorDot && cursorOutline && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-        let cursorX = window.innerWidth / 2;
-        let cursorY = window.innerHeight / 2;
-        let outlineX = cursorX;
-        let outlineY = cursorY;
-
+    if (cursorDot && cursorRing && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         window.addEventListener('mousemove', (e) => {
-            cursorX = e.clientX;
-            cursorY = e.clientY;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Normalized coordinates for Three.js parallax
+            targetX = (e.clientX / window.innerWidth) * 2 - 1;
+            targetY = -(e.clientY / window.innerHeight) * 2 + 1;
         }, { passive: true });
 
         const bindHoverables = () => {
-            const interactiveElements = document.querySelectorAll('a, button, input, .hoverable, .cursor-pointer');
+            const interactiveElements = document.querySelectorAll('.interactive-el, a, button, input');
             interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+                el.addEventListener('mouseenter', () => document.body.classList.add('hover-active'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hover-active'));
             });
         };
 
         function animateCursor() {
-            outlineX += (cursorX - outlineX) * 0.18;
-            outlineY += (cursorY - outlineY) * 0.18;
+            ringX += (mouseX - ringX) * 0.16;
+            ringY += (mouseY - ringY) * 0.16;
             
-            cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px) translate(-50%, -50%)`;
+            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+            cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
             
             requestAnimationFrame(animateCursor);
         }
@@ -86,23 +91,88 @@
     }
 
     /* ==========================================================================
-       4. THREE.JS 3D MULTILAYER SPATIAL CORE & GALAXY
+       4. THREE.JS 10,000 PARTICLE MORPHING ENGINE
        ========================================================================== */
-    let scene, camera, renderer, coreGroup, innerMesh, outerMesh, particleSystem;
-    let dirLight1, dirLight2;
-    let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+    const particleCount = 10000;
+    const positionAttributes = {
+        shape1: new Float32Array(particleCount * 3), // Hero: Clustered Sphere
+        shape2: new Float32Array(particleCount * 3), // About: Twisted Helix / Torus Knot
+        shape3: new Float32Array(particleCount * 3), // Work: Wavy Grid
+        shape4: new Float32Array(particleCount * 3)  // Contact: Massive Vortex / Explosion
+    };
+
+    let particleSystem = null;
+    let scrollState = {
+        progress: 0,
+        activeShape: 1,
+        morphFactor: 0
+    };
+
+    function randomPointInSphere(radius) {
+        const u = Math.random();
+        const v = Math.random();
+        const theta = u * 2.0 * Math.PI;
+        const phi = Math.acos(2.0 * v - 1.0);
+        const r = Math.cbrt(Math.random()) * radius;
+        const sinPhi = Math.sin(phi);
+        return [
+            r * sinPhi * Math.cos(theta),
+            r * sinPhi * Math.sin(theta),
+            r * Math.cos(phi)
+        ];
+    }
+
+    // Generate Shape Coordinate Buffers
+    for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+
+        // SHAPE 1: Clustered Sphere (Hero)
+        const p1 = randomPointInSphere(12);
+        positionAttributes.shape1[i3] = p1[0];
+        positionAttributes.shape1[i3 + 1] = p1[1];
+        positionAttributes.shape1[i3 + 2] = p1[2];
+
+        // SHAPE 2: Twisted Helix / Torus Knot (Vision / About)
+        const t = (i / particleCount) * Math.PI * 2 * 10;
+        const r2 = 8 + Math.sin(t * 3) * 2;
+        const x2 = Math.cos(t) * r2;
+        const y2 = Math.sin(t) * r2;
+        const z2 = Math.sin(t * 4) * 6;
+        positionAttributes.shape2[i3] = x2 + (Math.random() - 0.5) * 2;
+        positionAttributes.shape2[i3 + 1] = y2 + (Math.random() - 0.5) * 2;
+        positionAttributes.shape2[i3 + 2] = z2 + (Math.random() - 0.5) * 2;
+
+        // SHAPE 3: Wavy Grid (Archive / Work)
+        const gridCols = Math.sqrt(particleCount);
+        const col = i % gridCols;
+        const row = Math.floor(i / gridCols);
+        const spacing = 0.5;
+        const x3 = (col - gridCols / 2) * spacing;
+        const z3 = (row - gridCols / 2) * spacing;
+        positionAttributes.shape3[i3] = x3;
+        positionAttributes.shape3[i3 + 1] = (Math.random() - 0.5) * 1;
+        positionAttributes.shape3[i3 + 2] = z3;
+
+        // SHAPE 4: Massive Spatial Vortex / Explosion (Contact)
+        const radius4 = 30 + Math.random() * 20;
+        const angle4 = Math.random() * Math.PI * 2;
+        const height4 = (Math.random() - 0.5) * 50;
+        positionAttributes.shape4[i3] = Math.cos(angle4) * radius4;
+        positionAttributes.shape4[i3 + 1] = height4;
+        positionAttributes.shape4[i3 + 2] = Math.sin(angle4) * radius4;
+    }
 
     function initThreeJS() {
-        const canvas = document.getElementById('webgl-container');
+        const canvas = document.getElementById('webgl-canvas');
         if (!canvas || typeof THREE === 'undefined') return;
 
-        scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030303, 0.02);
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2('#050505', 0.025);
 
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 15);
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 25;
 
-        renderer = new THREE.WebGLRenderer({ 
+        const renderer = new THREE.WebGLRenderer({ 
             canvas: canvas, 
             alpha: true, 
             antialias: true,
@@ -111,244 +181,199 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        scene.add(ambientLight);
+        // Buffer Geometry
+        const geometry = new THREE.BufferGeometry();
+        const currentPositions = new Float32Array(positionAttributes.shape1);
+        geometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
 
-        dirLight1 = new THREE.DirectionalLight(0x4f46e5, 3);
-        dirLight1.position.set(5, 5, 5);
-        scene.add(dirLight1);
+        // Radial Gradient Glowing Particle Texture
+        const particleCanvas = document.createElement('canvas');
+        particleCanvas.width = 32;
+        particleCanvas.height = 32;
+        const pCtx = particleCanvas.getContext('2d');
+        const gradient = pCtx.createRadialGradient(16, 16, 0, 16, 16, 16);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(0.2, 'rgba(0, 255, 255, 0.85)'); // Cyan glow
+        gradient.addColorStop(0.5, 'rgba(138, 43, 226, 0.3)');  // Violet edge
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        pCtx.fillStyle = gradient;
+        pCtx.fillRect(0, 0, 32, 32);
+        const particleTexture = new THREE.CanvasTexture(particleCanvas);
 
-        dirLight2 = new THREE.DirectionalLight(0x00f0ff, 2.5);
-        dirLight2.position.set(-5, -5, 2);
-        scene.add(dirLight2);
-
-        // Core Group
-        coreGroup = new THREE.Group();
-        scene.add(coreGroup);
-
-        // Layer 1: Inner Solid Metallic Icosahedron
-        const innerGeo = new THREE.IcosahedronGeometry(2, 1);
-        const innerMat = new THREE.MeshPhysicalMaterial({
-            color: 0x11141c,
-            metalness: 0.9,
-            roughness: 0.1,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
-            wireframe: false
-        });
-        innerMesh = new THREE.Mesh(innerGeo, innerMat);
-        coreGroup.add(innerMesh);
-
-        // Layer 2: Outer Glowing Wireframe Icosahedron
-        const outerGeo = new THREE.IcosahedronGeometry(2.5, 2);
-        const outerMat = new THREE.MeshStandardMaterial({
-            color: 0x4f46e5,
-            wireframe: true,
+        const material = new THREE.PointsMaterial({
+            size: 0.4,
+            map: particleTexture,
             transparent: true,
-            opacity: 0.4
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            color: 0xffffff
         });
-        outerMesh = new THREE.Mesh(outerGeo, outerMat);
-        coreGroup.add(outerMesh);
 
-        // Layer 3: Orbiting Spherical Particle Dust Galaxy (3,000 points)
-        const particlesGeo = new THREE.BufferGeometry();
-        const particlesCount = 3000;
-        const posArray = new Float32Array(particlesCount * 3);
+        particleSystem = new THREE.Points(geometry, material);
+        scene.add(particleSystem);
 
-        for (let i = 0; i < particlesCount * 3; i += 3) {
-            const radius = 3 + Math.random() * 8;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(Math.random() * 2 - 1);
-            
-            posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
-            posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            posArray[i + 2] = radius * Math.cos(phi);
+        // ScrollTrigger 4-Phase Shape Mapping
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.create({
+                trigger: document.body,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: true,
+                onUpdate: (self) => {
+                    scrollState.progress = self.progress;
+                    const p = self.progress;
+                    if (p < 0.25) {
+                        scrollState.activeShape = 1;
+                        scrollState.morphFactor = p / 0.25;
+                    } else if (p < 0.5) {
+                        scrollState.activeShape = 2;
+                        scrollState.morphFactor = (p - 0.25) / 0.25;
+                    } else if (p < 0.75) {
+                        scrollState.activeShape = 3;
+                        scrollState.morphFactor = (p - 0.5) / 0.25;
+                    } else {
+                        scrollState.activeShape = 4;
+                        scrollState.morphFactor = (p - 0.75) / 0.25;
+                    }
+                }
+            });
         }
 
-        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMat = new THREE.PointsMaterial({
-            size: 0.025,
-            color: 0x00f0ff,
-            transparent: true,
-            opacity: 0.65,
-            blending: THREE.AdditiveBlending
-        });
-        particleSystem = new THREE.Points(particlesGeo, particlesMat);
-        coreGroup.add(particleSystem);
+        // Render Loop
+        const clock = new THREE.Clock();
+        let currentCameraX = 0;
+        let currentCameraY = 0;
 
-        // Mouse Listeners
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = clock.getElapsedTime();
+            const positions = particleSystem.geometry.attributes.position.array;
 
-        window.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX);
-            mouseY = (event.clientY - windowHalfY);
-        }, { passive: true });
+            let sourceArray = positionAttributes['shape' + scrollState.activeShape];
+            let targetArray = positionAttributes['shape' + Math.min(scrollState.activeShape + 1, 4)];
+            
+            if (scrollState.activeShape === 4) {
+                targetArray = positionAttributes.shape4;
+            }
 
-        // Window Resize
+            // Polynomial ease in-out
+            const t = scrollState.morphFactor;
+            const easeMorph = t * t * (3 - 2 * t);
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                
+                let x = sourceArray[i3] + (targetArray[i3] - sourceArray[i3]) * easeMorph;
+                let y = sourceArray[i3 + 1] + (targetArray[i3 + 1] - sourceArray[i3 + 1]) * easeMorph;
+                let z = sourceArray[i3 + 2] + (targetArray[i3 + 2] - sourceArray[i3 + 2]) * easeMorph;
+
+                // Dynamic breathing/wave motion
+                if (scrollState.activeShape === 1) {
+                    const pulse = Math.sin(time * 2 + i) * 0.08;
+                    x += x * pulse;
+                    y += y * pulse;
+                    z += z * pulse;
+                } else if (scrollState.activeShape === 3 || (scrollState.activeShape === 2 && scrollState.morphFactor > 0.5)) {
+                    y += Math.sin(x * 0.5 + time * 2) * 2 + Math.cos(z * 0.5 + time) * 2;
+                }
+
+                positions[i3] = x;
+                positions[i3 + 1] = y;
+                positions[i3 + 2] = z;
+            }
+
+            particleSystem.geometry.attributes.position.needsUpdate = true;
+
+            // Global System Rotation based on time and scroll progress
+            particleSystem.rotation.y = time * 0.05 + scrollState.progress * Math.PI * 2;
+            particleSystem.rotation.x = scrollState.progress * Math.PI;
+
+            // Smooth Camera Parallax
+            currentCameraX += (targetX * 5 - currentCameraX) * 0.05;
+            currentCameraY += (targetY * 5 - currentCameraY) * 0.05;
+            
+            camera.position.x = currentCameraX;
+            camera.position.y = currentCameraY;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
         window.addEventListener('resize', () => {
-            if (!camera || !renderer) return;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
-        // Start Render Loop
-        const clock = new THREE.Clock();
-
-        function render() {
-            const elapsedTime = clock.getElapsedTime();
-
-            innerMesh.rotation.y += 0.002;
-            innerMesh.rotation.x += 0.001;
-            
-            outerMesh.rotation.y -= 0.003;
-            outerMesh.rotation.z += 0.002;
-
-            particleSystem.rotation.y = elapsedTime * 0.05;
-            outerMesh.scale.setScalar(1 + Math.sin(elapsedTime * 1.5) * 0.05);
-
-            // Parallax mouse follow
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
-            
-            coreGroup.rotation.y += 0.05 * (targetX - coreGroup.rotation.y);
-            coreGroup.rotation.x += 0.05 * (targetY - coreGroup.rotation.x);
-
-            renderer.render(scene, camera);
-            requestAnimationFrame(render);
-        }
-        
-        render();
     }
 
     /* ==========================================================================
-       5. GSAP HORIZONTAL & VERTICAL SCROLL ANIMATIONS
+       5. GSAP UI ANIMATIONS & PRELOADER
        ========================================================================== */
-    function initAnimations() {
-        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    function initUIAnimations() {
+        if (typeof gsap === 'undefined') return;
 
-        // Preloader Animation
-        gsap.to("#loader-progress", {
-            width: "100%",
-            duration: 1.2,
+        let loadProgress = { val: 0 };
+        gsap.to(loadProgress, {
+            val: 100,
+            duration: 1.8,
             ease: "power2.inOut",
+            onUpdate: () => {
+                const progressEl = document.getElementById('loader-progress');
+                const percentEl = document.getElementById('loader-percentage');
+                if (progressEl) progressEl.style.width = `${loadProgress.val}%`;
+                if (percentEl) percentEl.innerText = `${Math.floor(loadProgress.val).toString().padStart(3, '0')}%`;
+            },
             onComplete: () => {
                 gsap.to("#loader", {
-                    yPercent: -100,
+                    opacity: 0,
                     duration: 0.9,
-                    ease: "power4.inOut",
+                    ease: "power2.inOut",
                     onComplete: () => {
                         const loader = document.getElementById('loader');
                         if (loader) loader.style.display = 'none';
-                        startScrollOrchestration();
+
+                        gsap.to(".gs-reveal-up", {
+                            y: 0,
+                            duration: 1.1,
+                            stagger: 0.1,
+                            ease: "power4.out"
+                        });
+                        gsap.fromTo(".gs-reveal", 
+                            { opacity: 0, y: 20 },
+                            { opacity: 1, y: 0, duration: 1, stagger: 0.15, delay: 0.3, ease: "power2.out" }
+                        );
                     }
                 });
             }
         });
 
-        function startScrollOrchestration() {
-            // Hero Text Reveal
-            gsap.fromTo(".gs-hero-reveal", 
-                { y: 50, opacity: 0 }, 
-                { y: 0, opacity: 1, duration: 1, stagger: 0.18, ease: "power3.out" }
-            );
+        gsap.to("#loader-title", {
+            y: 0,
+            duration: 1,
+            ease: "power4.out",
+            delay: 0.2
+        });
 
-            // General section text reveals
-            gsap.utils.toArray('.gs-fade-up').forEach(element => {
-                gsap.fromTo(element, 
-                    { y: 50, opacity: 0 },
-                    {
-                        scrollTrigger: {
-                            trigger: element,
-                            start: "top 85%",
-                            toggleActions: "play none none reverse"
-                        },
-                        y: 0,
-                        opacity: 1,
-                        duration: 1,
-                        ease: "power3.out"
-                    }
-                );
-            });
-
-            // 1. Vertical 3D Choreography Timeline
-            if (coreGroup) {
-                const tl = gsap.timeline({
+        // Section Scroll Triggers
+        gsap.utils.toArray('.gs-fade').forEach(elem => {
+            gsap.fromTo(elem, 
+                { opacity: 0, y: 40 },
+                {
                     scrollTrigger: {
-                        trigger: "#ui-layer",
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 1
-                    }
-                });
-
-                // Section 1 (About) -> Shift Core to Left, zoom in slightly
-                tl.to(coreGroup.position, {
-                    x: window.innerWidth > 768 ? -4 : 0,
-                    y: 1,
-                    z: 2,
-                    ease: "none"
-                }, 0.1);
-                
-                if (dirLight1) tl.to(dirLight1.color, { r: 0, g: 1, b: 0.8 }, 0.1);
-                if (outerMesh) tl.to(outerMesh.material.color, { r: 0.3, g: 0.2, b: 1 }, 0.1);
-
-                // Section 2 (Horizontal Works) -> Center core, push back
-                tl.to(coreGroup.position, {
-                    x: 0,
+                        trigger: elem,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    opacity: 1,
                     y: 0,
-                    z: -4,
-                    ease: "none"
-                }, 0.35);
-
-                // Section 3 (Capabilities) -> Lift core
-                tl.to(coreGroup.position, {
-                    x: window.innerWidth > 768 ? 3.5 : 0,
-                    y: -0.5,
-                    z: 0,
-                    ease: "none"
-                }, 0.65);
-
-                // Section 4 (Contact) -> Fly straight THROUGH the particle core
-                tl.to(coreGroup.position, {
-                    x: 0,
-                    y: -1.5,
-                    z: 12,
-                    ease: "none"
-                }, 0.9);
-
-                tl.to(coreGroup.rotation, {
-                    x: Math.PI * 2,
-                    y: Math.PI * 4,
-                    ease: "none"
-                }, 0);
-            }
-
-            // 2. PINNED HORIZONTAL SCROLL TRACK
-            const horizontalSection = document.getElementById('horizontal-work');
-            const track = document.getElementById('horizontal-track');
-
-            if (horizontalSection && track) {
-                const getScrollAmount = () => {
-                    return -(track.scrollWidth - window.innerWidth);
-                };
-
-                gsap.to(track, {
-                    x: getScrollAmount,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: horizontalSection,
-                        pin: true,
-                        start: "top top",
-                        end: () => `+=${track.scrollWidth - window.innerWidth}`,
-                        scrub: 1,
-                        invalidateOnRefresh: true
-                    }
-                });
-            }
-        }
+                    duration: 1.2,
+                    ease: "power3.out"
+                }
+            );
+        });
     }
 
     /* ==========================================================================
@@ -462,7 +487,7 @@
             switch (cmd) {
                 case 'help':
                     this.appendHistory(`Available Commands:
-- whoami       : Operator profile & core credentials
+- whoami       : Operator credentials & core identity
 - projects     : Production engineering & security suites
 - skills       : Offensive & cryptographic toolsets
 - certs        : Verified industry accreditations
@@ -473,9 +498,9 @@
 
                 case 'whoami':
                     this.appendHistory(`OPERATOR : DEEKSHITH (D33)
-ROLE     : Offensive Security Architect & Low-Level Systems Engineer
+ROLE     : Offensive Security Architect & Low-Level Systems Developer
 LOCATION : Bangalore, Karnataka, India [12.9716° N, 77.5946° E]
-CORE     : Low-Level Cryptography (C/C++), Penetration Testing, Real-Time Forensics`, 'text-gray-200');
+CORE     : Low-Level Cryptography (C/C++), Penetration Testing, Digital Forensics`, 'text-gray-200');
                     break;
 
                 case 'projects':
@@ -483,7 +508,7 @@ CORE     : Low-Level Cryptography (C/C++), Penetration Testing, Real-Time Forens
                     this.appendHistory(`1. E-D--Crypto         -> C / OpenSSL / AES-256-CBC / RSA-2048
 2. Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
 3. Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
-4. Data Stream Masking -> C++20 Real-Time Financial Tokenizer`, 'text-indigo-300');
+4. Data Stream Masking -> C++20 Financial Payload Tokenizer`, 'text-purple-300');
                     break;
 
                 case 'skills':
@@ -534,7 +559,7 @@ Location : Bangalore, India`, 'text-cyan-400');
        ========================================================================== */
     window.addEventListener('load', () => {
         initThreeJS();
-        initAnimations();
+        initUIAnimations();
         initMobileMenu();
         new InteractiveTerminalDrawer();
     });
