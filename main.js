@@ -1,319 +1,372 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — 3D IMMERSIVE PORTFOLIO & INTERACTIVE SYSTEMS
-   Three.js WebGL Particle Engine + Parallax + Terminal Interface
+   DEEKSHITH (D33) — ADVANCED 3D MOTION PORTFOLIO (v4.0)
+   GSAP Preloader & ScrollTrigger + Three.js Liquid Distortion Sphere + Terminal
    ========================================================================== */
 
 (function () {
     'use strict';
 
     /* ==========================================================================
-       1. LUCIDE ICONS INITIALIZATION
+       1. LUCIDE ICONS
        ========================================================================== */
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
 
     /* ==========================================================================
-       2. THREE.JS 3D PARTICLE TORUS KNOT BACKGROUND ENGINE
+       2. CUSTOM LERP CURSOR LOGIC
        ========================================================================== */
-    class ThreeJsBackgroundEngine {
-        constructor() {
-            this.canvas = document.getElementById('webgl-canvas');
-            if (!this.canvas || typeof THREE === 'undefined') return;
+    const dot = document.getElementById('cursor-dot');
+    const circle = document.getElementById('cursor-circle');
 
-            this.scene = null;
-            this.camera = null;
-            this.renderer = null;
-            this.objectsGroup = null;
-            this.torusKnot = null;
-            this.material = null;
-            this.dustParticles = null;
-            this.clock = new THREE.Clock();
+    if (dot && circle && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        let dotPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        let circlePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
-            this.mouseX = 0;
-            this.mouseY = 0;
-            this.targetX = 0;
-            this.targetY = 0;
-            this.scrollY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        }, { passive: true });
 
-            this.init();
-            this.bindEvents();
-            this.animate();
+        const bindHoverables = () => {
+            const hoverables = document.querySelectorAll('.hoverable, a, button, input');
+            hoverables.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+        };
+
+        const lerp = (start, end, factor) => start + (end - start) * factor;
+
+        function animateCursor() {
+            dotPos.x = lerp(dotPos.x, mouse.x, 0.4);
+            dotPos.y = lerp(dotPos.y, mouse.y, 0.4);
+            
+            circlePos.x = lerp(circlePos.x, mouse.x, 0.15);
+            circlePos.y = lerp(circlePos.y, mouse.y, 0.15);
+
+            dot.style.transform = `translate(${dotPos.x}px, ${dotPos.y}px) translate(-50%, -50%)`;
+            circle.style.transform = `translate(${circlePos.x}px, ${circlePos.y}px) translate(-50%, -50%)`;
+            
+            requestAnimationFrame(animateCursor);
         }
 
-        createCircleTexture() {
-            const matCanvas = document.createElement('canvas');
-            matCanvas.width = 64;
-            matCanvas.height = 64;
-            const ctx = matCanvas.getContext('2d');
+        bindHoverables();
+        requestAnimationFrame(animateCursor);
+    }
+
+    /* ==========================================================================
+       3. GSAP SCROLL ANIMATIONS & CINEMATIC PRELOADER
+       ========================================================================== */
+    function initGsapAnimations() {
+        if (typeof gsap === 'undefined') return;
+
+        if (typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
+
+        // Preloader Timeline Sequence
+        const tl = gsap.timeline();
+
+        tl.to("#loader-progress", {
+            width: "100%",
+            duration: 1.4,
+            ease: "power3.inOut"
+        })
+        .to(".loader-text .char", {
+            y: "0%",
+            opacity: 1,
+            stagger: 0.04,
+            duration: 0.7,
+            ease: "power4.out"
+        }, "-=0.4")
+        .to("#loader", {
+            yPercent: -100,
+            duration: 0.9,
+            ease: "power4.inOut",
+            delay: 0.15
+        })
+        .to("#main-content", {
+            opacity: 1,
+            duration: 0.1
+        }, "-=0.9")
+        .to(".hero-line", {
+            y: "0%",
+            duration: 1.1,
+            stagger: 0.12,
+            ease: "power4.out"
+        }, "-=0.4")
+        .fromTo(".hero-elem", 
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: "power3.out" },
+            "-=0.7"
+        );
+
+        // Section Title Reveals
+        gsap.utils.toArray('.section-title').forEach(title => {
+            gsap.to(title, {
+                scrollTrigger: {
+                    trigger: title.parentElement,
+                    start: "top 85%",
+                },
+                y: "0%",
+                duration: 1,
+                ease: "power4.out"
+            });
+        });
+
+        // Project Cards Parallax & Scroll Reveal
+        gsap.utils.toArray('.project-card').forEach(card => {
+            const img = card.querySelector('.parallax-img');
             
-            // Solid center core
+            gsap.fromTo(card,
+                { opacity: 0, y: 80 },
+                {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.1,
+                    ease: "power3.out"
+                }
+            );
+
+            if (img) {
+                gsap.to(img, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1
+                    },
+                    yPercent: 18,
+                    ease: "none"
+                });
+            }
+        });
+
+        // Expertise Cards Stagger
+        gsap.fromTo('.expertise-card', 
+            { opacity: 0, x: 40 },
+            {
+                scrollTrigger: {
+                    trigger: "#expertise",
+                    start: "top 65%",
+                },
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                stagger: 0.12,
+                ease: "power3.out"
+            }
+        );
+    }
+
+    /* ==========================================================================
+       4. THREE.JS PROCEDURAL LIQUID DISTORTION PARTICLE SPHERE
+       ========================================================================== */
+    function initThreeJS() {
+        const canvas = document.getElementById('webgl-canvas');
+        if (!canvas || typeof THREE === 'undefined') return;
+
+        // 1. Scene & Camera Setup
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.03);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 12;
+        
+        if (window.innerWidth > 768) {
+            camera.position.x = 2; 
+        }
+
+        // 2. Renderer
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true,
+            antialias: true,
+            powerPreference: 'high-performance'
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // 3. Icosahedron High-Detail Mesh (~9,000 vertices)
+        const geometry = new THREE.IcosahedronGeometry(4, 30);
+        const basePositions = new Float32Array(geometry.attributes.position.array);
+
+        // Circular Soft-Glow Texture
+        const createCircleTexture = () => {
+            const cvs = document.createElement('canvas');
+            cvs.width = 64;
+            cvs.height = 64;
+            const ctx = cvs.getContext('2d');
             ctx.beginPath();
-            ctx.arc(32, 32, 28, 0, 2 * Math.PI);
+            ctx.arc(32, 32, 28, 0, Math.PI * 2);
             ctx.fillStyle = '#ffffff';
             ctx.fill();
-            
-            // Soft glow outer ring
-            ctx.beginPath();
-            ctx.arc(32, 32, 30, 0, 2 * Math.PI);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            return new THREE.CanvasTexture(cvs);
+        };
 
-            return new THREE.CanvasTexture(matCanvas);
+        const material = new THREE.PointsMaterial({
+            size: 0.08,
+            color: 0xd8f34c, // Theme accent neon lime
+            map: createCircleTexture(),
+            transparent: true,
+            opacity: 0.7,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const particleMesh = new THREE.Points(geometry, material);
+        scene.add(particleMesh);
+
+        // 4. Background Star/Dust Field
+        const dustGeo = new THREE.BufferGeometry();
+        const dustCount = 1500;
+        const dustPos = new Float32Array(dustCount * 3);
+        for (let i = 0; i < dustCount * 3; i++) {
+            dustPos[i] = (Math.random() - 0.5) * 60;
         }
+        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+        const dustMat = new THREE.PointsMaterial({
+            size: 0.05,
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.25
+        });
+        const dust = new THREE.Points(dustGeo, dustMat);
+        scene.add(dust);
 
-        init() {
-            // 1. Scene Setup
-            this.scene = new THREE.Scene();
-            this.scene.fog = new THREE.FogExp2(0x020617, 0.05);
+        // 5. Interactivity Variables
+        let mouseX = 0;
+        let mouseY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
 
-            // 2. Camera Setup
-            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            this.camera.position.z = 15;
-            this.camera.position.y = 2;
-
-            // 3. Renderer Setup
-            this.renderer = new THREE.WebGLRenderer({
-                canvas: this.canvas,
-                alpha: true,
-                antialias: true,
-                powerPreference: 'high-performance'
-            });
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            // 4. Object Group
-            this.objectsGroup = new THREE.Group();
-            this.scene.add(this.objectsGroup);
-
-            // 5. Torus Knot Particle Mesh
-            const particleTexture = this.createCircleTexture();
-            const geometry = new THREE.TorusKnotGeometry(6, 1.5, 300, 40);
-            
-            this.material = new THREE.PointsMaterial({
-                size: 0.16,
-                map: particleTexture,
-                transparent: true,
-                opacity: 0.85,
-                color: 0x0ea5e9, // Tailwind sky-500
-                blending: THREE.AdditiveBlending,
-                depthWrite: false
-            });
-
-            this.torusKnot = new THREE.Points(geometry, this.material);
-            this.torusKnot.position.x = window.innerWidth > 1024 ? 5 : 0;
-            this.objectsGroup.add(this.torusKnot);
-
-            // 6. Ambient Floating Dust Particles
-            const dustGeometry = new THREE.BufferGeometry();
-            const dustCount = 1000;
-            const posArray = new Float32Array(dustCount * 3);
-            for (let i = 0; i < dustCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 40;
-            }
-            dustGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            
-            const dustMaterial = new THREE.PointsMaterial({
-                size: 0.05,
-                color: 0x8b5cf6, // Tailwind violet-500
-                transparent: true,
-                opacity: 0.45,
-                blending: THREE.AdditiveBlending
-            });
-            
-            this.dustParticles = new THREE.Points(dustGeometry, dustMaterial);
-            this.scene.add(this.dustParticles);
-        }
-
-        bindEvents() {
-            const windowHalfX = window.innerWidth / 2;
-            const windowHalfY = window.innerHeight / 2;
-
-            window.addEventListener('mousemove', (e) => {
-                this.mouseX = (e.clientX - windowHalfX) * 0.001;
-                this.mouseY = (e.clientY - windowHalfY) * 0.001;
-            }, { passive: true });
-
-            window.addEventListener('touchmove', (e) => {
-                if (e.touches && e.touches.length > 0) {
-                    this.mouseX = (e.touches[0].clientX - windowHalfX) * 0.001;
-                    this.mouseY = (e.touches[0].clientY - windowHalfY) * 0.001;
-                }
-            }, { passive: true });
-
-            window.addEventListener('scroll', () => {
-                this.scrollY = window.scrollY;
-            }, { passive: true });
-
-            window.addEventListener('resize', () => {
-                if (!this.camera || !this.renderer) return;
-                this.camera.aspect = window.innerWidth / window.innerHeight;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(window.innerWidth, window.innerHeight);
-
-                if (this.torusKnot) {
-                    this.torusKnot.position.x = window.innerWidth > 1024 ? 5 : 0;
-                }
-            });
-        }
-
-        animate() {
-            const renderLoop = () => {
-                const elapsedTime = this.clock.getElapsedTime();
-
-                // Easing for smooth mouse follow
-                this.targetX = this.mouseX * 0.5;
-                this.targetY = this.mouseY * 0.5;
-
-                if (this.objectsGroup) {
-                    this.objectsGroup.rotation.y += 0.05 * (this.targetX - this.objectsGroup.rotation.y);
-                    this.objectsGroup.rotation.x += 0.05 * (this.targetY - this.objectsGroup.rotation.x);
-                }
-
-                // Continuous baseline rotation for the Torus Knot
-                if (this.torusKnot) {
-                    this.torusKnot.rotation.y += 0.0025;
-                    this.torusKnot.rotation.z += 0.0015;
-                }
-
-                // Animate dust particles slowly upwards & oscillating
-                if (this.dustParticles) {
-                    this.dustParticles.rotation.y = -elapsedTime * 0.02;
-                    this.dustParticles.position.y = Math.sin(elapsedTime * 0.2) * 0.5;
-                    this.dustParticles.rotation.x = this.scrollY * 0.001;
-                }
-
-                // Color breathing effect shifting between sky-blue (#0ea5e9) and violet (#8b5cf6)
-                if (this.material) {
-                    const r = 14 / 255 + Math.abs(Math.sin(elapsedTime * 0.5)) * (139 / 255 - 14 / 255);
-                    const g = 165 / 255 + Math.abs(Math.sin(elapsedTime * 0.5)) * (92 / 255 - 165 / 255);
-                    const b = 233 / 255 + Math.abs(Math.sin(elapsedTime * 0.5)) * (246 / 255 - 233 / 255);
-                    this.material.color.setRGB(r, g, b);
-                }
-
-                // Scroll Parallax effect
-                if (this.camera) {
-                    this.camera.position.y = 2 - (this.scrollY * 0.004);
-                    this.camera.position.z = 15 - (this.scrollY * 0.0015);
-                }
-
-                if (this.renderer && this.scene && this.camera) {
-                    this.renderer.render(this.scene, this.camera);
-                }
-
-                requestAnimationFrame(renderLoop);
-            };
-
-            requestAnimationFrame(renderLoop);
-        }
-    }
-
-    /* ==========================================================================
-       3. SCROLL REVEAL OBSERVER
-       ========================================================================== */
-    function initScrollReveal() {
-        const reveals = document.querySelectorAll('.reveal');
-        
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, {
-                root: null,
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            reveals.forEach(el => observer.observe(el));
-        } else {
-            // Fallback for older browsers
-            function checkScroll() {
-                const windowHeight = window.innerHeight;
-                reveals.forEach(el => {
-                    const top = el.getBoundingClientRect().top;
-                    if (top < windowHeight - 80) {
-                        el.classList.add('active');
-                    }
-                });
-            }
-            window.addEventListener('scroll', checkScroll);
-            checkScroll();
-        }
-    }
-
-    /* ==========================================================================
-       4. NAVBAR SCROLL GLASS EFFECT & ACTIVE LINK SPY
-       ========================================================================== */
-    function initNavbar() {
-        const navbar = document.getElementById('navbar');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const sections = document.querySelectorAll('main[id], section[id]');
-
-        window.addEventListener('scroll', () => {
-            if (navbar) {
-                if (window.scrollY > 40) {
-                    navbar.classList.add('glass');
-                    navbar.classList.remove('py-4');
-                    navbar.classList.add('py-2');
-                } else {
-                    navbar.classList.remove('glass');
-                    navbar.classList.add('py-4');
-                    navbar.classList.remove('py-2');
-                }
-            }
-
-            let current = '';
-            sections.forEach(sec => {
-                if (window.scrollY >= sec.offsetTop - 150) {
-                    current = sec.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('text-sky-400');
-                    link.classList.remove('text-gray-300');
-                } else {
-                    link.classList.remove('text-sky-400');
-                    link.classList.add('text-gray-300');
-                }
-            });
+        window.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX) * 0.001;
+            mouseY = (event.clientY - windowHalfY) * 0.001;
         }, { passive: true });
+
+        // ScrollTrigger 3D Manipulations
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.to(particleMesh.rotation, {
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                },
+                x: Math.PI * 2,
+                y: Math.PI
+            });
+            
+            gsap.to(particleMesh.position, {
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                },
+                z: -5
+            });
+        }
+
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            if (window.innerWidth > 768) {
+                camera.position.x = 2; 
+            } else {
+                camera.position.x = 0;
+            }
+        });
+
+        // 6. Animation Loop (Liquid Vertex Mathematics)
+        const clock = new THREE.Clock();
+        const positions = particleMesh.geometry.attributes.position.array;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = clock.getElapsedTime();
+
+            // Parallax Mouse Follow
+            camera.position.x += (mouseX * 3 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 3 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            // Organic Vertex Mathematical Distortion
+            for (let i = 0; i < positions.length; i += 3) {
+                const bx = basePositions[i];
+                const by = basePositions[i + 1];
+                const bz = basePositions[i + 2];
+
+                const noise = Math.sin(bx * 1.5 + time) * 
+                              Math.cos(by * 1.5 + time) * 
+                              Math.sin(bz * 1.5 + time);
+
+                const wave = Math.sin(time * 0.5 + by * 0.5) * 0.5;
+
+                const len = Math.sqrt(bx * bx + by * by + bz * bz) || 1;
+                const nx = bx / len;
+                const ny = by / len;
+                const nz = bz / len;
+
+                const displacement = noise * 0.8 + wave;
+
+                positions[i] = bx + nx * displacement;
+                positions[i + 1] = by + ny * displacement;
+                positions[i + 2] = bz + nz * displacement;
+            }
+
+            particleMesh.geometry.attributes.position.needsUpdate = true;
+
+            // Ambient mesh rotation
+            particleMesh.rotation.y += 0.001;
+            dust.rotation.y -= 0.0005;
+            dust.rotation.x += 0.0002;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
     }
 
     /* ==========================================================================
-       5. MOBILE DRAWER NAVIGATION
+       5. MOBILE MENU
        ========================================================================== */
     function initMobileMenu() {
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const menu = document.getElementById('mobileMenu');
+        const links = document.querySelectorAll('.mobile-nav-link');
 
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+        if (menuBtn && menu) {
+            menuBtn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
             });
 
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenu.classList.add('hidden');
+            links.forEach(l => {
+                l.addEventListener('click', () => {
+                    menu.classList.add('hidden');
                 });
             });
         }
     }
 
     /* ==========================================================================
-       6. INTERACTIVE TERMINAL DRAWER & KEYBOARD SHORTCUTS
+       6. INTERACTIVE TERMINAL DRAWER
        ========================================================================== */
     class InteractiveTerminalDrawer {
         constructor() {
             this.modal = document.getElementById('terminalModal');
-            this.openBtn = document.getElementById('terminalLaunchBtn');
-            this.mobileOpenBtn = document.getElementById('mobileTerminalLaunchBtn');
+            this.openBtn = document.getElementById('terminalToggleBtn');
+            this.mobileOpenBtn = document.getElementById('mobileTerminalBtn');
             this.closeBtn = document.getElementById('closeTerminalBtn');
             this.input = document.getElementById('terminalInput');
             this.history = document.getElementById('terminalHistory');
@@ -326,7 +379,6 @@
             if (this.mobileOpenBtn) this.mobileOpenBtn.addEventListener('click', () => this.open());
             if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
 
-            // Global shortcut: '~' or '`' to open, 'Escape' to close
             window.addEventListener('keydown', (e) => {
                 if ((e.key === '`' || e.key === '~') && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                     e.preventDefault();
@@ -392,40 +444,38 @@
 
         processCommand(rawCmd) {
             const cmd = rawCmd.toLowerCase();
-            this.appendHistory(`d33:~$ ${rawCmd}`, 'text-emerald-400 font-semibold');
+            this.appendHistory(`d33:~$ ${rawCmd}`, 'text-[#d8f34c] font-semibold');
 
             switch (cmd) {
                 case 'help':
                     this.appendHistory(`Available Commands:
-- whoami       : Operator credentials & core specialization
-- projects     : Production engineering & security projects
-- skills       : Offensive & low-level cryptographic tools
-- certs        : Verified cybersecurity credentials
-- contact      : Direct communication endpoints
-- clear        : Wipe terminal buffer
-- exit         : Terminate terminal session`, 'text-sky-300');
+- whoami       : Security credentials & profile
+- projects     : Production engineering & security suites
+- skills       : Offensive & cryptographic toolsets
+- certs        : Industry certifications & CTF awards
+- contact      : Direct communication coordinates
+- clear        : Clear terminal output
+- exit         : Close terminal`, 'text-[#d8f34c]');
                     break;
 
                 case 'whoami':
                     this.appendHistory(`DEEKSHITH (D33)
-Role     : Cybersecurity Engineer & Systems Developer
-Location : Bangalore, Karnataka, India
-Focus    : Offensive Security, Cryptography in C/C++, Digital Forensics`, 'text-gray-200');
+Specialization : Offensive Cybersecurity, Cryptography (C/C++), Digital Forensics
+Location       : Bangalore, Karnataka, India
+Philosophy     : Hardening defenses through adversarial exploit depth`, 'text-gray-200');
                     break;
 
                 case 'projects':
-                    this.appendHistory(`1. E-D--Crypto         -> C / OpenSSL / AES-256 / RSA-2048
+                    this.appendHistory(`1. E-D--Crypto         -> Pure C / OpenSSL / AES-256 / RSA-2048 Hybrid
 2. Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
-3. Security Audit      -> Automated Bandit SAST & OWASP ZAP Framework
-4. Data Stream Masking -> C++20 Real-Time Financial Payload Sanitizer
-5. GPO Hardening       -> ISO 27001 & NIST 800-171 Compliance Automation
-6. Memory Forensics    -> Volatility 3 & YARA Malware Pipeline`, 'text-cyan-300');
+3. Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
+4. Data Stream Masking -> C++20 Financial Payload Sanitizer & Tokenizer`, 'text-sky-300');
                     break;
 
                 case 'skills':
-                    this.appendHistory(`Offensive : Penetration Testing, OWASP Top 10, Active Directory, Reverse Eng
+                    this.appendHistory(`Offensive : Pen-Testing, OWASP Top 10, Active Directory, Reverse Engineering
 Languages : C, C++20, Python, Bash, x86_64 Assembly, SQL, JavaScript
-Security  : OpenSSL, Burp Suite, Metasploit, Nmap, Wireshark, Volatility, YARA
+Tools     : OpenSSL, Burp Suite, Metasploit, Nmap, Wireshark, Volatility, YARA
 Defensive : ELK Stack, Suricata IDS/IPS, Linux Kernel Hardening, GPO`, 'text-gray-200');
                     break;
 
@@ -444,7 +494,7 @@ Defensive : ELK Stack, Suricata IDS/IPS, Linux Kernel Hardening, GPO`, 'text-gra
                     this.appendHistory(`Email    : d33kshith@proton.me
 GitHub   : github.com/28d33
 LinkedIn : linkedin.com/in/d33kshithanand
-Location : Bangalore, India`, 'text-sky-300');
+Location : Bangalore, India`, 'text-[#d8f34c]');
                     break;
 
                 case 'clear':
@@ -466,20 +516,13 @@ Location : Bangalore, India`, 'text-sky-300');
     }
 
     /* ==========================================================================
-       7. BOOTSTRAP APPLICATION
+       7. INITIALIZATION ON WINDOW LOAD
        ========================================================================== */
-    function initApp() {
-        new ThreeJsBackgroundEngine();
-        initScrollReveal();
-        initNavbar();
+    window.addEventListener('load', () => {
+        initGsapAnimations();
+        initThreeJS();
         initMobileMenu();
         new InteractiveTerminalDrawer();
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initApp);
-    } else {
-        initApp();
-    }
+    });
 
 })();

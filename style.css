@@ -1,14 +1,13 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — 3D IMMERSIVE PORTFOLIO STYLES
-   Three.js WebGL Particle Engine + Modern Glassmorphic Dark UI
+   DEEKSHITH (D33) — ADVANCED 3D MOTION PORTFOLIO (v4.0)
+   GSAP Motion Architecture + Three.js Liquid Distortion + Custom Cursor
    ========================================================================== */
 
 :root {
-    --primary: #0ea5e9;   /* Sky 500 */
-    --secondary: #8b5cf6; /* Violet 500 */
-    --bg-color: #020617;  /* Slate 950 */
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
+    --accent: #d8f34c; /* High-end neon lime accent */
+    --bg: #050505;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
 }
 
 *, *::before, *::after {
@@ -17,25 +16,22 @@
     padding: 0;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 body {
     margin: 0;
-    background-color: var(--bg-color);
+    background-color: var(--bg);
     color: var(--text-primary);
-    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
+    cursor: none; /* Hide default cursor for custom LERP cursor */
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
 }
 
-h1, h2, h3, h4, .font-display {
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+/* Typography */
+h1, h2, h3, h4, h5, .font-display {
+    font-family: 'Syne', sans-serif;
 }
 
-/* 3D WebGL Canvas */
+/* 3D Canvas Background */
 #webgl-canvas {
     position: fixed;
     top: 0;
@@ -46,86 +42,101 @@ h1, h2, h3, h4, .font-display {
     pointer-events: none;
 }
 
-/* Overlay to ensure maximum text contrast against 3D particle field */
-.vignette-overlay {
+/* Noise Overlay for Cinematic Feel */
+.noise-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, transparent 0%, rgba(2, 6, 23, 0.85) 120%);
-    z-index: -1;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
+    z-index: 50;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Glassmorphism Utilities */
-.glass {
-    background: rgba(15, 23, 42, 0.55);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+/* Custom Cursor */
+#cursor-dot, #cursor-circle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
 }
 
-.glass-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+#cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent);
 }
 
-.glass-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(14, 165, 233, 0.5);
-    box-shadow: 0 10px 40px -10px rgba(14, 165, 233, 0.3);
+#cursor-circle {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background-color 0.3s ease;
 }
 
-/* Text Gradients & Outlines */
-.text-gradient {
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.hovering #cursor-circle {
+    width: 65px;
+    height: 65px;
+    border-color: var(--accent);
+    background-color: rgba(216, 243, 76, 0.12);
 }
 
+/* Fallback for touch devices where cursor is hidden */
+@media (hover: none) and (pointer: coarse) {
+    body {
+        cursor: auto;
+    }
+    #cursor-dot, #cursor-circle {
+        display: none !important;
+    }
+}
+
+/* Typography Utilities */
 .text-outline {
     color: transparent;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
+    transition: -webkit-text-stroke 0.3s ease;
 }
 
-/* Scroll Reveal Animation Classes */
-.reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+.text-outline:hover {
+    -webkit-text-stroke: 1px var(--accent);
 }
 
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
+/* Loading Screen */
+#loader {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-/* Custom Scrollbar */
+.loader-text {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* Layout Utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.025);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Hide Default Scrollbar for Sleek Cinematic Look */
 ::-webkit-scrollbar {
-    width: 8px;
+    display: none;
 }
 
-::-webkit-scrollbar-track {
-    background: var(--bg-color);
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
-
-/* Focus states */
-a:focus-visible, button:focus-visible, input:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
