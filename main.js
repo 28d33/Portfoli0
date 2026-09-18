@@ -1,78 +1,90 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — CLEAN & MINIMALIST CYBER PORTFOLIO ENGINE
+   DEEKSHITH (D33) — CLEAN CYBER PORTFOLIO & ASCII MOTION GRAPHICS ENGINE
    ========================================================================== */
 
 (function () {
     'use strict';
 
     /* ==========================================================================
-       1. SUBTLE AMBIENT ASCII BACKGROUND CANVAS
+       1. LANDING STAGE: DYNAMIC ASCII MOTION GRAPHICS ENGINE
        ========================================================================== */
-    class SubtleAsciiBackground {
+    class AsciiMotionGraphicsEngine {
         constructor() {
-            this.canvas = document.getElementById('asciiBgCanvas');
+            this.canvas = document.getElementById('asciiMotionCanvas');
             if (!this.canvas) return;
 
             this.ctx = this.canvas.getContext('2d');
             this.fontSize = 12;
             this.cols = 0;
             this.rows = 0;
+
+            // Geometry angles
             this.A = 0;
             this.B = 0;
+            this.C = 0;
 
-            this.streams = [];
-            this.opcodes = [
-                'MOV RAX, 0x3B',
-                'XOR RDI, RDI',
-                'SYSCALL',
-                'PUSH RBP',
-                '0x7FFE10',
-                '0xDEADBEEF',
-                'AES256',
-                'RSA2048',
-                'RET'
-            ];
-            this.hexChars = '0123456789ABCDEF!#*+-~:/';
+            // Mouse parallax
+            this.mouseX = 0;
+            this.mouseY = 0;
+            this.targetMouseX = 0;
+            this.targetMouseY = 0;
+
+            // Particles
+            this.particles = [];
+            this.numParticles = 40;
+
+            // ASCII character ramp
+            this.chars = ' .,-~:;=!*#$@';
 
             this.resize();
+            this.initParticles();
             this.bindEvents();
             this.startLoop();
         }
 
         resize() {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
-            this.cols = Math.floor(this.canvas.width / 12);
-            this.rows = Math.floor(this.canvas.height / (this.fontSize + 4));
+            const parent = this.canvas.parentElement;
+            this.canvas.width = parent ? parent.clientWidth : window.innerWidth;
+            this.canvas.height = parent ? parent.clientHeight : window.innerHeight;
+            this.cols = Math.floor(this.canvas.width / 11);
+            this.rows = Math.floor(this.canvas.height / (this.fontSize + 3));
+        }
 
-            this.streams = [];
-            for (let i = 0; i < this.cols; i++) {
-                this.streams.push({
-                    y: Math.random() * this.rows,
-                    speed: 0.08 + Math.random() * 0.2,
-                    char: this.hexChars[Math.floor(Math.random() * this.hexChars.length)],
-                    opcodeIdx: Math.floor(Math.random() * this.opcodes.length)
+        initParticles() {
+            this.particles = [];
+            for (let i = 0; i < this.numParticles; i++) {
+                this.particles.push({
+                    x: Math.random() * (this.canvas.width || 800),
+                    y: Math.random() * (this.canvas.height || 600),
+                    vx: (Math.random() - 0.5) * 0.6,
+                    vy: (Math.random() - 0.5) * 0.6,
+                    char: ['+', 'x', '.', ':', '*', '#'][Math.floor(Math.random() * 6)],
+                    alpha: 0.1 + Math.random() * 0.3
                 });
             }
         }
 
         bindEvents() {
-            window.addEventListener('resize', () => this.resize());
+            window.addEventListener('resize', () => {
+                this.resize();
+                this.initParticles();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                this.targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                this.targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            });
         }
 
         startLoop() {
-            let lastTime = 0;
-            const animate = (time) => {
-                requestAnimationFrame(animate);
-                if (time - lastTime > 45) { // ~22 FPS for subtle, calm ambient animation
-                    lastTime = time;
-                    this.render(time * 0.001);
-                }
+            const renderFrame = () => {
+                requestAnimationFrame(renderFrame);
+                this.render();
             };
-            requestAnimationFrame(animate);
+            requestAnimationFrame(renderFrame);
         }
 
-        render(t) {
+        render() {
             const ctx = this.ctx;
             const w = this.canvas.width;
             const h = this.canvas.height;
@@ -81,37 +93,32 @@
             ctx.font = `${this.fontSize}px 'JetBrains Mono', monospace`;
             ctx.textBaseline = 'top';
 
-            this.A += 0.02;
-            this.B += 0.01;
+            // Smooth mouse follow
+            this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
+            this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
 
-            // 1. Subtle Background Matrix Streams
-            for (let col = 0; col < this.cols; col += 4) {
-                const stream = this.streams[col];
-                if (!stream) continue;
+            this.A += 0.018 + this.mouseY * 0.01;
+            this.B += 0.012 + this.mouseX * 0.01;
+            this.C += 0.008;
 
-                stream.y += stream.speed;
-                if (stream.y > this.rows + 10) {
-                    stream.y = -5;
-                    stream.speed = 0.08 + Math.random() * 0.2;
-                }
+            // 1. Draw floating ambient ASCII cyber particles
+            for (let i = 0; i < this.particles.length; i++) {
+                const p = this.particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
 
-                const rowIdx = Math.floor(stream.y);
-                const xPos = col * 12;
-                const yPos = rowIdx * (this.fontSize + 4);
+                if (p.x < 0) p.x = w;
+                if (p.x > w) p.x = 0;
+                if (p.y < 0) p.y = h;
+                if (p.y > h) p.y = 0;
 
-                if (col % 8 === 0 && rowIdx >= 0 && rowIdx < this.rows) {
-                    ctx.fillStyle = 'rgba(14, 165, 233, 0.25)'; // Sky blue
-                    ctx.fillText(this.opcodes[stream.opcodeIdx], xPos, yPos);
-                } else if (rowIdx >= 0 && rowIdx < this.rows) {
-                    ctx.fillStyle = 'rgba(16, 185, 129, 0.18)'; // Emerald
-                    const ch = this.hexChars[(Math.floor(t * 8) + col) % this.hexChars.length];
-                    ctx.fillText(ch, xPos, yPos);
-                }
+                ctx.fillStyle = `rgba(16, 185, 129, ${p.alpha})`;
+                ctx.fillText(p.char, p.x, p.y);
             }
 
-            // 2. Rotating 3D Torus in Upper-Right
-            const torusCols = Math.min(38, Math.floor(this.cols * 0.4));
-            const torusRows = Math.min(18, Math.floor(this.rows * 0.45));
+            // 2. Render 3D Rotating ASCII Torus Knot / Cyber Sphere
+            const torusCols = Math.min(50, Math.floor(this.cols * 0.55));
+            const torusRows = Math.min(24, Math.floor(this.rows * 0.65));
             const b = [];
             const z = [];
             for (let k = 0; k < torusCols * torusRows; k++) {
@@ -119,12 +126,12 @@
                 z[k] = 0;
             }
 
-            const R1 = 1;
-            const R2 = 2.0;
+            const R1 = 1.1;
+            const R2 = 2.2;
             const K2 = 5;
 
-            for (let j = 0; j < 6.28; j += 0.35) {
-                for (let i = 0; i < 6.28; i += 0.16) {
+            for (let j = 0; j < 6.28; j += 0.28) {
+                for (let i = 0; i < 6.28; i += 0.12) {
                     const c = Math.sin(i);
                     const d = Math.cos(j);
                     const e = Math.sin(this.A);
@@ -137,38 +144,60 @@
                     const n = Math.sin(this.B);
                     const torusT = c * h * g - f * e;
 
-                    const x = Math.floor(torusCols / 2 + 28 * D * (l * h * m - torusT * n));
-                    const y = Math.floor(torusRows / 2 + 14 * D * (l * h * n + torusT * m));
+                    const x = Math.floor(torusCols / 2 + 32 * D * (l * h * m - torusT * n));
+                    const y = Math.floor(torusRows / 2 + 16 * D * (l * h * n + torusT * m));
                     const o = x + torusCols * y;
                     const N = Math.floor(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n));
 
                     if (y >= 0 && y < torusRows && x >= 0 && x < torusCols && D > z[o]) {
                         z[o] = D;
-                        const chars = '.,-~:;=!*#$@';
-                        b[o] = chars[Math.max(0, Math.min(chars.length - 1, N > 0 ? N : 0))];
+                        b[o] = this.chars[Math.max(0, Math.min(this.chars.length - 1, N > 0 ? N : 0))];
                     }
                 }
             }
 
-            const startX = Math.max(20, w - torusCols * 12 - 30);
-            const startY = Math.max(80, Math.floor(h * 0.1));
+            // Position torus on the right side of the landing screen
+            const startX = Math.max(20, w - torusCols * 11 - 50);
+            const startY = Math.max(40, Math.floor((h - torusRows * (this.fontSize + 2)) / 2));
 
-            ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.45)';
             for (let ty = 0; ty < torusRows; ty++) {
                 for (let tx = 0; tx < torusCols; tx++) {
                     const char = b[tx + torusCols * ty];
                     if (char && char !== ' ') {
-                        ctx.fillText(char, startX + tx * 12, startY + ty * (this.fontSize + 2));
+                        // Alternate subtle cyan/emerald tone
+                        ctx.fillStyle = (tx + ty) % 4 === 0 ? 'rgba(14, 165, 233, 0.55)' : 'rgba(16, 185, 129, 0.45)';
+                        ctx.fillText(char, startX + tx * 11, startY + ty * (this.fontSize + 2));
                     }
                 }
             }
         }
     }
 
-    new SubtleAsciiBackground();
+    new AsciiMotionGraphicsEngine();
 
     /* ==========================================================================
-       2. METRICS COUNTER ANIMATION
+       2. TYPEWRITER EFFECT FOR LANDING COMMAND
+       ========================================================================== */
+    const typingEl = document.getElementById('landingCommandTyping');
+    if (typingEl) {
+        const fullText = './boot_system.sh --operator=DEEKSHITH --mode=PRO';
+        typingEl.textContent = '';
+        let charIdx = 0;
+
+        function typeChar() {
+            if (charIdx < fullText.length) {
+                typingEl.textContent += fullText.charAt(charIdx);
+                charIdx++;
+                setTimeout(typeChar, 35 + Math.random() * 30);
+            }
+        }
+
+        setTimeout(typeChar, 300);
+    }
+
+    /* ==========================================================================
+       3. METRICS COUNTER ANIMATION
        ========================================================================== */
     const counters = document.querySelectorAll('.counter');
     const counterObserver = new IntersectionObserver((entries) => {
@@ -195,12 +224,13 @@
     counters.forEach(c => counterObserver.observe(c));
 
     /* ==========================================================================
-       3. INTERACTIVE TERMINAL DRAWER
+       4. INTERACTIVE TERMINAL DRAWER
        ========================================================================== */
     class InteractiveTerminal {
         constructor() {
             this.overlay = document.getElementById('terminalOverlay');
             this.openBtn = document.getElementById('terminalToggleBtn');
+            this.heroOpenBtn = document.getElementById('landingShellBtn');
             this.closeBtn = document.getElementById('closeTerminalBtn');
             this.input = document.getElementById('terminalInput');
             this.history = document.getElementById('terminalHistory');
@@ -210,6 +240,7 @@
 
         bindEvents() {
             if (this.openBtn) this.openBtn.addEventListener('click', () => this.open());
+            if (this.heroOpenBtn) this.heroOpenBtn.addEventListener('click', () => this.open());
             if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
 
             window.addEventListener('keydown', (e) => {
@@ -262,7 +293,7 @@
 
             switch (cmd) {
                 case 'help':
-                    this.appendHistory(`Commands:
+                    this.appendHistory(`Available Commands:
 - whoami       : About Deekshith
 - projects     : List key security projects
 - skills       : List technical capabilities
@@ -343,7 +374,7 @@ Location : Bangalore, Karnataka, India`, 'color: #e2e8f0;');
     new InteractiveTerminal();
 
     /* ==========================================================================
-       4. PROJECT CATEGORY FILTERING
+       5. PROJECT CATEGORY FILTERING
        ========================================================================== */
     const filterTags = document.querySelectorAll('.filter-tag');
     const projectCards = document.querySelectorAll('.project-card');
@@ -366,7 +397,7 @@ Location : Bangalore, Karnataka, India`, 'color: #e2e8f0;');
     });
 
     /* ==========================================================================
-       5. NAVBAR SCROLL & ACTIVE LINK SPY
+       6. NAVBAR SCROLL & ACTIVE LINK SPY
        ========================================================================== */
     const navbar = document.getElementById('navbar');
     const navItems = document.querySelectorAll('.nav-item');
@@ -390,7 +421,7 @@ Location : Bangalore, Karnataka, India`, 'color: #e2e8f0;');
     }, { passive: true });
 
     /* ==========================================================================
-       6. MOBILE MENU
+       7. MOBILE MENU
        ========================================================================== */
     const mobileToggle = document.getElementById('mobileToggle');
     const navLinks = document.getElementById('navLinks');
@@ -408,7 +439,7 @@ Location : Bangalore, Karnataka, India`, 'color: #e2e8f0;');
     }
 
     /* ==========================================================================
-       7. CONTACT FORM DISPATCH
+       8. CONTACT FORM DISPATCH
        ========================================================================== */
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');

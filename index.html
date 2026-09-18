@@ -64,40 +64,58 @@
     <!-- Main Content -->
     <main class="main-layout">
 
-        <!-- ==================== HERO SECTION ==================== -->
-        <section id="hero" class="hero-section">
-            <div class="container">
+        <!-- ==================== LANDING STAGE: SMOOTH ASCII MOTION GRAPHICS ==================== -->
+        <section id="hero" class="landing-motion-section">
+            <div class="landing-canvas-wrapper">
+                <canvas id="asciiMotionCanvas"></canvas>
+            </div>
+
+            <div class="container landing-content">
                 
-                <div class="hero-header-tag">
-                    <span class="status-dot"></span>
-                    <span>Available for security roles &amp; consulting &bull; Bangalore, India</span>
+                <!-- Terminal Command Line -->
+                <div class="landing-cmd-badge">
+                    <span class="cmd-prompt"><span class="text-emerald">root@d33</span>:<span class="text-cyan">~</span>$</span>
+                    <span class="cmd-typing" id="landingCommandTyping">./boot_system.sh --operator=DEEKSHITH --mode=PRO</span>
                 </div>
 
-                <h1 class="hero-title">
-                    Hi, I'm <span class="text-highlight">Deekshith</span>.
-                </h1>
+                <!-- Smooth ASCII Motion Name Banner -->
+                <div class="landing-ascii-banner-box">
+                    <pre class="landing-ascii-art" id="landingAsciiArt" aria-label="DEEKSHITH ASCII ART">
+██████╗ ███████╗███████╗██╗  ██╗███████╗██╗  ██╗██╗████████╗██╗  ██╗
+██╔══██╗██╔════╝██╔════╝██║ ██╔╝██╔════╝██║  ██║██║╚══██╔══╝██║  ██║
+██║  ██║█████╗  █████╗  █████╔╝ ███████╗███████║██║   ██║   ███████║
+██║  ██║██╔══╝  ██╔══╝  ██╔═██╗ ╚════██║██╔══██║██║   ██║   ██╔══██║
+██████╔╝███████╗███████╗██║  ██╗███████║██║  ██║██║   ██║   ██║  ██║
+╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝</pre>
+                </div>
 
-                <p class="hero-subtitle">
-                    Cybersecurity engineer &amp; ethical hacker specializing in <strong>penetration testing</strong>, <strong>digital forensics</strong>, and <strong>low-level security engineering</strong>.
+                <!-- Role & Location Subhead -->
+                <div class="landing-role-strip">
+                    <span class="strip-item"><span class="text-emerald">●</span> <strong>CYBERSECURITY ENGINEER</strong></span>
+                    <span class="strip-sep">//</span>
+                    <span class="strip-item"><span class="text-cyan">●</span> <strong>PENETRATION TESTER</strong></span>
+                    <span class="strip-sep">//</span>
+                    <span class="strip-item"><span class="text-amber">●</span> <strong>EXPLOIT RESEARCHER</strong></span>
+                </div>
+
+                <p class="landing-lead">
+                    Specialized in offensive red teaming, digital forensics, and engineering custom cryptographic utilities in C and Python. Breaking perimeters to engineer unbreachable defenses.
                 </p>
 
-                <p class="hero-bio">
-                    I assess systems from an attacker's perspective to build stronger defenses. Experienced in identifying vulnerabilities, designing zero-trust networks, and engineering custom cryptographic utilities in C and Python.
-                </p>
-
-                <div class="hero-cta-row">
-                    <a href="#projects" class="btn btn-primary">
-                        <i class="fas fa-arrow-down"></i> View Projects
+                <!-- Interactive CTA Row -->
+                <div class="landing-actions-row">
+                    <a href="#about" class="btn btn-primary btn-lg" id="exploreBtn">
+                        <i class="fas fa-arrow-down"></i> <span>Explore Portfolio</span>
                     </a>
-                    <a href="resume.pdf" download="Deekshith_Resume.pdf" class="btn btn-secondary">
-                        <i class="fas fa-file-lines"></i> Resume (PDF)
-                    </a>
-                    <a href="#contact" class="btn btn-secondary">
-                        <i class="fas fa-envelope"></i> Get in Touch
+                    <button class="btn btn-secondary btn-lg" id="landingShellBtn">
+                        <i class="fas fa-terminal"></i> <span>Interactive Shell <kbd>`</kbd></span>
+                    </button>
+                    <a href="resume.pdf" download="Deekshith_Resume.pdf" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-file-arrow-down"></i> <span>Download Resume</span>
                     </a>
                 </div>
 
-                <!-- Fast Fact Strip -->
+                <!-- Fast Metrics Strip -->
                 <div class="hero-metrics-strip">
                     <div class="metric-box">
                         <span class="metric-num counter" data-target="8">0</span><span class="metric-plus">+</span>
@@ -115,10 +133,16 @@
                     </div>
                     <div class="metric-divider"></div>
                     <div class="metric-box">
-                        <span class="metric-num">C / Python</span>
-                        <span class="metric-label">Security Tool Development</span>
+                        <span class="metric-num">Bangalore, IN</span>
+                        <span class="metric-label">Base Coordinates (UTC+5:30)</span>
                     </div>
                 </div>
+
+                <!-- Smooth Scroll Indicator -->
+                <a href="#about" class="scroll-down-indicator" aria-label="Scroll down">
+                    <span class="scroll-text">SCROLL TO EXPLORE</span>
+                    <i class="fas fa-chevron-down scroll-arrow"></i>
+                </a>
 
             </div>
         </section>
