@@ -9,6 +9,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: 'Inter', sans-serif;
@@ -17,7 +21,13 @@ body {
     overflow-x: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    cursor: none; /* Custom physics cursor */
+    -webkit-font-smoothing: antialiased;
+}
+
+@media (pointer: fine) {
+    body {
+        cursor: none; /* Custom physics cursor on desktop / mouse pointer devices only */
+    }
 }
 
 body::-webkit-scrollbar {
@@ -113,6 +123,17 @@ body::-webkit-scrollbar {
     height: 0px;
 }
 
+/* Hide Custom Cursor on touch devices / phones / tablets */
+@media (pointer: coarse), (hover: none) {
+    #cursor-dot,
+    #cursor-ring {
+        display: none !important;
+    }
+    body {
+        cursor: auto !important;
+    }
+}
+
 /* Glass Panels */
 .glass-panel {
     background: rgba(255, 255, 255, 0.025);
@@ -133,7 +154,7 @@ body::-webkit-scrollbar {
 
 .magnetic-area {
     position: absolute;
-    inset: -20px;
+    inset: -15px;
     z-index: 1;
 }
 
@@ -141,13 +162,13 @@ body::-webkit-scrollbar {
     mix-blend-mode: difference;
 }
 
-/* Scroll Animation */
+/* Scroll Indicator Keyframes */
 @keyframes scroll {
     0% { transform: translateY(-100%); }
     100% { transform: translateY(100%); }
 }
 
-/* Custom Scrollbar for Terminal */
+/* Custom Scrollbar for Terminal & Modals */
 .scrollbar-thin::-webkit-scrollbar {
     width: 4px;
 }
