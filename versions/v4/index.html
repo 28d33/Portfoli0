@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deekshith (D33) | 3D Immersive Portfolio & Cybersecurity Engineer</title>
+    <meta name="description" content="Portfolio of Deekshith (D33) — Cybersecurity Engineer, Penetration Tester, Cryptographic & Systems Developer.">
+    <meta name="keywords" content="Deekshith, D33, Cybersecurity, Penetration Testing, C, C++, Three.js, Portfolio, Bangalore, InfoSec">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- 3D Three.js Background Canvas -->
+    <canvas id="webgl-canvas"></canvas>
+    <div class="vignette-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Brand Logo -->
+            <a href="#home" class="flex items-center gap-2 group cursor-pointer">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-sky-400 to-violet-500 flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-lg shadow-sky-500/20">
+                    <span class="font-display font-bold text-white text-base">D33</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-lg tracking-tight text-white group-hover:text-sky-400 transition-colors">DEEKSHITH</span>
+                    <span class="text-[10px] font-mono text-gray-400 -mt-1 tracking-wider uppercase">Cybersecurity</span>
+                </div>
+            </a>
+
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium glass px-7 py-2.5 rounded-full">
+                <a href="#home" class="nav-link text-gray-300 hover:text-white transition-colors">Home</a>
+                <a href="#work" class="nav-link text-gray-300 hover:text-white transition-colors">Work</a>
+                <a href="#expertise" class="nav-link text-gray-300 hover:text-white transition-colors">Expertise</a>
+                <a href="#certs" class="nav-link text-gray-300 hover:text-white transition-colors">Certifications</a>
+            </div>
+
+            <!-- Header Action Button -->
+            <div class="hidden md:flex items-center gap-3">
+                <button id="terminalLaunchBtn" class="glass text-xs font-mono text-sky-300 hover:text-white px-3.5 py-2 rounded-full border border-sky-500/30 hover:border-sky-400 transition-all flex items-center gap-1.5">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                    <span>Terminal</span>
+                </button>
+                <a href="#contact" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-2 rounded-full text-sm font-semibold transition-all backdrop-blur-sm hover:scale-105">
+                    Let's Talk
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobileMenuBtn" class="md:hidden text-white p-2 focus:outline-none" aria-label="Toggle Navigation">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden glass mx-4 mt-2 p-6 rounded-2xl flex flex-col gap-4 border border-white/10">
+            <a href="#home" class="mobile-nav-link text-gray-200 hover:text-white py-2 text-base font-medium">Home</a>
+            <a href="#work" class="mobile-nav-link text-gray-200 hover:text-white py-2 text-base font-medium">Work</a>
+            <a href="#expertise" class="mobile-nav-link text-gray-200 hover:text-white py-2 text-base font-medium">Expertise</a>
+            <a href="#certs" class="mobile-nav-link text-gray-200 hover:text-white py-2 text-base font-medium">Certifications</a>
+            <a href="#contact" class="mobile-nav-link text-gray-200 hover:text-white py-2 text-base font-medium">Contact</a>
+            <div class="pt-2 border-t border-white/10 flex justify-between items-center">
+                <button id="mobileTerminalLaunchBtn" class="text-xs font-mono text-sky-400 flex items-center gap-2 py-2">
+                    <i data-lucide="terminal" class="w-4 h-4"></i>
+                    <span>Launch Terminal [~]</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main id="home" class="relative min-h-screen flex flex-col justify-center items-center px-6 pt-24 pb-16">
+        <div class="w-full max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-8 space-y-6 text-center lg:text-left reveal active">
+                
+                <!-- Live Status Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-300 text-xs font-semibold uppercase tracking-wider mb-2">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                    </span>
+                    Available for Security Audits & Engineering Roles
+                </div>
+                
+                <!-- Headline -->
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.08]">
+                    <span class="block text-outline opacity-85">Offensive</span>
+                    <span class="block text-white">Security <span class="text-gray-500 font-light italic">&</span></span>
+                    <span class="block text-gradient">Systems Dev.</span>
+                </h1>
+                
+                <!-- Bio -->
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl font-light leading-relaxed mx-auto lg:mx-0">
+                    Hi, I'm <span class="text-white font-medium">Deekshith (D33)</span>. I specialize in offensive penetration testing, cryptographic engineering in C/C++, digital forensics, and hardened infrastructure architecture.
+                </p>
+
+                <!-- Key Telemetry Highlights -->
+                <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
+                    <div class="glass px-4 py-2 rounded-xl flex items-center gap-2.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span class="text-xs font-mono text-gray-300">Bangalore, India</span>
+                    </div>
+                    <div class="glass px-4 py-2 rounded-xl flex items-center gap-2.5">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-sky-400"></i>
+                        <span class="text-xs font-mono text-gray-300">50+ CTF Flags Captured</span>
+                    </div>
+                    <div class="glass px-4 py-2 rounded-xl flex items-center gap-2.5">
+                        <i data-lucide="lock" class="w-4 h-4 text-violet-400"></i>
+                        <span class="text-xs font-mono text-gray-300">OpenSSL / AES-256 Engine</span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
+                    <a href="#work" class="bg-white text-gray-950 px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-white/10">
+                        View Projects
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="glass text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="file-text" class="w-5 h-5 text-sky-400"></i>
+                        Download Resume
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Space for 3D Torus Knot to shine on desktop -->
+            <div class="hidden lg:block lg:col-span-4 h-96"></div>
+            
+        </div>
+
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-gray-500 z-10 pointer-events-none">
+            <span class="text-xs uppercase tracking-widest mb-2 font-display font-semibold">Discover</span>
+            <i data-lucide="mouse" class="w-5 h-5 mb-1"></i>
+            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+        </div>
+    </main>
+
+    <!-- Projects Section -->
+    <section id="work" class="relative py-28 px-6">
+        <div class="max-w-7xl mx-auto z-10 relative">
+            <div class="mb-16 reveal">
+                <div class="flex items-center gap-2 text-sky-400 text-xs font-mono uppercase tracking-widest mb-2">
+                    <i data-lucide="folder-git-2" class="w-4 h-4"></i>
+                    <span>Production Architecture</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Selected <span class="text-outline">Work</span></h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-sky-500 to-violet-500 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Project 1: E-D--Crypto -->
+                <div class="glass-card rounded-2xl p-6 group reveal flex flex-col justify-between">
+                    <div>
+                        <div class="aspect-video bg-gray-900/80 rounded-xl mb-6 overflow-hidden relative border border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-sky-500/20 to-violet-500/20 group-hover:scale-110 transition-transform duration-700"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                                <i data-lucide="key-round" class="w-10 h-10 text-sky-400 mb-2"></i>
+                                <span class="font-mono text-xs text-gray-400">AES-256-CBC + RSA-2048</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-display font-bold text-white group-hover:text-sky-400 transition-colors">E-D--Crypto</h3>
+                            <a href="https://github.com/28d33/E-D--Crypto" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="GitHub Repo">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-white"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">High-performance cryptographic file encryption system built in pure C utilizing OpenSSL EVP interfaces, zero-padding protection, and hybrid key encapsulation.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono text-sky-300">
+                        <span class="bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded">C / C++</span>
+                        <span class="bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded">OpenSSL</span>
+                        <span class="bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded">Cryptography</span>
+                    </div>
+                </div>
+
+                <!-- Project 2: Perimeter Security & SIEM -->
+                <div class="glass-card rounded-2xl p-6 group reveal flex flex-col justify-between" style="transition-delay: 100ms;">
+                    <div>
+                        <div class="aspect-video bg-gray-900/80 rounded-xl mb-6 overflow-hidden relative border border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 group-hover:scale-110 transition-transform duration-700"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                                <i data-lucide="shield-alert" class="w-10 h-10 text-emerald-400 mb-2"></i>
+                                <span class="font-mono text-xs text-gray-400">Zero-Trust & ELK SIEM</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-display font-bold text-white group-hover:text-emerald-400 transition-colors">Perimeter Defense & SIEM</h3>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="GitHub Repo">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-white"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Multi-tier DMZ defense architecture with Suricata IDS/IPS, IPTables firewall rules, and unified ELK stack telemetry for real-time attack threat correlation.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono text-emerald-300">
+                        <span class="bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded">ELK Stack</span>
+                        <span class="bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded">Suricata</span>
+                        <span class="bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded">Zero-Trust</span>
+                    </div>
+                </div>
+
+                <!-- Project 3: Full-Scope Security Audit -->
+                <div class="glass-card rounded-2xl p-6 group reveal flex flex-col justify-between" style="transition-delay: 200ms;">
+                    <div>
+                        <div class="aspect-video bg-gray-900/80 rounded-xl mb-6 overflow-hidden relative border border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-rose-500/20 to-orange-500/20 group-hover:scale-110 transition-transform duration-700"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                                <i data-lucide="binary" class="w-10 h-10 text-rose-400 mb-2"></i>
+                                <span class="font-mono text-xs text-gray-400">OWASP Top 10 + SAST/DAST</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-display font-bold text-white group-hover:text-rose-400 transition-colors">Automated Security Audit</h3>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="GitHub Repo">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-white"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Automated vulnerability assessment engine combining Bandit SAST, OWASP ZAP dynamic analysis, and CI/CD security gating to eliminate zero-days before deploy.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono text-rose-300">
+                        <span class="bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded">SAST / DAST</span>
+                        <span class="bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded">Python</span>
+                        <span class="bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded">CI/CD Security</span>
+                    </div>
+                </div>
+
+                <!-- Project 4: Enterprise Data Security -->
+                <div class="glass-card rounded-2xl p-6 group reveal flex flex-col justify-between">
+                    <div>
+                        <div class="aspect-video bg-gray-900/80 rounded-xl mb-6 overflow-hidden relative border border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-purple-500/20 group-hover:scale-110 transition-transform duration-700"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                                <i data-lucide="database-zap" class="w-10 h-10 text-violet-400 mb-2"></i>
+                                <span class="font-mono text-xs text-gray-400">Stream Tokenization Engine</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-display font-bold text-white group-hover:text-violet-400 transition-colors">Data Stream Masking</h3>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="GitHub Repo">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-white"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">High-throughput C++ data sanitization microservice providing real-time PII & financial payload masking with strict sub-millisecond latency guarantees.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono text-violet-300">
+                        <span class="bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded">C++20</span>
+                        <span class="bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded">Data Privacy</span>
+                        <span class="bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded">High Performance</span>
+                    </div>
+                </div>
+
+                <!-- Project 5: Infrastructure & Compliance Engine -->
+                <div class="glass-card rounded-2xl p-6 group reveal flex flex-col justify-between" style="transition-delay: 100ms;">
+                    <div>
+                        <div class="aspect-video bg-gray-900/80 rounded-xl mb-6 overflow-hidden relative border border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-yellow-500/20 group-hover:scale-110 transition-transform duration-700"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                                <i data-lucide="sliders" class="w-10 h-10 text-amber-400 mb-2"></i>
+                                <span class="font-mono text-xs text-gray-400">ISO 27001 & CMMC Framework</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-display font-bold text-white group-hover:text-amber-400 transition-colors">Hardening & Compliance</h3>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="GitHub Repo">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-white"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Enterprise compliance automation scripts in Bash & PowerShell mapping Active Directory GPO configurations to ISO/IEC 27001 and NIST 800-171 controls.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono text-amber-300">
+                        <span class="bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded">Bash / PowerShell</span>
+                        <span class="bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded">ISO 27001</span>
+                        <span class="bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded">GPO Hardening</span>
+                    </div>
+                </div>
+
+                <!-- Project 6: Forensics & Memory Analysis -->
+                <div class="glass-card rounded-2xl p-6 group reveal flex flex-col justify-between" style="transition-delay: 200ms;">
+                    <div>
+                        <div class="aspect-video bg-gray-900/80 rounded-xl mb-6 overflow-hidden relative border border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 group-hover:scale-110 transition-transform duration-700"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                                <i data-lucide="cpu" class="w-10 h-10 text-cyan-400 mb-2"></i>
+                                <span class="font-mono text-xs text-gray-400">Volatility & YARA Rule Suite</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-display font-bold text-white group-hover:text-cyan-400 transition-colors">Forensics Artifact Pipeline</h3>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="GitHub Repo">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-white"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Incident response automation parsing volatile memory dumps, extracting DLL injection vectors, and generating automated YARA signature rules.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono text-cyan-300">
+                        <span class="bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded">Volatility 3</span>
+                        <span class="bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded">YARA</span>
+                        <span class="bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded">Incident Response</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Expertise Section -->
+    <section id="expertise" class="relative py-28 px-6">
+        <div class="max-w-7xl mx-auto z-10 relative">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <div class="flex items-center gap-2 text-violet-400 text-xs font-mono uppercase tracking-widest mb-2">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <span>Technical Capabilities</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-6">Technical <br/><span class="text-gradient">Arsenal.</span></h2>
+                    <p class="text-gray-400 text-lg mb-8 font-light leading-relaxed">
+                        Combining deep offensive security methodologies with low-level systems programming. I build resilient defenses by understanding precisely how adversarial attacks operate under the hood.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="font-medium text-white">Offensive Security & Pen-Testing (OWASP / AD / Web)</span>
+                                <span class="text-sky-400 font-mono">95%</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-sky-500 to-sky-300 w-[95%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="font-medium text-white">Systems & Cryptography (C / C++ / OpenSSL / Assembly)</span>
+                                <span class="text-violet-400 font-mono">90%</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-violet-500 to-violet-300 w-[90%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="font-medium text-white">Defensive SIEM & Digital Forensics (ELK / Volatility)</span>
+                                <span class="text-fuchsia-400 font-mono">88%</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-fuchsia-500 to-fuchsia-300 w-[88%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="font-medium text-white">Cloud, Linux & Compliance (AWS / Docker / ISO 27001)</span>
+                                <span class="text-emerald-400 font-mono">85%</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-300 w-[85%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 reveal" style="transition-delay: 200ms;">
+                    <div class="glass p-6 rounded-2xl flex flex-col items-center text-center gap-3 hover:bg-white/5 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                            <i data-lucide="shield" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-white">Offensive Mindset</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Black-box & white-box security auditing, privilege escalation, exploit research.</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex flex-col items-center text-center gap-3 hover:bg-white/5 transition-colors mt-8">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+                            <i data-lucide="lock" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-white">Cryptographic Core</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">AES, RSA, ECC, hashing protocols, and secure key derivation algorithms in C.</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex flex-col items-center text-center gap-3 hover:bg-white/5 transition-colors -mt-8">
+                        <div class="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400">
+                            <i data-lucide="search" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-white">Digital Forensics</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Volatile memory analysis, packet inspection, timeline reconstruction, YARA rules.</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex flex-col items-center text-center gap-3 hover:bg-white/5 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                            <i data-lucide="server" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-white">Hardened Systems</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Kernel parameter tuning, DMZ isolation, Active Directory hardening & SIEM.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certs" class="relative py-28 px-6">
+        <div class="max-w-7xl mx-auto z-10 relative">
+            <div class="mb-16 reveal">
+                <div class="flex items-center gap-2 text-amber-400 text-xs font-mono uppercase tracking-widest mb-2">
+                    <i data-lucide="award" class="w-4 h-4"></i>
+                    <span>Industry Recognition</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Verified <span class="text-outline">Credentials</span></h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-amber-500 to-rose-500 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div class="glass-card rounded-2xl p-5 group reveal">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 mb-4">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">Ethical Hacking</h3>
+                    <p class="text-xs font-mono text-amber-300/80 mb-2">IISc Bangalore</p>
+                    <p class="text-xs text-gray-400">Network exploitation, system defense & cryptographic protocols.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 group reveal" style="transition-delay: 50ms;">
+                    <div class="w-10 h-10 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400 mb-4">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">Cybersecurity Course</h3>
+                    <p class="text-xs font-mono text-sky-300/80 mb-2">IIT Guwahati</p>
+                    <p class="text-xs text-gray-400">Threat modeling, vulnerability assessment & defense in depth.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 group reveal" style="transition-delay: 100ms;">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
+                        <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">Ethical Hacker</h3>
+                    <p class="text-xs font-mono text-emerald-300/80 mb-2">Cisco</p>
+                    <p class="text-xs text-gray-400">Enterprise network reconnaissance and perimeter auditing.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 group reveal" style="transition-delay: 150ms;">
+                    <div class="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center text-violet-400 mb-4">
+                        <i data-lucide="terminal" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">Presecurity Certified</h3>
+                    <p class="text-xs font-mono text-violet-300/80 mb-2">TryHackMe</p>
+                    <p class="text-xs text-gray-400">Offensive methodologies, Linux security & web attack vectors.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 group reveal" style="transition-delay: 200ms;">
+                    <div class="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400 mb-4">
+                        <i data-lucide="briefcase" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">Cyber Job Simulation</h3>
+                    <p class="text-xs font-mono text-rose-300/80 mb-2">Deloitte Australia</p>
+                    <p class="text-xs text-gray-400">Incident response triage, governance & forensic reporting.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 group reveal" style="transition-delay: 250ms;">
+                    <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">Cyber Analyst IAM</h3>
+                    <p class="text-xs font-mono text-cyan-300/80 mb-2">Tata Consultancy Services</p>
+                    <p class="text-xs text-gray-400">Identity and Access Management, RBAC & compliance audits.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 group reveal" style="transition-delay: 300ms;">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 mb-4">
+                        <i data-lucide="server" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">CIP Associate</h3>
+                    <p class="text-xs font-mono text-amber-300/80 mb-2">OPSWAT</p>
+                    <p class="text-xs text-gray-400">Critical Infrastructure Protection & supply chain defense.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 group reveal" style="transition-delay: 350ms;">
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 mb-4">
+                        <i data-lucide="flag" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-base text-white mb-1">50+ CTF Flags</h3>
+                    <p class="text-xs font-mono text-purple-300/80 mb-2">PBCTF / IDEEEAS / Triwizard</p>
+                    <p class="text-xs text-gray-400">Reverse engineering, binary exploitation & cryptography.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact -->
+    <footer id="contact" class="relative border-t border-white/10 mt-20">
+        <div class="absolute inset-0 bg-gradient-to-t from-sky-950/20 to-transparent pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6 py-20 relative z-10 text-center">
+            
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-300 text-xs font-mono uppercase tracking-wider mb-6">
+                <span>Direct Contact</span>
+            </div>
+
+            <h2 class="text-4xl md:text-6xl font-display font-bold mb-6 reveal">Ready to harden <br/>your <span class="text-outline">infrastructure?</span></h2>
+            
+            <p class="text-gray-400 mb-10 max-w-xl mx-auto reveal leading-relaxed" style="transition-delay: 100ms;">
+                I'm actively available for cybersecurity audits, penetration testing engagements, and systems software roles. Let's connect.
+            </p>
+            
+            <a href="mailto:d33kshith@proton.me?subject=Security%20Inquiry%20from%20Portfolio" class="inline-block bg-gradient-to-r from-sky-500 to-violet-500 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-[0_0_30px_rgba(14,165,233,0.5)] hover:scale-105 transition-all reveal shadow-lg shadow-sky-500/20" style="transition-delay: 200ms;">
+                d33kshith@proton.me
+            </a>
+            
+            <div class="flex justify-center gap-6 mt-16">
+                <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:border-sky-400/50 hover:scale-110 transition-all" aria-label="GitHub Profile">
+                    <i data-lucide="github" class="w-5 h-5"></i>
+                </a>
+                <a href="https://linkedin.com/in/d33kshithanand" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:border-sky-400/50 hover:scale-110 transition-all" aria-label="LinkedIn Profile">
+                    <i data-lucide="linkedin" class="w-5 h-5"></i>
+                </a>
+                <a href="mailto:d33kshith@proton.me" class="w-12 h-12 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:border-sky-400/50 hover:scale-110 transition-all" aria-label="Proton Mail">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                </a>
+            </div>
+            
+            <p class="text-gray-500 text-sm mt-10 font-mono">
+                &copy; 2026 DEEKSHITH (D33). Powered by Three.js & WebGL.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Interactive Terminal Drawer Modal -->
+    <div id="terminalModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-2xl glass rounded-2xl border border-sky-500/30 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <!-- Terminal Header -->
+            <div class="px-4 py-3 bg-gray-900/90 border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                    <span class="text-xs font-mono text-gray-400 ml-2">d33@terminal-v3:~</span>
+                </div>
+                <button id="closeTerminalBtn" class="text-gray-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <!-- Terminal Body -->
+            <div id="terminalBody" class="p-4 overflow-y-auto flex-1 font-mono text-xs space-y-2 text-gray-300">
+                <div class="text-sky-400">=== DEEKSHITH (D33) INTERACTIVE TERMINAL v3.0 ===</div>
+                <div class="text-gray-400">Type <span class="text-emerald-400 font-semibold">help</span> to view available commands. Press <span class="text-amber-400">ESC</span> to close.</div>
+                <div id="terminalHistory"></div>
+            </div>
+            <!-- Terminal Input -->
+            <div class="p-3 bg-gray-900/80 border-t border-white/10 flex items-center gap-2">
+                <span class="text-emerald-400 font-mono text-xs">d33:~$</span>
+                <input id="terminalInput" type="text" class="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none" placeholder="Type a command (e.g. whoami, projects, certs, skills)..." autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Logic Script -->
+    <script src="main.js"></script>
+
+<!-- Floating Version Switcher Dock -->
+<div id="version-dock" style="position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; align-items: center; gap: 6px; background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 6px 12px; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.6); font-family: monospace; font-size: 11px;">
+    <a href="/compare.html" style="display: flex; align-items: center; gap: 4px; color: #06b6d4; text-decoration: none; font-weight: bold; padding: 4px 8px; border-radius: 9999px; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); transition: all 0.2s;">
+        <span>⇄ COMPARE</span>
+    </a>
+    <span style="color: rgba(255,255,255,0.2);">|</span>
+    <div style="display: flex; align-items: center; gap: 4px; overflow-x: auto; max-width: 65vw;">
+        <a href="/versions/v1/" title="v1 Original" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v1</a>
+        <a href="/versions/v2/" title="v2 Cyber" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v2</a>
+        <a href="/versions/v3/" title="v3 ASCII Flow" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v3</a>
+        <a href="/versions/v4/" title="v4 3D Particles" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v4</a>
+        <a href="/versions/v5/" title="v5 Liquid Lime" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v5</a>
+        <a href="/versions/v6/" title="v6 ctOS Breach" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v6</a>
+        <a href="/versions/v7/" title="v7 ANIMUS Uplink" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v7</a>
+        <a href="/versions/v8/" title="v8 Pinned Core" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v8</a>
+        <a href="/versions/v8.5_particle_morph/" title="v8.5 10k Morph" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v8.5</a>
+        <a href="/versions/v9_torus_knot/" title="v9 Torus Knot" style="color: rgba(255,255,255,0.7); text-decoration: none; padding: 2px 6px; border-radius: 4px;">v9</a>
+        <a href="/versions/v10_ascii_flow/" title="v10 ASCII Skull" style="color: #fff; font-weight: bold; text-decoration: none; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.2);">v10</a>
+    </div>
+</div>
+
+</body>
+</html>

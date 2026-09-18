@@ -1,0 +1,176 @@
+body {
+    background-color: #0a0a0b;
+    color: #f4f4f5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- ASCII Canvas Background --- */
+#ascii-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Let clicks pass through to the UI */
+    user-select: none;
+    opacity: 0.8;
+    transition: opacity 0.5s ease;
+}
+
+#ascii-output {
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 0.9;
+    white-space: pre;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* --- Theming Classes --- */
+.theme-ghost #ascii-output {
+    color: rgba(255, 255, 255, 0.15);
+}
+
+.theme-synthwave #ascii-output {
+    background: linear-gradient(135deg, #ff007f, #00d2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.6;
+}
+
+.theme-terminal #ascii-output {
+    color: #00ff41;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+    opacity: 0.4;
+}
+
+.theme-lava #ascii-output {
+    background: linear-gradient(to top, #ff4e00, #ec9f05);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.5;
+}
+
+.theme-ocean #ascii-output {
+    color: #0ea5e9;
+    opacity: 0.35;
+}
+
+/* Vignette to soften edges of the ASCII */
+.vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 30%, #0a0a0b 90%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* --- UI Overlay --- */
+#ui-layer {
+    position: relative;
+    z-index: 10;
+}
+
+/* Glassmorphism utilities */
+.glass {
+    background: rgba(10, 10, 11, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+}
+
+/* Custom Scrollbar for the page */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #0a0a0b; 
+}
+::-webkit-scrollbar-thumb {
+    background: #27272a; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46; 
+}
+
+/* Custom Range Slider Styling */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    margin-top: -6px; 
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+
+.animated-text-gradient {
+    background: linear-gradient(to right, #fff, #71717a, #fff);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+#intro-skull {
+    animation: introSequence 3.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    will-change: transform, opacity, filter;
+    text-shadow: 0 0 20px rgba(255,255,255,0.6);
+    opacity: 0;
+    transform: scale(0.5);
+    color: #fff;
+}
+
+@keyframes introSequence {
+    0% { transform: scale(0.1); opacity: 0; filter: blur(20px); }
+    15% { transform: scale(1); opacity: 1; filter: blur(0px); }
+    55% { transform: scale(1.05); opacity: 1; filter: blur(0px); }
+    80% { transform: scale(80); opacity: 0; filter: blur(10px); }
+    100% { transform: scale(80); opacity: 0; filter: blur(10px); }
+}
+
+/* Terminal Drawer Custom Scrollbar */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
