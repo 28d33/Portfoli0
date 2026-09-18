@@ -1,6 +1,6 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — SYSTEM BREACH // ctOS JAVASCRIPT ENGINE (v5.0)
-   Three.js Wireframe Terrain + Central Core Node + Terminal Console
+   DEEKSHITH (D33) — ANIMUS // GENETIC MEMORY UPLINK (v6.0)
+   Three.js Memory Corridor Void + GSAP Sequence + Interactive Terminal
    ========================================================================== */
 
 (function () {
@@ -14,25 +14,41 @@
     }
 
     /* ==========================================================================
-       2. SNAPPY CROSSHAIR CURSOR LOGIC
+       2. CUSTOM GEOMETRIC ANIMUS CURSOR LOGIC
        ========================================================================== */
-    const cursor = document.getElementById('cursor-crosshair');
+    const cursor = document.getElementById('custom-cursor');
 
     if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        let cursorX = window.innerWidth / 2;
+        let cursorY = window.innerHeight / 2;
 
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX;
             mouse.y = e.clientY;
-            // Direct instantaneous transformation for snappy military/hacker feel
-            cursor.style.transform = `translate(${mouse.x}px, ${mouse.y}px) translate(-50%, -50%)`;
         }, { passive: true });
+
+        const renderCursor = () => {
+            cursorX += (mouse.x - cursorX) * 0.22;
+            cursorY += (mouse.y - cursorY) * 0.22;
+            cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+            requestAnimationFrame(renderCursor);
+        };
+        requestAnimationFrame(renderCursor);
 
         const bindHoverables = () => {
             const hoverables = document.querySelectorAll('.hoverable, a, button, input');
             hoverables.forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+                el.addEventListener('mouseenter', () => {
+                    document.body.classList.add('hovering');
+                    if (el.classList.contains('desync-hover')) {
+                        document.body.classList.add('desync-hover');
+                    }
+                });
+                el.addEventListener('mouseleave', () => {
+                    document.body.classList.remove('hovering');
+                    document.body.classList.remove('desync-hover');
+                });
             });
         };
 
@@ -40,7 +56,7 @@
     }
 
     /* ==========================================================================
-       3. GSAP ANIMATIONS & TERMINAL BOOT SEQUENCE
+       3. GSAP PRELOADER & SCROLLTRIGGER ANIMATIONS
        ========================================================================== */
     function initAnimations() {
         if (typeof gsap === 'undefined') return;
@@ -51,68 +67,63 @@
 
         const tl = gsap.timeline();
 
-        // Staggered log terminal sequence
-        tl.to(".log-line", {
-            opacity: 1,
-            y: 0,
-            duration: 0.08,
-            stagger: 0.22,
-            ease: "none"
-        })
-        // Cyan screen flash
-        .to("#terminal-loader", {
-            backgroundColor: "#00e5ff",
-            duration: 0.08,
-            delay: 0.3
-        })
-        // Fade out loader
-        .to("#terminal-loader", {
-            opacity: 0,
-            duration: 0.45,
-            ease: "power2.inOut",
-            onComplete: () => {
-                const loader = document.getElementById('terminal-loader');
-                if (loader) loader.style.display = 'none';
-                initThreeJS(); // Launch 3D engine immediately after boot
-            }
-        })
-        // Reveal main UI
-        .to("#main-ui", {
-            opacity: 1,
-            duration: 0.1
-        }, "-=0.2")
-        // Hero text reveals
-        .fromTo(".gs-reveal", 
-            { opacity: 0, x: -40 },
-            { opacity: 1, x: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }
-        )
-        .fromTo(".gs-title-line",
-            { y: "100%" },
-            { y: "0%", duration: 0.9, stagger: 0.12, ease: "power4.out" },
-            "-=0.7"
-        );
+        // Preloader Sequence
+        tl.to("#loader-text-1", { opacity: 1, duration: 0.45 })
+          .to("#loader-text-1", { opacity: 0, duration: 0.25, delay: 0.4 })
+          .to("#loader-text-2", { opacity: 1, duration: 0.45 })
+          .to("#loader-text-2", { opacity: 0, duration: 0.25, delay: 0.45 })
+          .to("#loader-text-3", { opacity: 1, duration: 0.45 })
+          .to("#animus-loader", {
+              opacity: 0,
+              duration: 0.8,
+              delay: 0.35,
+              ease: "power2.inOut",
+              onComplete: () => {
+                  const loader = document.getElementById('animus-loader');
+                  if (loader) loader.style.display = 'none';
+                  initThreeJS(); // Launch 3D Memory Corridor
+              }
+          })
+          // Reveal Main UI
+          .to("#main-ui", { opacity: 1, duration: 0.8 }, "-=0.4")
+          
+          // Hero Sequence Reveal
+          .fromTo(".gs-title",
+              { y: 80, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: "power4.out" }
+          )
+          .fromTo(".gs-reveal",
+              { opacity: 0, x: -30 },
+              { opacity: 1, x: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" },
+              "-=0.4"
+          )
+          .fromTo(".gs-fade",
+              { opacity: 0, y: 20 },
+              { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: "power2.out" },
+              "-=0.4"
+          );
 
-        // Section Headers
+        // Section Headers Reveal
         gsap.utils.toArray('.gs-section-header').forEach(header => {
             gsap.fromTo(header,
-                { opacity: 0, x: -40 },
+                { opacity: 0, y: 30 },
                 {
                     scrollTrigger: {
                         trigger: header,
                         start: "top 85%",
                     },
                     opacity: 1,
-                    x: 0,
-                    duration: 0.7,
+                    y: 0,
+                    duration: 0.8,
                     ease: "power3.out"
                 }
             );
         });
 
-        // Project Cards
-        gsap.utils.toArray('.gs-project').forEach((card, i) => {
+        // Memory Project Cards Reveal
+        gsap.utils.toArray('.gs-memory').forEach((card, i) => {
             gsap.fromTo(card,
-                { opacity: 0, y: 45 },
+                { opacity: 0, y: 50 },
                 {
                     scrollTrigger: {
                         trigger: card,
@@ -120,32 +131,32 @@
                     },
                     opacity: 1,
                     y: 0,
-                    duration: 0.7,
+                    duration: 0.9,
                     delay: i % 2 === 0 ? 0 : 0.15,
                     ease: "power3.out"
                 }
             );
         });
 
-        // Skills Stagger
+        // Eagle Vision Skills
         gsap.fromTo(".gs-skill",
-            { opacity: 0, y: 30 },
+            { opacity: 0, scale: 0.95 },
             {
                 scrollTrigger: {
-                    trigger: "#specs",
-                    start: "top 80%"
+                    trigger: "#skills",
+                    start: "top 75%"
                 },
                 opacity: 1,
-                y: 0,
+                scale: 1,
                 duration: 0.6,
                 stagger: 0.12,
-                ease: "power2.out"
+                ease: "back.out(1.2)"
             }
         );
     }
 
     /* ==========================================================================
-       4. THREE.JS 3D CYBER DEFENSE ENVIRONMENT
+       4. THREE.JS 3D ANIMUS MEMORY CORRIDOR
        ========================================================================== */
     function initThreeJS() {
         const canvas = document.getElementById('webgl-canvas');
@@ -153,11 +164,11 @@
 
         // 1. Scene Setup
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020202, 0.04);
+        scene.fog = new THREE.FogExp2(0x020611, 0.025);
 
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 5, 15);
-        
+        camera.position.set(0, 0, 5);
+
         const renderer = new THREE.WebGLRenderer({
             canvas: canvas,
             alpha: true,
@@ -167,86 +178,87 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // 2. Wireframe Terrain (The Digital Grid)
-        const terrainGeo = new THREE.PlaneGeometry(100, 100, 40, 40);
-        terrainGeo.rotateX(-Math.PI / 2);
-        
-        const vertices = terrainGeo.attributes.position.array;
-        for (let i = 0; i < vertices.length; i += 3) {
-            const x = vertices[i];
-            const z = vertices[i + 2];
-            vertices[i + 1] = (Math.sin(x * 0.2) * Math.cos(z * 0.2) * 2) + (Math.sin(x * 0.05) * 4);
+        // Corridor Group
+        const corridorGroup = new THREE.Group();
+        scene.add(corridorGroup);
+
+        // 2. Floating Memory Shards (Tetrahedrons)
+        const shardGeo = new THREE.TetrahedronGeometry(1.5, 0);
+        const shardMatCyan = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.18 });
+        const shardMatWhite = new THREE.MeshBasicMaterial({ color: 0xe0f7fa, wireframe: true, transparent: true, opacity: 0.12 });
+
+        const shardCount = 80;
+        const shards = [];
+
+        for (let i = 0; i < shardCount; i++) {
+            const isCyan = Math.random() > 0.45;
+            const mesh = new THREE.Mesh(shardGeo, isCyan ? shardMatCyan : shardMatWhite);
+            
+            mesh.position.x = (Math.random() - 0.5) * 40;
+            mesh.position.y = (Math.random() - 0.5) * 40;
+            mesh.position.z = (Math.random() - 1) * 100;
+            
+            mesh.rotation.x = Math.random() * Math.PI;
+            mesh.rotation.y = Math.random() * Math.PI;
+
+            mesh.userData = {
+                rotX: (Math.random() - 0.5) * 0.012,
+                rotY: (Math.random() - 0.5) * 0.012
+            };
+
+            corridorGroup.add(mesh);
+            shards.push(mesh);
         }
-        terrainGeo.computeVertexNormals();
 
-        const terrainMat = new THREE.MeshBasicMaterial({ 
-            color: 0x00e5ff, 
-            wireframe: true, 
-            transparent: true, 
-            opacity: 0.18 
-        });
-        const terrain = new THREE.Mesh(terrainGeo, terrainMat);
-        terrain.position.y = -4;
-        scene.add(terrain);
-
-        // 3. Central Data Core Node
-        const coreGroup = new THREE.Group();
-        
-        // Outer Cyan Wireframe Icosahedron
-        const outerGeo = new THREE.IcosahedronGeometry(4, 1);
-        const outerMat = new THREE.MeshBasicMaterial({
-            color: 0x00e5ff,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.35
-        });
-        const outerCore = new THREE.Mesh(outerGeo, outerMat);
-        
-        // Inner Red Wireframe Octahedron
-        const innerGeo = new THREE.OctahedronGeometry(2, 0);
-        const innerMat = new THREE.MeshBasicMaterial({
-            color: 0xff003c,
-            wireframe: true
-        });
-        const innerCore = new THREE.Mesh(innerGeo, innerMat);
-
-        coreGroup.add(outerCore);
-        coreGroup.add(innerCore);
-        
-        coreGroup.position.set(window.innerWidth > 768 ? 4 : 0, 2, -5);
-        scene.add(coreGroup);
-
-        // 4. Floating Cyan Data Stream Particles
+        // 3. Genetic Data Particles (DNA Helix Cloud)
         const particlesGeo = new THREE.BufferGeometry();
-        const particlesCount = 800;
-        const posArray = new Float32Array(particlesCount * 3);
+        const particleCount = 1500;
+        const posArray = new Float32Array(particleCount * 3);
         
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 50;
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            const radius = 5 + Math.random() * 15;
+            const angle = Math.random() * Math.PI * 2;
+            
+            posArray[i] = Math.cos(angle) * radius;
+            posArray[i + 1] = Math.sin(angle) * radius;
+            posArray[i + 2] = (Math.random() - 1) * 120;
         }
         
         particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const particlesMat = new THREE.PointsMaterial({
-            size: 0.06,
+            size: 0.09,
             color: 0x00e5ff,
             transparent: true,
-            opacity: 0.7,
+            opacity: 0.55,
             blending: THREE.AdditiveBlending
         });
         
         const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
-        scene.add(particlesMesh);
+        corridorGroup.add(particlesMesh);
 
-        // 5. Interactive Mouse Parallax
+        // 4. Perspective Corridor Guide Lines
+        const lineMat = new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.06 });
+        for (let i = 0; i < 4; i++) {
+            const points = [];
+            points.push(new THREE.Vector3((i % 2 === 0 ? -10 : 10), (i < 2 ? -10 : 10), 20));
+            points.push(new THREE.Vector3((i % 2 === 0 ? -2 : 2), (i < 2 ? -2 : 2), -100));
+            const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(lineGeo, lineMat);
+            corridorGroup.add(line);
+        }
+
+        // 5. Parallax Look-Ahead Variables
         let targetX = 0;
         let targetY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
 
         window.addEventListener('mousemove', (event) => {
-            targetX = (event.clientX / window.innerWidth) * 2 - 1;
-            targetY = -(event.clientY / window.innerHeight) * 2 + 1;
+            targetX = (event.clientX - windowHalfX) * 0.002;
+            targetY = (event.clientY - windowHalfY) * 0.002;
         }, { passive: true });
 
-        // 6. GSAP Scroll Connection
+        // 6. GSAP Scroll Connection (The Memory Dive)
         if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             gsap.to(camera.position, {
                 scrollTrigger: {
@@ -255,68 +267,49 @@
                     end: "bottom bottom",
                     scrub: 1
                 },
-                z: -10,
-                y: 10
+                z: -50,
+                ease: "none"
             });
-
-            gsap.to(coreGroup.rotation, {
+            
+            gsap.to(corridorGroup.rotation, {
                 scrollTrigger: {
                     trigger: "body",
                     start: "top top",
                     end: "bottom bottom",
-                    scrub: 1
+                    scrub: 2
                 },
-                x: Math.PI * 2,
-                z: Math.PI
+                z: Math.PI / 4,
+                ease: "none"
             });
         }
 
         // 7. Resize Handler
         window.addEventListener('resize', () => {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-            coreGroup.position.x = window.innerWidth > 768 ? 4 : 0;
         });
 
         // 8. Render Loop
-        const clock = new THREE.Clock();
-
         function animate() {
             requestAnimationFrame(animate);
             
-            const time = clock.getElapsedTime();
+            // Mouse Parallax Look-Ahead
+            camera.position.x += (targetX - camera.position.x) * 0.05;
+            camera.position.y += (-targetY - camera.position.y) * 0.05;
+            camera.lookAt(0, 0, camera.position.z - 10);
 
-            // Parallax Camera drift
-            camera.position.x += (targetX * 2 - camera.position.x) * 0.05;
-            camera.position.y += (targetY * 2 + 5 - camera.position.y) * 0.05;
-            camera.lookAt(0, 0, 0);
+            // Shards Floating & Rotating
+            shards.forEach(shard => {
+                shard.rotation.x += shard.userData.rotX;
+                shard.rotation.y += shard.userData.rotY;
+                shard.position.y += Math.sin(Date.now() * 0.001 + shard.position.x) * 0.01;
+            });
 
-            // Animate Core Nodes
-            outerCore.rotation.y += 0.002;
-            outerCore.rotation.x += 0.001;
-            innerCore.rotation.y -= 0.005;
-            
-            // Random glitch jitter on Core
-            if (Math.random() > 0.98) {
-                innerCore.scale.setScalar(1 + Math.random() * 0.25);
-                outerMat.opacity = Math.random() * 0.5 + 0.15;
-            } else {
-                innerCore.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
-                outerMat.opacity = 0.35;
-            }
-
-            // Infinite terrain flight loop
-            terrain.position.z = (time * 2) % 4;
-
-            // Animate floating upward data particles
-            const pPositions = particlesGeo.attributes.position.array;
-            for (let i = 1; i < particlesCount * 3; i += 3) {
-                pPositions[i] += 0.03;
-                if (pPositions[i] > 20) pPositions[i] = -20;
-            }
-            particlesGeo.attributes.position.needsUpdate = true;
-            particlesMesh.rotation.y = time * 0.04;
+            // Cloud Rotation
+            particlesMesh.rotation.z -= 0.0005;
 
             renderer.render(scene, camera);
         }
@@ -325,8 +318,8 @@
     }
 
     /* ==========================================================================
-       5. MOBILE MENU
-       ========================================================================== */
+       5. MOBILE MENU DRAWER
+       ========================================================================= */
     function initMobileMenu() {
         const menuBtn = document.getElementById('mobileMenuBtn');
         const menu = document.getElementById('mobileMenu');
@@ -346,7 +339,7 @@
     }
 
     /* ==========================================================================
-       6. INTERACTIVE ctOS TERMINAL DRAWER
+       6. INTERACTIVE ANIMUS TERMINAL DRAWER
        ========================================================================== */
     class InteractiveTerminalDrawer {
         constructor() {
@@ -430,32 +423,33 @@
 
         processCommand(rawCmd) {
             const cmd = rawCmd.toLowerCase();
-            this.appendHistory(`d33:root# ${rawCmd}`, 'text-[#00e5ff] font-bold');
+            this.appendHistory(`d33:animus# ${rawCmd}`, 'text-[#00e5ff] font-bold');
 
             switch (cmd) {
                 case 'help':
                     this.appendHistory(`Available Commands:
-- whoami       : Operator identity & kernel clearance
-- projects     : Database records of security suites
-- skills       : Offensive & cryptographic toolsets
+- whoami       : Subject identity & synchronization metrics
+- memories     : Extracted project memory blocks
+- skills       : Eagle Vision tactical capability matrix
 - certs        : Verified accreditations & CTF records
-- uplink       : Direct communication channels
-- clear        : Clear console buffer
+- contact      : Direct communication uplink
+- clear        : Clear buffer
 - exit         : Terminate session`, 'text-[#00e5ff]');
                     break;
 
                 case 'whoami':
-                    this.appendHistory(`OPERATOR : DEEKSHITH (D33)
-ROLE     : Offensive Security Architect & Systems Developer
-NODE     : Bangalore, Karnataka, India [12.9716° N, 77.5946° E]
-CORE     : Low-level C/C++ Cryptography, Pen-Testing, Digital Forensics`, 'text-gray-200');
+                    this.appendHistory(`SUBJECT  : DEEKSHITH (D33) [SUBJECT_17]
+TITLE    : Master Architect & Offensive Cybersecurity Engineer
+LOCATION : Bangalore, Karnataka, India [12.9716° N, 77.5946° E]
+CORE     : Low-Level Cryptography (C/C++), Penetration Testing, Digital Forensics`, 'text-gray-200');
                     break;
 
+                case 'memories':
                 case 'projects':
-                    this.appendHistory(`[0x11A] E-D--Crypto         -> C / OpenSSL / AES-256-CBC / RSA-2048
-[0x11B] Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
-[0x11C] Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
-[0x11D] Data Stream Masking -> C++20 Financial Payload Tokenizer`, 'text-sky-300');
+                    this.appendHistory(`[MEMORY 01] E-D--Crypto         -> C / OpenSSL / AES-256-CBC / RSA-2048
+[MEMORY 02] Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
+[MEMORY 03] Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
+[MEMORY 04] Data Stream Masking -> C++20 Financial Payload Tokenizer`, 'text-[#e0f7fa]');
                     break;
 
                 case 'skills':
@@ -473,15 +467,14 @@ Defensive : ELK Stack, Suricata IDS/IPS, Linux Kernel Hardening, GPO`, 'text-gra
 - Cyber Job Simulation (Deloitte Australia)
 - Cybersecurity Analyst IAM (TCS)
 - Critical Infrastructure Protection (OPSWAT)
-- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-[#ff003c]');
+- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-[#00e5ff]');
                     break;
 
                 case 'contact':
-                case 'uplink':
                     this.appendHistory(`Email    : d33kshith@proton.me
 GitHub   : github.com/28d33
 LinkedIn : linkedin.com/in/d33kshithanand
-Uplink   : SECURE_SOCKET_OPEN`, 'text-[#00e5ff]');
+Uplink   : GENETIC_MEMORY_SYNCHRONIZED`, 'text-[#00e5ff]');
                     break;
 
                 case 'clear':
@@ -496,7 +489,7 @@ Uplink   : SECURE_SOCKET_OPEN`, 'text-[#00e5ff]');
                     break;
 
                 default:
-                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for command list.`, 'text-[#ff003c]');
+                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for command list.`, 'text-[#ff3333]');
                     break;
             }
         }
