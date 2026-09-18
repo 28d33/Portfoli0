@@ -137,10 +137,10 @@
                 const yPos = rowIdx * (this.fontSize + 3);
 
                 if (col % 9 === 0 && rowIdx >= 0 && rowIdx < this.rows) {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
+                    ctx.fillStyle = 'rgba(56, 189, 248, 0.45)'; // Subtle Sky Blue for Opcodes
                     ctx.fillText(this.opcodes[stream.opcodeIdx], xPos, yPos);
                 } else if (rowIdx >= 0 && rowIdx < this.rows) {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+                    ctx.fillStyle = 'rgba(52, 211, 153, 0.28)'; // Subtle Terminal Emerald for Stream Chars
                     const ch = this.hexChars[(Math.floor(t * 10) + col) % this.hexChars.length];
                     ctx.fillText(ch, xPos, yPos);
                 }
@@ -191,7 +191,7 @@
             const startX = Math.max(20, w - torusCols * 11 - 30);
             const startY = Math.max(70, Math.floor(h * 0.12));
 
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.48)';
+            ctx.fillStyle = 'rgba(52, 211, 153, 0.55)'; // Crisp Terminal Emerald 3D Torus
             for (let ty = 0; ty < torusRows; ty++) {
                 for (let tx = 0; tx < torusCols; tx++) {
                     const char = b[tx + torusCols * ty];
@@ -206,7 +206,7 @@
             const memStartY = h - memLines * (this.fontSize + 4) - 25;
             for (let m = 0; m < memLines; m++) {
                 const idx = (Math.floor(t * 2) + m) % this.memoryBuffer.length;
-                ctx.fillStyle = 'rgba(200, 200, 200, 0.25)';
+                ctx.fillStyle = 'rgba(148, 163, 184, 0.32)'; // Titanium Silver for Memory Dumps
                 ctx.fillText(this.memoryBuffer[idx], 25, memStartY + m * (this.fontSize + 4));
             }
         }

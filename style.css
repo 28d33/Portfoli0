@@ -5,26 +5,43 @@
    ========================================================================== */
 
 :root {
-    /* Pure Black & White Contrast System */
+    /* Pure Black & White Base System */
     --c-black: #000000;
     --c-black-soft: #080808;
-    --c-surface: #0c0c0c;
-    --c-surface-light: #141414;
-    --c-border: #262626;
-    --c-border-strong: #404040;
-    --c-border-light: #171717;
+    --c-surface: #0a0c10;
+    --c-surface-light: #12161f;
+    --c-border: #1e2430;
+    --c-border-strong: #334155;
+    --c-border-light: #161b26;
 
     --c-white: #ffffff;
-    --c-white-dim: #e5e5e5;
-    --c-silver: #a3a3a3;
-    --c-muted: #737373;
-    --c-dark-gray: #404040;
+    --c-white-dim: #e2e8f0;
+    --c-silver: #94a3b8;
+    --c-muted: #64748b;
+    --c-dark-gray: #334155;
 
-    /* Highlight Accents (Pure High-Contrast Monochrome) */
+    /* Subtle Cyber Terminal Color Touches (Clean, Refined, Non-Overcrowded) */
+    --c-emerald: #34d399;
+    --c-emerald-dim: rgba(52, 211, 153, 0.12);
+    --c-emerald-glow: rgba(52, 211, 153, 0.3);
+
+    --c-cyan: #38bdf8;
+    --c-cyan-dim: rgba(56, 189, 248, 0.12);
+    --c-cyan-glow: rgba(56, 189, 248, 0.3);
+
+    --c-amber: #fbbf24;
+    --c-amber-dim: rgba(251, 191, 36, 0.12);
+
+    --c-crimson: #f87171;
+    --c-crimson-dim: rgba(248, 113, 113, 0.12);
+
+    --c-purple: #c084fc;
+    --c-purple-dim: rgba(192, 132, 252, 0.12);
+
+    /* Highlight Accents */
     --c-highlight-bg: #ffffff;
     --c-highlight-text: #000000;
-    --c-glow: rgba(255, 255, 255, 0.25);
-    --c-status-green: #22c55e;
+    --c-glow: rgba(255, 255, 255, 0.2);
 
     /* Fonts */
     --font-mono: 'JetBrains Mono', 'Share Tech Mono', 'Courier New', monospace;
@@ -73,12 +90,12 @@ body.terminal-body {
     z-index: 5;
     background: repeating-linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.25),
-        rgba(0, 0, 0, 0.25) 1px,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 1px,
         transparent 1px,
         transparent 2px
     );
-    opacity: 0.55;
+    opacity: 0.5;
 }
 
 .crt-vignette {
@@ -89,7 +106,7 @@ body.terminal-body {
     height: 100vh;
     pointer-events: none;
     z-index: 6;
-    background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.9) 100%);
+    background: radial-gradient(circle at center, transparent 65%, rgba(0, 0, 0, 0.88) 100%);
 }
 
 /* Full-Screen Recursive Animated ASCII Background Canvas */
@@ -102,7 +119,7 @@ body.terminal-body {
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
-    opacity: 0.18;
+    opacity: 0.22;
 }
 
 #asciiBgCanvas {
@@ -128,7 +145,7 @@ body.terminal-body {
     left: 0;
     width: 100%;
     height: 28px;
-    background: var(--c-black);
+    background: #030508;
     border-bottom: 1px solid var(--c-border);
     z-index: 1000;
     display: flex;
@@ -154,7 +171,7 @@ body.terminal-body {
 }
 
 .ascii-tag {
-    color: var(--c-white);
+    color: var(--c-cyan);
     font-weight: 700;
 }
 
@@ -166,16 +183,21 @@ body.terminal-body {
     display: inline-block;
     width: 6px;
     height: 6px;
-    background: var(--c-white);
-    box-shadow: 0 0 6px var(--c-white);
+    background: var(--c-emerald);
+    box-shadow: 0 0 8px var(--c-emerald-glow);
     border-radius: 50%;
     margin-right: 4px;
     animation: statusBlink 2s infinite;
 }
 
+.topbar-status {
+    color: var(--c-emerald);
+    font-weight: 700;
+}
+
 @keyframes statusBlink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.85); }
 }
 
 /* ==========================================================================
@@ -187,7 +209,7 @@ body.terminal-body {
     left: 0;
     width: 100%;
     height: 56px;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(3, 5, 8, 0.95);
     border-bottom: 1px solid var(--c-border);
     z-index: 999;
     backdrop-filter: blur(12px);
@@ -196,7 +218,7 @@ body.terminal-body {
 
 .navbar.scrolled {
     border-bottom-color: var(--c-border-strong);
-    background: rgba(0, 0, 0, 0.98);
+    background: rgba(3, 5, 8, 0.98);
 }
 
 .nav-container {
@@ -211,7 +233,6 @@ body.terminal-body {
 
 .nav-brand {
     text-decoration: none;
-    color: var(--c-white);
     font-weight: 700;
     font-size: 0.92rem;
     display: flex;
@@ -219,15 +240,16 @@ body.terminal-body {
 }
 
 .brand-bracket { color: var(--c-muted); }
-.brand-user { color: var(--c-white); }
+.brand-user { color: var(--c-emerald); }
 .brand-at { color: var(--c-muted); }
-.brand-host { color: var(--c-silver); }
+.brand-host { color: var(--c-cyan); }
 .brand-path { color: var(--c-white); }
-.brand-dollar { color: var(--c-muted); margin-right: 4px; }
+.brand-dollar { color: var(--c-amber); margin-right: 4px; }
 
 .cursor-blink {
     animation: blinkCursor 1s step-end infinite;
-    color: var(--c-white);
+    color: var(--c-emerald);
+    font-weight: 800;
 }
 
 @keyframes blinkCursor {
@@ -262,13 +284,13 @@ body.terminal-body {
 }
 
 .nav-link.active {
-    color: var(--c-black);
-    background: var(--c-white);
+    color: var(--c-emerald);
+    background: var(--c-emerald-dim);
     font-weight: 700;
-    border-color: var(--c-white);
+    border-color: rgba(52, 211, 153, 0.3);
 }
 .nav-link.active .nav-num {
-    color: var(--c-black);
+    color: var(--c-emerald);
 }
 
 .nav-actions {
@@ -438,8 +460,8 @@ kbd {
 .prompt-text {
     color: var(--c-muted);
 }
-.p-user { color: var(--c-white); font-weight: 700; }
-.p-path { color: var(--c-silver); }
+.p-user { color: var(--c-emerald); font-weight: 700; }
+.p-path { color: var(--c-cyan); }
 .cmd-run { color: var(--c-white); font-weight: 600; }
 
 /* ASCII Art Hero Logo Banner */
@@ -454,7 +476,7 @@ kbd {
     font-size: clamp(0.48rem, 1.45vw, 1.05rem);
     line-height: 1.05;
     color: var(--c-white);
-    text-shadow: 0 0 12px var(--c-glow);
+    text-shadow: 0 0 16px rgba(52, 211, 153, 0.35);
     white-space: pre;
     user-select: none;
 }
@@ -481,7 +503,7 @@ kbd {
 }
 
 .m-item strong {
-    color: var(--c-white);
+    color: var(--c-emerald);
 }
 .m-sep {
     color: var(--c-dark-gray);
@@ -506,7 +528,7 @@ kbd {
 }
 
 .ascii-bullet {
-    color: var(--c-white);
+    color: var(--c-emerald);
     font-weight: 700;
     margin-right: 4px;
 }
@@ -524,13 +546,30 @@ kbd {
     background: var(--c-surface);
     border: 1px solid var(--c-border);
     color: var(--c-white);
+    transition: var(--trans-fast);
 }
+
+.ascii-chip:nth-child(1) { color: var(--c-emerald); border-color: rgba(52, 211, 153, 0.35); background: var(--c-emerald-dim); }
+.ascii-chip:nth-child(2) { color: var(--c-crimson); border-color: rgba(248, 113, 113, 0.35); background: var(--c-crimson-dim); }
+.ascii-chip:nth-child(3) { color: var(--c-amber); border-color: rgba(251, 191, 36, 0.35); background: var(--c-amber-dim); }
+.ascii-chip:nth-child(4) { color: var(--c-cyan); border-color: rgba(56, 189, 248, 0.35); background: var(--c-cyan-dim); }
+.ascii-chip:nth-child(5) { color: var(--c-purple); border-color: rgba(192, 132, 252, 0.35); background: var(--c-purple-dim); }
 
 .hero-actions {
     display: flex;
     gap: 0.8rem;
     flex-wrap: wrap;
     margin-bottom: 1.2rem;
+}
+
+.btn-shell-open {
+    color: var(--c-emerald);
+    border-color: rgba(52, 211, 153, 0.4);
+}
+.btn-shell-open:hover {
+    background: var(--c-emerald-dim);
+    border-color: var(--c-emerald);
+    box-shadow: 0 0 12px var(--c-emerald-glow);
 }
 
 .ascii-shortcut-bar {
@@ -541,7 +580,7 @@ kbd {
 }
 
 .sc-key {
-    color: var(--c-white);
+    color: var(--c-amber);
     font-weight: 700;
 }
 
@@ -557,6 +596,11 @@ kbd {
     background: var(--c-surface);
     border: 1px solid var(--c-border);
     padding: 0.8rem;
+    transition: var(--trans-fast);
+}
+
+.deck-stat-cell:hover {
+    border-color: var(--c-border-strong);
 }
 
 .cell-label {
@@ -567,15 +611,19 @@ kbd {
     margin-bottom: 4px;
 }
 
+.deck-stat-cell:nth-child(1) .cell-val { color: var(--c-cyan); }
+.deck-stat-cell:nth-child(2) .cell-val { color: var(--c-amber); }
+.deck-stat-cell:nth-child(3) .cell-val { color: var(--c-purple); }
+.deck-stat-cell:nth-child(4) .cell-val { color: var(--c-emerald); }
+
 .cell-val {
     font-size: 1.4rem;
     font-weight: 800;
-    color: var(--c-white);
 }
 
 .cell-suffix {
     font-size: 1.1rem;
-    color: var(--c-white);
+    color: var(--c-silver);
 }
 
 .cell-sub {
@@ -587,11 +635,11 @@ kbd {
 
 .ascii-art-cube {
     font-size: 0.72rem;
-    color: var(--c-silver);
+    color: var(--c-emerald);
     line-height: 1.35;
     background: var(--c-black);
     padding: 0.6rem;
-    border: 1px solid var(--c-border);
+    border: 1px solid rgba(52, 211, 153, 0.25);
     overflow-x: auto;
 }
 
@@ -610,8 +658,9 @@ kbd {
 .sec-cmd {
     display: inline-block;
     font-size: 0.78rem;
-    color: var(--c-muted);
+    color: var(--c-cyan);
     margin-bottom: 4px;
+    font-weight: 600;
 }
 
 .sec-title {
@@ -642,14 +691,15 @@ kbd {
     margin-top: 1.2rem;
     padding: 0.8rem;
     background: var(--c-surface);
-    border-left: 3px solid var(--c-white);
+    border-left: 3px solid var(--c-emerald);
     font-size: 0.88rem;
-    color: var(--c-white);
+    color: var(--c-white-dim);
 }
 
 .q-border {
-    color: var(--c-silver);
+    color: var(--c-emerald);
     margin-right: 6px;
+    font-weight: 700;
 }
 
 .ascii-spec-table {
@@ -664,7 +714,7 @@ kbd {
 }
 
 .spec-k {
-    color: var(--c-muted);
+    color: var(--c-cyan);
     font-weight: 700;
     width: 35%;
 }
@@ -676,10 +726,14 @@ kbd {
 .spec-v a {
     color: var(--c-white);
     text-decoration: underline;
+    transition: var(--trans-fast);
+}
+.spec-v a:hover {
+    color: var(--c-cyan);
 }
 
 .badge-status {
-    color: var(--c-white);
+    color: var(--c-emerald);
     font-weight: 700;
 }
 
@@ -709,13 +763,14 @@ kbd {
 
 .ascii-list li em {
     font-style: normal;
-    color: var(--c-muted);
-    font-size: 0.76rem;
-    margin-left: 4px;
+    color: var(--c-cyan);
+    font-size: 0.74rem;
+    margin-left: 6px;
+    font-weight: 600;
 }
 
 .list-bullet {
-    color: var(--c-white);
+    color: var(--c-emerald);
     font-weight: 700;
     margin-right: 6px;
 }
@@ -732,6 +787,13 @@ kbd {
     background: var(--c-surface);
     border: 1px solid var(--c-border);
     color: var(--c-white);
+    transition: var(--trans-fast);
+}
+
+.t-tag:hover {
+    border-color: var(--c-cyan);
+    color: var(--c-cyan);
+    background: var(--c-cyan-dim);
 }
 
 /* ==========================================================================
@@ -756,15 +818,16 @@ kbd {
 }
 
 .filter-btn:hover {
-    border-color: var(--c-white);
-    color: var(--c-white);
+    border-color: var(--c-cyan);
+    color: var(--c-cyan);
 }
 
 .filter-btn.active {
-    background: var(--c-white);
-    color: var(--c-black);
+    background: var(--c-cyan-dim);
+    color: var(--c-cyan);
     font-weight: 700;
-    border-color: var(--c-white);
+    border-color: var(--c-cyan);
+    box-shadow: 0 0 10px var(--c-cyan-glow);
 }
 
 .projects-ascii-grid {
@@ -787,17 +850,23 @@ kbd {
 
 .p-type {
     font-size: 0.72rem;
-    color: var(--c-muted);
+    color: var(--c-cyan);
     font-weight: 700;
 }
 
+.project-ascii-card[data-category="tool"] .p-type { color: var(--c-cyan); }
+.project-ascii-card[data-category="pentest"] .p-type { color: var(--c-emerald); }
+.project-ascii-card[data-category="research"] .p-type { color: var(--c-purple); }
+
 .p-link {
-    color: var(--c-white);
+    color: var(--c-silver);
     font-size: 0.78rem;
     text-decoration: none;
     font-weight: 700;
+    transition: var(--trans-fast);
 }
 .p-link:hover {
+    color: var(--c-cyan);
     text-decoration: underline;
 }
 
@@ -827,6 +896,12 @@ kbd {
     background: var(--c-surface);
     padding: 2px 6px;
     border: 1px solid var(--c-border);
+    transition: var(--trans-fast);
+}
+
+.p-tags code:hover {
+    border-color: var(--c-cyan);
+    color: var(--c-cyan);
 }
 
 /* ==========================================================================
@@ -838,12 +913,19 @@ kbd {
     gap: 1rem;
 }
 
+.cert-ascii-item {
+    transition: var(--trans-fast);
+}
+.cert-ascii-item:hover {
+    border-color: var(--c-border-strong);
+}
+
 .cert-ascii-item .c-badge {
     display: inline-block;
     font-size: 0.68rem;
-    color: var(--c-muted);
     font-weight: 700;
     margin-bottom: 4px;
+    color: var(--c-cyan);
 }
 
 .cert-ascii-item .c-title {
@@ -862,10 +944,11 @@ kbd {
 .cert-ascii-item .c-status {
     display: inline-block;
     font-size: 0.68rem;
-    color: var(--c-white);
-    background: var(--c-surface);
-    border: 1px solid var(--c-border);
+    color: var(--c-emerald);
+    background: var(--c-emerald-dim);
+    border: 1px solid rgba(52, 211, 153, 0.3);
     padding: 2px 6px;
+    font-weight: 600;
 }
 
 /* ==========================================================================
