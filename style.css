@@ -1,14 +1,12 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — ANIMUS // GENETIC MEMORY UPLINK (v6.0)
-   Three.js Memory Corridor Void + Abstergo UI + Desynchronization Glitch
+   DEEKSHITH (D33) — 3D SPATIAL INTERACTIVE PORTFOLIO (v7.0)
+   Three.js Multilayer Core + Lenis Smooth Scroll + Horizontal Track + GSAP
    ========================================================================== */
 
 :root {
-    --animus-cyan: #00e5ff;
-    --animus-blue: #005bb5;
-    --animus-light: #e0f7fa;
-    --desync-red: #ff3333;
-    --bg-dark: #020611;
+    --brand-primary: #4f46e5;
+    --brand-secondary: #00f0ff;
+    --bg-dark: #030303;
 }
 
 *, *::before, *::after {
@@ -19,21 +17,24 @@
 
 body {
     margin: 0;
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--bg-dark);
     color: #ffffff;
-    font-family: 'Rajdhani', sans-serif;
     overflow-x: hidden;
-    cursor: none; /* Hide default cursor for custom Animus cursor */
-    -webkit-font-smoothing: antialiased;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
-/* Historical / Hero Font */
-.font-historical {
-    font-family: 'Cinzel', serif;
+body::-webkit-scrollbar {
+    display: none;
 }
 
-/* 3D Canvas fixed behind everything */
-#webgl-canvas {
+.font-display {
+    font-family: 'Syncopate', sans-serif;
+}
+
+/* Fixed WebGL Canvas Container */
+#webgl-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -43,207 +44,110 @@ body {
     pointer-events: none;
 }
 
-/* Subtle grid overlay to simulate the Animus simulation room */
-.animus-grid {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: 
-        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 1;
-    perspective: 1000px;
+/* UI Layer */
+#ui-layer {
+    position: relative;
+    z-index: 10;
 }
 
-/* Custom Geometric Cursor */
-#custom-cursor {
+/* Outline Text Effect */
+.text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
+    transition: color 0.3s ease, -webkit-text-stroke 0.3s ease;
+}
+
+.text-outline:hover {
+    color: white;
+    -webkit-text-stroke: 1px transparent;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+}
+
+/* Custom Dual Cursor */
+#cursor-dot,
+#cursor-outline {
     position: fixed;
     top: 0;
     left: 0;
-    width: 24px;
-    height: 24px;
     transform: translate(-50%, -50%);
-    pointer-events: none;
+    border-radius: 50%;
     z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
 }
 
-#custom-cursor .diamond {
+#cursor-dot {
     width: 8px;
     height: 8px;
-    border: 1px solid var(--animus-cyan);
-    transform: rotate(45deg);
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    background-color: var(--brand-secondary);
 }
 
-#custom-cursor .ring {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border: 1px dashed rgba(0, 229, 255, 0.4);
-    border-radius: 50%;
-    animation: rotate-slow 4s linear infinite;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+#cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.hovering #custom-cursor .diamond {
-    width: 4px;
-    height: 4px;
-    background: var(--animus-cyan);
-}
-.hovering #custom-cursor .ring {
-    opacity: 1;
+.hovering #cursor-outline {
+    width: 60px;
+    height: 60px;
+    border-color: var(--brand-secondary);
+    background-color: rgba(0, 240, 255, 0.1);
 }
 
-.desync-hover #custom-cursor .diamond,
-body.desync-hover #custom-cursor .diamond {
-    border-color: var(--desync-red);
-    box-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
-    background: var(--desync-red);
-}
-
-@keyframes rotate-slow {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Touch fallback */
 @media (hover: none) and (pointer: coarse) {
     body {
         cursor: auto;
     }
-    #custom-cursor {
+    #cursor-dot, #cursor-outline {
         display: none !important;
     }
 }
 
-/* Glitch / Desync Effect */
-.desync-text {
-    position: relative;
-    display: inline-block;
-}
-.desync-text:hover {
-    color: transparent;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-}
-.desync-text:hover::before, .desync-text:hover::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: var(--desync-red);
-    background: transparent;
-}
-.desync-text:hover::before {
-    left: 2px;
-    clip: rect(10px, 9999px, 40px, 0);
-    animation: glitch-anim 0.2s infinite linear alternate-reverse;
-}
-.desync-text:hover::after {
-    left: -2px;
-    color: var(--animus-cyan);
-    clip: rect(40px, 9999px, 80px, 0);
-    animation: glitch-anim 0.3s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-anim {
-    0% { clip: rect(15px, 9999px, 30px, 0); }
-    20% { clip: rect(40px, 9999px, 60px, 0); }
-    40% { clip: rect(5px, 9999px, 20px, 0); }
-    60% { clip: rect(70px, 9999px, 90px, 0); }
-    80% { clip: rect(25px, 9999px, 45px, 0); }
-    100% { clip: rect(50px, 9999px, 75px, 0); }
-}
-
-/* Preloader */
-#animus-loader {
+/* Loading Screen */
+#loader {
     position: fixed;
     inset: 0;
     background: var(--bg-dark);
     z-index: 10000;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
-.loader-ring {
-    width: 150px;
-    height: 150px;
+.loader-bar {
+    width: 220px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 20px;
     position: relative;
+    overflow: hidden;
+    border-radius: 2px;
 }
-.loader-ring::before, .loader-ring::after {
-    content: '';
+
+.loader-progress {
     position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 2px solid transparent;
-}
-.loader-ring::before {
-    border-top-color: var(--animus-cyan);
-    border-bottom-color: rgba(0, 229, 255, 0.2);
-    animation: spin 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-}
-.loader-ring::after {
-    border-left-color: var(--animus-light);
-    animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
-    inset: 15px;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--brand-secondary);
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+@keyframes bounce-x {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6px); }
 }
 
-/* Abstergo UI Elements */
-.abstergo-panel {
-    background: rgba(2, 6, 17, 0.65);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(0, 229, 255, 0.18);
-    position: relative;
-    transition: all 0.3s ease;
+.animate-bounce-x {
+    animation: bounce-x 1.5s infinite;
 }
-.abstergo-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--animus-cyan), transparent);
-    opacity: 0.5;
-}
-
-.corner-accent {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border: 1px solid var(--animus-cyan);
-    transition: all 0.3s ease;
-}
-.corner-tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-.corner-tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
-.corner-bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
-.corner-br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-
-.abstergo-panel:hover .corner-accent {
-    width: 20px;
-    height: 20px;
-    box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-dark); }
-::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--animus-cyan); }

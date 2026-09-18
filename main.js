@@ -1,6 +1,6 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — ANIMUS // GENETIC MEMORY UPLINK (v6.0)
-   Three.js Memory Corridor Void + GSAP Sequence + Interactive Terminal
+   DEEKSHITH (D33) — 3D SPATIAL INTERACTIVE PORTFOLIO (v7.0)
+   Three.js Spatial Core + Lenis Smooth Scroll + Horizontal Pin Track + GSAP
    ========================================================================== */
 
 (function () {
@@ -14,312 +14,346 @@
     }
 
     /* ==========================================================================
-       2. CUSTOM GEOMETRIC ANIMUS CURSOR LOGIC
+       2. LENIS SMOOTH SCROLLING SETUP
        ========================================================================== */
-    const cursor = document.getElementById('custom-cursor');
+    let lenis = null;
+    if (typeof Lenis !== 'undefined') {
+        lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
 
-    if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-        let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0);
+        }
+    }
+
+    /* ==========================================================================
+       3. CUSTOM DUAL LERP CURSOR
+       ========================================================================== */
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorOutline = document.getElementById('cursor-outline');
+
+    if (cursorDot && cursorOutline && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         let cursorX = window.innerWidth / 2;
         let cursorY = window.innerHeight / 2;
+        let outlineX = cursorX;
+        let outlineY = cursorY;
 
         window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
+            cursorX = e.clientX;
+            cursorY = e.clientY;
         }, { passive: true });
 
-        const renderCursor = () => {
-            cursorX += (mouse.x - cursorX) * 0.22;
-            cursorY += (mouse.y - cursorY) * 0.22;
-            cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            requestAnimationFrame(renderCursor);
-        };
-        requestAnimationFrame(renderCursor);
-
         const bindHoverables = () => {
-            const hoverables = document.querySelectorAll('.hoverable, a, button, input');
-            hoverables.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    document.body.classList.add('hovering');
-                    if (el.classList.contains('desync-hover')) {
-                        document.body.classList.add('desync-hover');
-                    }
-                });
-                el.addEventListener('mouseleave', () => {
-                    document.body.classList.remove('hovering');
-                    document.body.classList.remove('desync-hover');
-                });
+            const interactiveElements = document.querySelectorAll('a, button, input, .hoverable, .cursor-pointer');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
             });
         };
 
-        bindHoverables();
-    }
-
-    /* ==========================================================================
-       3. GSAP PRELOADER & SCROLLTRIGGER ANIMATIONS
-       ========================================================================== */
-    function initAnimations() {
-        if (typeof gsap === 'undefined') return;
-
-        if (typeof ScrollTrigger !== 'undefined') {
-            gsap.registerPlugin(ScrollTrigger);
+        function animateCursor() {
+            outlineX += (cursorX - outlineX) * 0.18;
+            outlineY += (cursorY - outlineY) * 0.18;
+            
+            cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+            cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px) translate(-50%, -50%)`;
+            
+            requestAnimationFrame(animateCursor);
         }
 
-        const tl = gsap.timeline();
-
-        // Preloader Sequence
-        tl.to("#loader-text-1", { opacity: 1, duration: 0.45 })
-          .to("#loader-text-1", { opacity: 0, duration: 0.25, delay: 0.4 })
-          .to("#loader-text-2", { opacity: 1, duration: 0.45 })
-          .to("#loader-text-2", { opacity: 0, duration: 0.25, delay: 0.45 })
-          .to("#loader-text-3", { opacity: 1, duration: 0.45 })
-          .to("#animus-loader", {
-              opacity: 0,
-              duration: 0.8,
-              delay: 0.35,
-              ease: "power2.inOut",
-              onComplete: () => {
-                  const loader = document.getElementById('animus-loader');
-                  if (loader) loader.style.display = 'none';
-                  initThreeJS(); // Launch 3D Memory Corridor
-              }
-          })
-          // Reveal Main UI
-          .to("#main-ui", { opacity: 1, duration: 0.8 }, "-=0.4")
-          
-          // Hero Sequence Reveal
-          .fromTo(".gs-title",
-              { y: 80, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: "power4.out" }
-          )
-          .fromTo(".gs-reveal",
-              { opacity: 0, x: -30 },
-              { opacity: 1, x: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" },
-              "-=0.4"
-          )
-          .fromTo(".gs-fade",
-              { opacity: 0, y: 20 },
-              { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: "power2.out" },
-              "-=0.4"
-          );
-
-        // Section Headers Reveal
-        gsap.utils.toArray('.gs-section-header').forEach(header => {
-            gsap.fromTo(header,
-                { opacity: 0, y: 30 },
-                {
-                    scrollTrigger: {
-                        trigger: header,
-                        start: "top 85%",
-                    },
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: "power3.out"
-                }
-            );
-        });
-
-        // Memory Project Cards Reveal
-        gsap.utils.toArray('.gs-memory').forEach((card, i) => {
-            gsap.fromTo(card,
-                { opacity: 0, y: 50 },
-                {
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top 85%",
-                    },
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.9,
-                    delay: i % 2 === 0 ? 0 : 0.15,
-                    ease: "power3.out"
-                }
-            );
-        });
-
-        // Eagle Vision Skills
-        gsap.fromTo(".gs-skill",
-            { opacity: 0, scale: 0.95 },
-            {
-                scrollTrigger: {
-                    trigger: "#skills",
-                    start: "top 75%"
-                },
-                opacity: 1,
-                scale: 1,
-                duration: 0.6,
-                stagger: 0.12,
-                ease: "back.out(1.2)"
-            }
-        );
+        bindHoverables();
+        requestAnimationFrame(animateCursor);
     }
 
     /* ==========================================================================
-       4. THREE.JS 3D ANIMUS MEMORY CORRIDOR
+       4. THREE.JS 3D MULTILAYER SPATIAL CORE & GALAXY
        ========================================================================== */
+    let scene, camera, renderer, coreGroup, innerMesh, outerMesh, particleSystem;
+    let dirLight1, dirLight2;
+    let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+
     function initThreeJS() {
-        const canvas = document.getElementById('webgl-canvas');
+        const canvas = document.getElementById('webgl-container');
         if (!canvas || typeof THREE === 'undefined') return;
 
-        // 1. Scene Setup
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020611, 0.025);
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x030303, 0.02);
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 5);
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 15);
 
-        const renderer = new THREE.WebGLRenderer({
-            canvas: canvas,
-            alpha: true,
+        renderer = new THREE.WebGLRenderer({ 
+            canvas: canvas, 
+            alpha: true, 
             antialias: true,
-            powerPreference: 'high-performance'
+            powerPreference: "high-performance"
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Corridor Group
-        const corridorGroup = new THREE.Group();
-        scene.add(corridorGroup);
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
 
-        // 2. Floating Memory Shards (Tetrahedrons)
-        const shardGeo = new THREE.TetrahedronGeometry(1.5, 0);
-        const shardMatCyan = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.18 });
-        const shardMatWhite = new THREE.MeshBasicMaterial({ color: 0xe0f7fa, wireframe: true, transparent: true, opacity: 0.12 });
+        dirLight1 = new THREE.DirectionalLight(0x4f46e5, 3);
+        dirLight1.position.set(5, 5, 5);
+        scene.add(dirLight1);
 
-        const shardCount = 80;
-        const shards = [];
+        dirLight2 = new THREE.DirectionalLight(0x00f0ff, 2.5);
+        dirLight2.position.set(-5, -5, 2);
+        scene.add(dirLight2);
 
-        for (let i = 0; i < shardCount; i++) {
-            const isCyan = Math.random() > 0.45;
-            const mesh = new THREE.Mesh(shardGeo, isCyan ? shardMatCyan : shardMatWhite);
-            
-            mesh.position.x = (Math.random() - 0.5) * 40;
-            mesh.position.y = (Math.random() - 0.5) * 40;
-            mesh.position.z = (Math.random() - 1) * 100;
-            
-            mesh.rotation.x = Math.random() * Math.PI;
-            mesh.rotation.y = Math.random() * Math.PI;
+        // Core Group
+        coreGroup = new THREE.Group();
+        scene.add(coreGroup);
 
-            mesh.userData = {
-                rotX: (Math.random() - 0.5) * 0.012,
-                rotY: (Math.random() - 0.5) * 0.012
-            };
+        // Layer 1: Inner Solid Metallic Icosahedron
+        const innerGeo = new THREE.IcosahedronGeometry(2, 1);
+        const innerMat = new THREE.MeshPhysicalMaterial({
+            color: 0x11141c,
+            metalness: 0.9,
+            roughness: 0.1,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1,
+            wireframe: false
+        });
+        innerMesh = new THREE.Mesh(innerGeo, innerMat);
+        coreGroup.add(innerMesh);
 
-            corridorGroup.add(mesh);
-            shards.push(mesh);
-        }
+        // Layer 2: Outer Glowing Wireframe Icosahedron
+        const outerGeo = new THREE.IcosahedronGeometry(2.5, 2);
+        const outerMat = new THREE.MeshStandardMaterial({
+            color: 0x4f46e5,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.4
+        });
+        outerMesh = new THREE.Mesh(outerGeo, outerMat);
+        coreGroup.add(outerMesh);
 
-        // 3. Genetic Data Particles (DNA Helix Cloud)
+        // Layer 3: Orbiting Spherical Particle Dust Galaxy (3,000 points)
         const particlesGeo = new THREE.BufferGeometry();
-        const particleCount = 1500;
-        const posArray = new Float32Array(particleCount * 3);
-        
-        for (let i = 0; i < particleCount * 3; i += 3) {
-            const radius = 5 + Math.random() * 15;
-            const angle = Math.random() * Math.PI * 2;
+        const particlesCount = 3000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i += 3) {
+            const radius = 3 + Math.random() * 8;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(Math.random() * 2 - 1);
             
-            posArray[i] = Math.cos(angle) * radius;
-            posArray[i + 1] = Math.sin(angle) * radius;
-            posArray[i + 2] = (Math.random() - 1) * 120;
+            posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
+            posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            posArray[i + 2] = radius * Math.cos(phi);
         }
-        
+
         particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const particlesMat = new THREE.PointsMaterial({
-            size: 0.09,
-            color: 0x00e5ff,
+            size: 0.025,
+            color: 0x00f0ff,
             transparent: true,
-            opacity: 0.55,
+            opacity: 0.65,
             blending: THREE.AdditiveBlending
         });
-        
-        const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
-        corridorGroup.add(particlesMesh);
+        particleSystem = new THREE.Points(particlesGeo, particlesMat);
+        coreGroup.add(particleSystem);
 
-        // 4. Perspective Corridor Guide Lines
-        const lineMat = new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.06 });
-        for (let i = 0; i < 4; i++) {
-            const points = [];
-            points.push(new THREE.Vector3((i % 2 === 0 ? -10 : 10), (i < 2 ? -10 : 10), 20));
-            points.push(new THREE.Vector3((i % 2 === 0 ? -2 : 2), (i < 2 ? -2 : 2), -100));
-            const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-            const line = new THREE.Line(lineGeo, lineMat);
-            corridorGroup.add(line);
-        }
-
-        // 5. Parallax Look-Ahead Variables
-        let targetX = 0;
-        let targetY = 0;
-        let windowHalfX = window.innerWidth / 2;
-        let windowHalfY = window.innerHeight / 2;
+        // Mouse Listeners
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
 
         window.addEventListener('mousemove', (event) => {
-            targetX = (event.clientX - windowHalfX) * 0.002;
-            targetY = (event.clientY - windowHalfY) * 0.002;
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
         }, { passive: true });
 
-        // 6. GSAP Scroll Connection (The Memory Dive)
-        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-            gsap.to(camera.position, {
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1
-                },
-                z: -50,
-                ease: "none"
-            });
-            
-            gsap.to(corridorGroup.rotation, {
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 2
-                },
-                z: Math.PI / 4,
-                ease: "none"
-            });
-        }
-
-        // 7. Resize Handler
+        // Window Resize
         window.addEventListener('resize', () => {
-            windowHalfX = window.innerWidth / 2;
-            windowHalfY = window.innerHeight / 2;
+            if (!camera || !renderer) return;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // 8. Render Loop
-        function animate() {
-            requestAnimationFrame(animate);
+        // Start Render Loop
+        const clock = new THREE.Clock();
+
+        function render() {
+            const elapsedTime = clock.getElapsedTime();
+
+            innerMesh.rotation.y += 0.002;
+            innerMesh.rotation.x += 0.001;
             
-            // Mouse Parallax Look-Ahead
-            camera.position.x += (targetX - camera.position.x) * 0.05;
-            camera.position.y += (-targetY - camera.position.y) * 0.05;
-            camera.lookAt(0, 0, camera.position.z - 10);
+            outerMesh.rotation.y -= 0.003;
+            outerMesh.rotation.z += 0.002;
 
-            // Shards Floating & Rotating
-            shards.forEach(shard => {
-                shard.rotation.x += shard.userData.rotX;
-                shard.rotation.y += shard.userData.rotY;
-                shard.position.y += Math.sin(Date.now() * 0.001 + shard.position.x) * 0.01;
-            });
+            particleSystem.rotation.y = elapsedTime * 0.05;
+            outerMesh.scale.setScalar(1 + Math.sin(elapsedTime * 1.5) * 0.05);
 
-            // Cloud Rotation
-            particlesMesh.rotation.z -= 0.0005;
+            // Parallax mouse follow
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+            
+            coreGroup.rotation.y += 0.05 * (targetX - coreGroup.rotation.y);
+            coreGroup.rotation.x += 0.05 * (targetY - coreGroup.rotation.x);
 
             renderer.render(scene, camera);
+            requestAnimationFrame(render);
         }
-
-        animate();
+        
+        render();
     }
 
     /* ==========================================================================
-       5. MOBILE MENU DRAWER
-       ========================================================================= */
+       5. GSAP HORIZONTAL & VERTICAL SCROLL ANIMATIONS
+       ========================================================================== */
+    function initAnimations() {
+        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+        // Preloader Animation
+        gsap.to("#loader-progress", {
+            width: "100%",
+            duration: 1.2,
+            ease: "power2.inOut",
+            onComplete: () => {
+                gsap.to("#loader", {
+                    yPercent: -100,
+                    duration: 0.9,
+                    ease: "power4.inOut",
+                    onComplete: () => {
+                        const loader = document.getElementById('loader');
+                        if (loader) loader.style.display = 'none';
+                        startScrollOrchestration();
+                    }
+                });
+            }
+        });
+
+        function startScrollOrchestration() {
+            // Hero Text Reveal
+            gsap.fromTo(".gs-hero-reveal", 
+                { y: 50, opacity: 0 }, 
+                { y: 0, opacity: 1, duration: 1, stagger: 0.18, ease: "power3.out" }
+            );
+
+            // General section text reveals
+            gsap.utils.toArray('.gs-fade-up').forEach(element => {
+                gsap.fromTo(element, 
+                    { y: 50, opacity: 0 },
+                    {
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 85%",
+                            toggleActions: "play none none reverse"
+                        },
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        ease: "power3.out"
+                    }
+                );
+            });
+
+            // 1. Vertical 3D Choreography Timeline
+            if (coreGroup) {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: "#ui-layer",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1
+                    }
+                });
+
+                // Section 1 (About) -> Shift Core to Left, zoom in slightly
+                tl.to(coreGroup.position, {
+                    x: window.innerWidth > 768 ? -4 : 0,
+                    y: 1,
+                    z: 2,
+                    ease: "none"
+                }, 0.1);
+                
+                if (dirLight1) tl.to(dirLight1.color, { r: 0, g: 1, b: 0.8 }, 0.1);
+                if (outerMesh) tl.to(outerMesh.material.color, { r: 0.3, g: 0.2, b: 1 }, 0.1);
+
+                // Section 2 (Horizontal Works) -> Center core, push back
+                tl.to(coreGroup.position, {
+                    x: 0,
+                    y: 0,
+                    z: -4,
+                    ease: "none"
+                }, 0.35);
+
+                // Section 3 (Capabilities) -> Lift core
+                tl.to(coreGroup.position, {
+                    x: window.innerWidth > 768 ? 3.5 : 0,
+                    y: -0.5,
+                    z: 0,
+                    ease: "none"
+                }, 0.65);
+
+                // Section 4 (Contact) -> Fly straight THROUGH the particle core
+                tl.to(coreGroup.position, {
+                    x: 0,
+                    y: -1.5,
+                    z: 12,
+                    ease: "none"
+                }, 0.9);
+
+                tl.to(coreGroup.rotation, {
+                    x: Math.PI * 2,
+                    y: Math.PI * 4,
+                    ease: "none"
+                }, 0);
+            }
+
+            // 2. PINNED HORIZONTAL SCROLL TRACK
+            const horizontalSection = document.getElementById('horizontal-work');
+            const track = document.getElementById('horizontal-track');
+
+            if (horizontalSection && track) {
+                const getScrollAmount = () => {
+                    return -(track.scrollWidth - window.innerWidth);
+                };
+
+                gsap.to(track, {
+                    x: getScrollAmount,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: horizontalSection,
+                        pin: true,
+                        start: "top top",
+                        end: () => `+=${track.scrollWidth - window.innerWidth}`,
+                        scrub: 1,
+                        invalidateOnRefresh: true
+                    }
+                });
+            }
+        }
+    }
+
+    /* ==========================================================================
+       6. MOBILE MENU
+       ========================================================================== */
     function initMobileMenu() {
         const menuBtn = document.getElementById('mobileMenuBtn');
         const menu = document.getElementById('mobileMenu');
@@ -339,7 +373,7 @@
     }
 
     /* ==========================================================================
-       6. INTERACTIVE ANIMUS TERMINAL DRAWER
+       7. INTERACTIVE TERMINAL DRAWER
        ========================================================================== */
     class InteractiveTerminalDrawer {
         constructor() {
@@ -423,33 +457,33 @@
 
         processCommand(rawCmd) {
             const cmd = rawCmd.toLowerCase();
-            this.appendHistory(`d33:animus# ${rawCmd}`, 'text-[#00e5ff] font-bold');
+            this.appendHistory(`d33:~$ ${rawCmd}`, 'text-cyan-400 font-bold');
 
             switch (cmd) {
                 case 'help':
                     this.appendHistory(`Available Commands:
-- whoami       : Subject identity & synchronization metrics
-- memories     : Extracted project memory blocks
-- skills       : Eagle Vision tactical capability matrix
-- certs        : Verified accreditations & CTF records
-- contact      : Direct communication uplink
-- clear        : Clear buffer
-- exit         : Terminate session`, 'text-[#00e5ff]');
+- whoami       : Operator profile & core credentials
+- projects     : Production engineering & security suites
+- skills       : Offensive & cryptographic toolsets
+- certs        : Verified industry accreditations
+- contact      : Direct communication coordinates
+- clear        : Clear console output
+- exit         : Close terminal`, 'text-cyan-400');
                     break;
 
                 case 'whoami':
-                    this.appendHistory(`SUBJECT  : DEEKSHITH (D33) [SUBJECT_17]
-TITLE    : Master Architect & Offensive Cybersecurity Engineer
+                    this.appendHistory(`OPERATOR : DEEKSHITH (D33)
+ROLE     : Offensive Security Architect & Low-Level Systems Engineer
 LOCATION : Bangalore, Karnataka, India [12.9716° N, 77.5946° E]
-CORE     : Low-Level Cryptography (C/C++), Penetration Testing, Digital Forensics`, 'text-gray-200');
+CORE     : Low-Level Cryptography (C/C++), Penetration Testing, Real-Time Forensics`, 'text-gray-200');
                     break;
 
-                case 'memories':
                 case 'projects':
-                    this.appendHistory(`[MEMORY 01] E-D--Crypto         -> C / OpenSSL / AES-256-CBC / RSA-2048
-[MEMORY 02] Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
-[MEMORY 03] Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
-[MEMORY 04] Data Stream Masking -> C++20 Financial Payload Tokenizer`, 'text-[#e0f7fa]');
+                case 'works':
+                    this.appendHistory(`1. E-D--Crypto         -> C / OpenSSL / AES-256-CBC / RSA-2048
+2. Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
+3. Security Audit      -> Automated Bandit SAST & OWASP ZAP Pipeline
+4. Data Stream Masking -> C++20 Real-Time Financial Tokenizer`, 'text-indigo-300');
                     break;
 
                 case 'skills':
@@ -467,14 +501,14 @@ Defensive : ELK Stack, Suricata IDS/IPS, Linux Kernel Hardening, GPO`, 'text-gra
 - Cyber Job Simulation (Deloitte Australia)
 - Cybersecurity Analyst IAM (TCS)
 - Critical Infrastructure Protection (OPSWAT)
-- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-[#00e5ff]');
+- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-cyan-400');
                     break;
 
                 case 'contact':
                     this.appendHistory(`Email    : d33kshith@proton.me
 GitHub   : github.com/28d33
 LinkedIn : linkedin.com/in/d33kshithanand
-Uplink   : GENETIC_MEMORY_SYNCHRONIZED`, 'text-[#00e5ff]');
+Location : Bangalore, India`, 'text-cyan-400');
                     break;
 
                 case 'clear':
@@ -489,16 +523,17 @@ Uplink   : GENETIC_MEMORY_SYNCHRONIZED`, 'text-[#00e5ff]');
                     break;
 
                 default:
-                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for command list.`, 'text-[#ff3333]');
+                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for options.`, 'text-rose-400');
                     break;
             }
         }
     }
 
     /* ==========================================================================
-       7. BOOT ON WINDOW LOAD
+       8. BOOTSTRAP ON WINDOW LOAD
        ========================================================================== */
     window.addEventListener('load', () => {
+        initThreeJS();
         initAnimations();
         initMobileMenu();
         new InteractiveTerminalDrawer();

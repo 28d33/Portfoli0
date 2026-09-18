@@ -1,441 +1,279 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth bg-[#020611] text-white">
+<html lang="en" class="bg-[#030303] text-white overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEEKSHITH (D33) // ANIMUS GENETIC MEMORY UPLINK</title>
+    <title>DEEKSHITH (D33) | 3D Interactive Motion & Cybersecurity Portfolio</title>
     <meta name="description" content="Portfolio of Deekshith (D33) — Cybersecurity Engineer, Penetration Tester, Cryptographic Systems Developer.">
-    <meta name="keywords" content="Deekshith, D33, Cybersecurity, Penetration Testing, C, C++, Three.js, GSAP, WebGL, Animus, InfoSec, Cryptography">
+    <meta name="keywords" content="Deekshith, D33, Cybersecurity, Penetration Testing, C, C++, Three.js, GSAP, WebGL, Lenis, InfoSec, Cryptography">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts: Cinzel (Epic/Historical) + Rajdhani (Animus Tech) + JetBrains Mono -->
+    
+    <!-- Google Fonts: Syncopate (Display) + Space Grotesk (Body) + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
+    
     <!-- GSAP & ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
+    <!-- Lenis for Butter-Smooth Scrolling -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased selection:bg-[#00e5ff] selection:text-black">
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Animus Preloader -->
-    <div id="animus-loader">
-        <div class="loader-ring mb-8">
-            <div class="absolute inset-0 flex items-center justify-center">
-                <i data-lucide="dna" class="w-8 h-8 text-[#00e5ff] animate-pulse"></i>
-            </div>
+    <!-- Custom Cursor -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
+
+    <!-- Preloader -->
+    <div id="loader">
+        <h1 class="font-display text-2xl md:text-3xl tracking-widest text-white uppercase flex items-center gap-2">
+            <span>DEEKSHITH</span><span class="text-cyan-400">.D33</span>
+        </h1>
+        <div class="loader-bar">
+            <div id="loader-progress" class="loader-progress"></div>
         </div>
-        <div class="text-center font-mono text-sm tracking-[0.3em] text-[#00e5ff]">
-            <p id="loader-text-1" class="opacity-0 mb-2">INITIALIZING ANIMUS OMEGA v6.0...</p>
-            <p id="loader-text-2" class="opacity-0 mb-2">ACCESSING GENETIC MEMORY [SUBJECT_17]...</p>
-            <p id="loader-text-3" class="opacity-0 text-[#e0f7fa]">SYNCHRONIZATION COMPLETE // OPERATOR D33.</p>
-        </div>
+        <p class="font-mono text-xs text-gray-500 mt-4 tracking-widest uppercase">Initializing 3D Spatial Core...</p>
     </div>
 
-    <!-- Custom Geometric Animus Cursor -->
-    <div id="custom-cursor">
-        <div class="ring"></div>
-        <div class="diamond"></div>
-    </div>
-    
-    <!-- Animus Simulation Grid Overlay -->
-    <div class="animus-grid"></div>
+    <!-- 3D Canvas fixed background -->
+    <canvas id="webgl-container"></canvas>
 
-    <!-- 3D WebGL Canvas fixed behind content -->
-    <canvas id="webgl-canvas"></canvas>
-
-    <!-- Main Content Container -->
-    <div id="main-ui" class="relative z-10 opacity-0 flex flex-col min-h-screen">
+    <!-- Main Content Layer -->
+    <main id="ui-layer">
         
         <!-- Navigation -->
-        <nav class="w-full px-6 md:px-12 py-5 flex justify-between items-center fixed top-0 z-50 bg-[#020611]/70 backdrop-blur-md border-b border-[#00e5ff]/20">
-            <a href="#synchronize" class="flex items-center gap-3 hoverable cursor-none group">
-                <!-- Abstergo / Assassin abstract logo -->
-                <div class="w-10 h-10 relative flex items-center justify-center border border-white/20 group-hover:border-[#00e5ff] transition-colors duration-500">
-                    <div class="w-0 h-0 border-l-[10px] border-l-transparent border-b-[16px] border-b-white group-hover:border-b-[#00e5ff] border-r-[10px] border-r-transparent transition-colors duration-500"></div>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-[10px] tracking-[0.3em] text-gray-400">SUBJECT 17 // D33</span>
-                    <span class="text-sm font-bold tracking-[0.2em] uppercase text-white group-hover:text-[#00e5ff] transition-colors">DEEKSHITH</span>
-                </div>
+        <nav class="fixed top-0 w-full p-6 md:px-12 flex justify-between items-center mix-blend-difference z-50">
+            <a href="#home" class="font-display font-bold text-xl tracking-tighter hoverable flex items-center gap-1.5 group">
+                <span>D33</span><span class="text-cyan-400 group-hover:text-indigo-400 transition-colors">_SEC</span>
             </a>
             
-            <div class="hidden md:flex gap-8 text-xs tracking-[0.3em] font-medium text-gray-400">
-                <a href="#synchronize" class="hoverable hover:text-[#00e5ff] transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-[#00e5ff] hover:after:w-full after:transition-all after:duration-300">01. SYNCHRONIZE</a>
-                <a href="#memories" class="hoverable hover:text-[#00e5ff] transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-[#00e5ff] hover:after:w-full after:transition-all after:duration-300">02. MEMORIES</a>
-                <a href="#skills" class="hoverable hover:text-[#00e5ff] transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-[#00e5ff] hover:after:w-full after:transition-all after:duration-300">03. EAGLE_VISION</a>
-                <a href="#credentials" class="hoverable hover:text-[#00e5ff] transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-[#00e5ff] hover:after:w-full after:transition-all after:duration-300">04. ACCREDITATIONS</a>
+            <div class="hidden md:flex gap-8 text-xs font-semibold tracking-widest uppercase text-gray-300">
+                <a href="#home" class="hoverable hover:text-cyan-400 transition-colors">Home</a>
+                <a href="#about" class="hoverable hover:text-cyan-400 transition-colors">Manifesto</a>
+                <a href="#horizontal-work" class="hoverable hover:text-cyan-400 transition-colors">Works [H-Scroll]</a>
+                <a href="#capabilities" class="hoverable hover:text-cyan-400 transition-colors">Capabilities</a>
+                <a href="#contact" class="hoverable hover:text-cyan-400 transition-colors">Contact</a>
             </div>
 
-            <div class="hidden md:flex items-center gap-3">
-                <button id="terminalToggleBtn" class="hoverable abstergo-panel px-3.5 py-1.5 text-xs text-[#00e5ff] font-mono hover:text-white transition-colors flex items-center gap-1.5">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
+            <div class="hidden md:flex items-center gap-4">
+                <button id="terminalToggleBtn" class="hoverable text-xs font-mono border border-white/20 hover:border-cyan-400 text-gray-300 hover:text-cyan-400 px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5">
                     <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                    <span>ANIMUS CLI [~]</span>
+                    <span>Terminal [~]</span>
                 </button>
-                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="hoverable text-xs font-mono bg-[#00e5ff] hover:bg-white text-black font-bold px-4 py-1.5 transition-colors uppercase">
+                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="hoverable text-xs font-mono bg-white text-black hover:bg-cyan-400 hover:text-black px-4 py-1.5 rounded-full font-bold uppercase transition-all">
                     Resume
                 </a>
             </div>
 
-            <button id="mobileMenuBtn" class="md:hidden hoverable text-[#00e5ff] p-2">
+            <button id="mobileMenuBtn" class="md:hidden hoverable text-white p-2">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </nav>
 
         <!-- Mobile Menu Drawer -->
-        <div id="mobileMenu" class="hidden md:hidden fixed top-[73px] left-0 w-full bg-[#020611]/95 border-b border-[#00e5ff]/30 p-6 flex flex-col gap-4 z-40">
-            <a href="#synchronize" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-xs tracking-[0.3em]">01. SYNCHRONIZE</a>
-            <a href="#memories" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-xs tracking-[0.3em]">02. MEMORIES</a>
-            <a href="#skills" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-xs tracking-[0.3em]">03. EAGLE_VISION</a>
-            <a href="#credentials" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-xs tracking-[0.3em]">04. ACCREDITATIONS</a>
-            <a href="#contact" class="mobile-nav-link text-gray-300 hover:text-[#00e5ff] text-xs tracking-[0.3em]">05. CONTACT</a>
+        <div id="mobileMenu" class="hidden md:hidden fixed top-[70px] left-0 w-full glass-panel mx-4 mt-2 p-6 rounded-2xl flex flex-col gap-4 border border-white/10 z-50">
+            <a href="#home" class="mobile-nav-link text-gray-200 hover:text-cyan-400 text-sm font-semibold tracking-widest uppercase">Home</a>
+            <a href="#about" class="mobile-nav-link text-gray-200 hover:text-cyan-400 text-sm font-semibold tracking-widest uppercase">Manifesto</a>
+            <a href="#horizontal-work" class="mobile-nav-link text-gray-200 hover:text-cyan-400 text-sm font-semibold tracking-widest uppercase">Works</a>
+            <a href="#capabilities" class="mobile-nav-link text-gray-200 hover:text-cyan-400 text-sm font-semibold tracking-widest uppercase">Capabilities</a>
+            <a href="#contact" class="mobile-nav-link text-gray-200 hover:text-cyan-400 text-sm font-semibold tracking-widest uppercase">Contact</a>
             <div class="pt-3 border-t border-white/10 flex justify-between items-center">
-                <button id="mobileTerminalBtn" class="text-xs font-mono text-[#00e5ff] flex items-center gap-2">
+                <button id="mobileTerminalBtn" class="text-xs font-mono text-cyan-400 flex items-center gap-2">
                     <i data-lucide="terminal" class="w-4 h-4"></i>
-                    <span>LAUNCH TERMINAL</span>
+                    <span>Launch Terminal</span>
                 </button>
-                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="text-xs font-mono bg-[#00e5ff] text-black font-bold px-3 py-1">
-                    RESUME
+                <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="text-xs font-mono bg-white text-black font-bold px-3 py-1 rounded-full">
+                    Resume
                 </a>
             </div>
         </div>
 
-        <!-- Hero Section (Memory Sequence 01) -->
-        <header id="synchronize" class="min-h-screen flex items-center px-6 md:px-20 max-w-screen-2xl mx-auto w-full pt-28 pb-16">
-            <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Hero Section (Centered 3D Spatial Core) -->
+        <section id="home" class="h-screen w-full flex flex-col justify-center items-center relative px-6">
+            <div class="text-center z-10 pointer-events-none">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-mono uppercase tracking-widest mb-6 gs-hero-reveal">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Offensive Security & Systems Developer</span>
+                </div>
                 
-                <div class="lg:col-span-8 gs-reveal">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-[1px] bg-[#00e5ff]"></div>
-                        <p class="text-[#00e5ff] text-xs tracking-[0.4em] uppercase font-bold animate-pulse">Memory Sequence 01 // Genetic Synchronization</p>
+                <h1 class="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold uppercase leading-none tracking-tighter gs-hero-reveal">
+                    DEEKSHITH<br>
+                    <span class="text-outline hoverable pointer-events-auto cursor-pointer">ARCHITECT</span>
+                </h1>
+                
+                <p class="text-gray-400 text-sm md:text-base max-w-lg mx-auto mt-6 font-light leading-relaxed gs-hero-reveal">
+                    Forging resilient digital fortresses through low-level C/C++ cryptography, adversarial penetration testing, and real-time forensics telemetry.
+                </p>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 flex flex-col items-center gap-3 gs-hero-reveal opacity-60 pointer-events-none">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-mono" style="writing-mode: vertical-rl;">Scroll To Explore 3D Void</span>
+                <div class="w-[1px] h-14 bg-gradient-to-b from-cyan-400 via-indigo-500 to-transparent"></div>
+            </div>
+        </section>
+
+        <!-- About / Manifesto Section (3D Object Shifts Left) -->
+        <section id="about" class="min-h-screen w-full flex items-center px-6 md:px-20 relative py-28">
+            <div class="grid grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto gap-12 items-center">
+                <!-- Empty left column allows 3D core to shine on the left -->
+                <div class="hidden md:block"></div>
+                
+                <div class="flex flex-col justify-center gs-fade-up">
+                    <div class="flex items-center gap-2 text-indigo-400 font-mono text-xs uppercase tracking-widest mb-4">
+                        <span class="w-8 h-[1px] bg-indigo-400"></span>
+                        <span>01 // THE MANIFESTO</span>
                     </div>
                     
-                    <h1 class="font-historical text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05] mb-6">
-                        <div class="overflow-hidden"><span class="block gs-title text-white">Master</span></div>
-                        <div class="overflow-hidden"><span class="block gs-title text-transparent bg-clip-text bg-gradient-to-r from-white via-[#e0f7fa] to-[#00e5ff]">Architect</span></div>
-                    </h1>
+                    <h3 class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-6 uppercase leading-tight">
+                        Bridging <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">Offense & Defense</span>
+                    </h3>
                     
-                    <p class="text-gray-300 max-w-xl text-sm md:text-base leading-relaxed tracking-wider mb-8 gs-fade font-light">
-                        <span class="italic text-white">"We work in the dark to serve the light."</span> Extracting adversarial exploit structures, engineering cryptographic systems in C/C++, and forging impenetrable defenses within the Animus framework.
+                    <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-6 font-light">
+                        Based in <span class="text-white font-medium">Bangalore, India</span>, I engineer cryptographic systems and security frameworks that thrive under extreme conditions. Real-world defense requires mastering adversarial exploit logic from the ground up.
                     </p>
-
-                    <!-- Highlights -->
-                    <div class="flex flex-wrap gap-3 mb-8 gs-fade">
-                        <span class="abstergo-panel px-3 py-1 text-xs font-mono text-gray-300 border border-white/10">Bangalore, India</span>
-                        <span class="abstergo-panel px-3 py-1 text-xs font-mono text-[#00e5ff] border border-[#00e5ff]/30">50+ CTF Flags</span>
-                        <span class="abstergo-panel px-3 py-1 text-xs font-mono text-white border border-white/20">OpenSSL / AES-256 Engine</span>
-                    </div>
                     
-                    <div class="flex flex-col sm:flex-row gap-5 gs-fade">
-                        <a href="#memories" class="hoverable abstergo-panel px-8 py-4 text-xs tracking-[0.2em] font-bold text-white group flex items-center justify-center gap-3">
-                            <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                            <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                            <span>ACCESS MEMORIES</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-2 transition-transform text-[#00e5ff]"></i>
-                        </a>
-                        <a href="#contact" class="hoverable border border-white/20 px-8 py-4 text-xs tracking-[0.2em] font-bold text-gray-300 hover:text-white hover:border-[#00e5ff] transition-all flex items-center justify-center">
-                            INITIATE CONTACT
-                        </a>
-                    </div>
-                </div>
-
-                <!-- HUD Telemetry on the right -->
-                <div class="lg:col-span-4 hidden lg:flex flex-col items-end justify-center gap-6 gs-reveal opacity-75">
-                    <div class="abstergo-panel p-4 text-right backdrop-blur-sm w-56 relative">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        <p class="text-[10px] text-gray-500 tracking-[0.3em] mb-1">COORDINATES</p>
-                        <p class="text-xs tracking-widest text-[#00e5ff] font-mono">LAT: 12.9716° N<br>LNG: 77.5946° E</p>
-                    </div>
-                    <div class="abstergo-panel p-4 text-right backdrop-blur-sm w-56 relative overflow-hidden">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        <div class="absolute top-0 left-0 w-full h-[1px] bg-[#00e5ff]/50"></div>
-                        <p class="text-[10px] text-gray-500 tracking-[0.3em] mb-2">SYNC_LEVEL</p>
-                        <div class="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden">
-                            <div class="w-[98%] h-full bg-[#00e5ff] shadow-[0_0_10px_#00e5ff]"></div>
-                        </div>
-                        <p class="text-xs tracking-widest text-white font-mono mt-2 text-right">98.4% STABLE</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Sequence 02: Extracted Memories (Projects) -->
-        <section id="memories" class="py-32 px-6 md:px-20 max-w-screen-2xl mx-auto w-full relative z-10">
-            
-            <div class="mb-20 gs-section-header">
-                <p class="text-[#00e5ff] text-xs tracking-[0.4em] mb-2 font-mono">SEQUENCE 02 // ARTIFACT CORRIDOR</p>
-                <h2 class="font-historical text-4xl md:text-5xl border-b border-white/10 pb-6 inline-block pr-20">Extracted Memories</h2>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                
-                <!-- Memory 01: E-D--Crypto -->
-                <div class="group hoverable gs-memory">
-                    <div class="abstergo-panel p-2 mb-6 relative overflow-hidden">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        
-                        <div class="aspect-[16/9] bg-[#020611] relative overflow-hidden flex items-center justify-center p-8">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-[#020611] via-zinc-950 to-[#005bb5]/20 opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700"></div>
-                            
-                            <!-- Scanning effect on hover -->
-                            <div class="absolute top-0 left-0 w-full h-2 bg-[#00e5ff]/40 blur-sm -translate-y-full group-hover:translate-y-[600px] transition-transform duration-[2s] ease-in-out"></div>
-                            
-                            <div class="relative z-10 flex flex-col items-center gap-3">
-                                <i data-lucide="key-round" class="w-14 h-14 text-[#00e5ff] group-hover:scale-110 transition-transform duration-500"></i>
-                                <span class="font-mono text-xs text-gray-300">MEMORY_BLOCK_01 // AES-256-CBC + RSA-2048</span>
-                            </div>
-
-                            <!-- DNA Overlay -->
-                            <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                                <i data-lucide="dna" class="w-6 h-6 text-[#00e5ff]"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-start">
+                    <div class="grid grid-cols-2 gap-6 pt-6 border-t border-white/10">
                         <div>
-                            <p class="text-xs text-gray-500 font-mono tracking-widest mb-2">ERA: 2026 // CRYPTOGRAPHY</p>
-                            <h3 class="text-2xl font-bold tracking-wider mb-3 group-hover:text-[#00e5ff] transition-colors font-historical">E-D--Crypto Engine</h3>
-                            <p class="text-sm text-gray-400 leading-relaxed max-w-md">High-performance cryptographic file encryption system written in pure C. Leverages OpenSSL EVP interfaces, zero-padding guards, and hybrid asymmetric key encapsulation.</p>
-                            <a href="https://github.com/28d33/E-D--Crypto" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#00e5ff] mt-4 uppercase tracking-wider">
-                                <span>ACCESS REPOSITORY</span>
-                                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
-                            </a>
+                            <h4 class="text-white font-bold mb-2 uppercase tracking-wider text-sm">Offensive Ops</h4>
+                            <p class="text-gray-400 text-xs font-mono">Penetration Testing, OWASP Top 10, Active Directory, Reverse Engineering</p>
                         </div>
-                        <div class="hidden md:flex flex-col gap-2 items-end">
-                            <span class="text-[10px] border border-[#00e5ff]/30 px-2 py-1 text-[#00e5ff] tracking-widest font-mono">C / C++</span>
-                            <span class="text-[10px] border border-white/20 px-2 py-1 text-gray-400 tracking-widest font-mono">OPENSSL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Memory 02: Perimeter Defense & SIEM -->
-                <div class="group hoverable gs-memory lg:mt-24">
-                    <div class="abstergo-panel p-2 mb-6 relative overflow-hidden">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        
-                        <div class="aspect-[16/9] bg-[#020611] relative overflow-hidden flex items-center justify-center p-8">
-                            <div class="absolute inset-0 bg-gradient-to-bl from-[#020611] via-zinc-950 to-[#ff3333]/20 opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700"></div>
-                            <div class="absolute top-0 left-0 w-full h-2 bg-white/40 blur-sm -translate-y-full group-hover:translate-y-[600px] transition-transform duration-[2s] ease-in-out"></div>
-                            
-                            <div class="relative z-10 flex flex-col items-center gap-3">
-                                <i data-lucide="shield-alert" class="w-14 h-14 text-[#ff3333] group-hover:scale-110 transition-transform duration-500"></i>
-                                <span class="font-mono text-xs text-gray-300">MEMORY_BLOCK_02 // ZERO-TRUST DMZ</span>
-                            </div>
-
-                            <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                                <i data-lucide="network" class="w-6 h-6 text-white"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-xs text-gray-500 font-mono tracking-widest mb-2">ERA: 2026 // DEFENSIVE OPERATIONS</p>
-                            <h3 class="text-2xl font-bold tracking-wider mb-3 group-hover:text-white transition-colors font-historical">Perimeter Defense & SIEM</h3>
-                            <p class="text-sm text-gray-400 leading-relaxed max-w-md">Multi-tier DMZ defense architecture integrating Suricata IDS/IPS, IPTables kernel firewall filtering, and unified ELK telemetry for live automated attack correlation.</p>
-                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#00e5ff] mt-4 uppercase tracking-wider">
-                                <span>ACCESS SPECS</span>
-                                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
-                            </a>
-                        </div>
-                        <div class="hidden md:flex flex-col gap-2 items-end">
-                            <span class="text-[10px] border border-white/30 px-2 py-1 text-white tracking-widest font-mono">ELK STACK</span>
-                            <span class="text-[10px] border border-white/20 px-2 py-1 text-gray-400 tracking-widest font-mono">SURICATA</span>
+                            <h4 class="text-white font-bold mb-2 uppercase tracking-wider text-sm">Low-Level Core</h4>
+                            <p class="text-gray-400 text-xs font-mono">C/C++, OpenSSL, AES-256, RSA-2048, Linux Kernel Tuning</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Memory 03: Automated Security Audit -->
-                <div class="group hoverable gs-memory">
-                    <div class="abstergo-panel p-2 mb-6 relative overflow-hidden">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        
-                        <div class="aspect-[16/9] bg-[#020611] relative overflow-hidden flex items-center justify-center p-8">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-[#020611] via-zinc-950 to-[#00e5ff]/20 opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700"></div>
-                            <div class="absolute top-0 left-0 w-full h-2 bg-[#00e5ff]/40 blur-sm -translate-y-full group-hover:translate-y-[600px] transition-transform duration-[2s] ease-in-out"></div>
-                            
-                            <div class="relative z-10 flex flex-col items-center gap-3">
-                                <i data-lucide="binary" class="w-14 h-14 text-[#00e5ff] group-hover:scale-110 transition-transform duration-500"></i>
-                                <span class="font-mono text-xs text-gray-300">MEMORY_BLOCK_03 // SAST & DAST</span>
-                            </div>
-
-                            <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                                <i data-lucide="cpu" class="w-6 h-6 text-[#00e5ff]"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-gray-500 font-mono tracking-widest mb-2">ERA: 2026 // DEVSECOPS</p>
-                            <h3 class="text-2xl font-bold tracking-wider mb-3 group-hover:text-[#00e5ff] transition-colors font-historical">Automated Security Audit</h3>
-                            <p class="text-sm text-gray-400 leading-relaxed max-w-md">Automated vulnerability assessment engine combining Bandit SAST, OWASP ZAP dynamic analysis, and CI/CD security gating to eliminate zero-days before deploy.</p>
-                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#00e5ff] mt-4 uppercase tracking-wider">
-                                <span>ACCESS ENGINE</span>
-                                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
-                            </a>
-                        </div>
-                        <div class="hidden md:flex flex-col gap-2 items-end">
-                            <span class="text-[10px] border border-[#00e5ff]/30 px-2 py-1 text-[#00e5ff] tracking-widest font-mono">PYTHON</span>
-                            <span class="text-[10px] border border-white/20 px-2 py-1 text-gray-400 tracking-widest font-mono">OWASP ZAP</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Memory 04: Data Stream Masking -->
-                <div class="group hoverable gs-memory lg:mt-24">
-                    <div class="abstergo-panel p-2 mb-6 relative overflow-hidden">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        
-                        <div class="aspect-[16/9] bg-[#020611] relative overflow-hidden flex items-center justify-center p-8">
-                            <div class="absolute inset-0 bg-gradient-to-bl from-[#020611] via-zinc-950 to-[#005bb5]/20 opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700"></div>
-                            <div class="absolute top-0 left-0 w-full h-2 bg-[#e0f7fa]/40 blur-sm -translate-y-full group-hover:translate-y-[600px] transition-transform duration-[2s] ease-in-out"></div>
-                            
-                            <div class="relative z-10 flex flex-col items-center gap-3">
-                                <i data-lucide="database-zap" class="w-14 h-14 text-[#e0f7fa] group-hover:scale-110 transition-transform duration-500"></i>
-                                <span class="font-mono text-xs text-gray-300">MEMORY_BLOCK_04 // C++20 TOKENIZER</span>
-                            </div>
-
-                            <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                                <i data-lucide="shield" class="w-6 h-6 text-white"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-gray-500 font-mono tracking-widest mb-2">ERA: 2026 // HIGH-PERF SYSTEMS</p>
-                            <h3 class="text-2xl font-bold tracking-wider mb-3 group-hover:text-white transition-colors font-historical">Data Stream Masking</h3>
-                            <p class="text-sm text-gray-400 leading-relaxed max-w-md">High-throughput C++ data sanitization microservice providing real-time PII & financial payload masking with strict sub-millisecond latency guarantees.</p>
-                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-mono text-gray-300 hover:text-[#00e5ff] mt-4 uppercase tracking-wider">
-                                <span>ACCESS BENCHMARKS</span>
-                                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
-                            </a>
-                        </div>
-                        <div class="hidden md:flex flex-col gap-2 items-end">
-                            <span class="text-[10px] border border-white/30 px-2 py-1 text-white tracking-widest font-mono">C++20</span>
-                            <span class="text-[10px] border border-white/20 px-2 py-1 text-gray-400 tracking-widest font-mono">DPDK</span>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
-        <!-- Sequence 03: Eagle Vision (Skills) -->
-        <section id="skills" class="py-32 px-6 md:px-20 max-w-screen-2xl mx-auto w-full relative z-10">
-            
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- HORIZONTAL SCROLLING SHOWCASE (Selected Work) -->
+        <section id="horizontal-work" class="relative overflow-hidden bg-black/50 backdrop-blur-sm border-t border-b border-white/10">
+            <div id="horizontal-track-container" class="h-screen w-full flex items-center overflow-hidden">
                 
-                <div class="lg:col-span-4 gs-section-header">
-                    <i data-lucide="eye" class="w-8 h-8 text-[#00e5ff] mb-6"></i>
-                    <p class="text-[#00e5ff] text-xs tracking-[0.4em] mb-2 font-mono">SEQUENCE 03</p>
-                    <h2 class="font-historical text-4xl md:text-5xl mb-6">Eagle<br>Vision</h2>
-                    <p class="text-gray-400 text-sm leading-relaxed tracking-wider mb-8">
-                        Analyzing the operational environment. Highlighting low-level cryptographic primitives, adversarial exploit tactics, and threat mitigation protocols.
-                    </p>
-                </div>
-
-                <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div id="horizontal-track" class="flex gap-12 px-6 md:px-24 items-center flex-nowrap will-change-transform">
                     
-                    <!-- Skill Node 1 -->
-                    <div class="abstergo-panel p-6 gs-skill hoverable">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        <h4 class="text-lg font-bold tracking-widest mb-4 flex items-center justify-between font-historical">
-                            <span>Offensive Pen-Testing</span>
-                            <span class="text-xs font-mono text-[#00e5ff]">LVL. 50</span>
-                        </h4>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>OWASP TOP 10 / WEB</span><span>95%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-[#00e5ff] w-[95%]"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>ACTIVE DIRECTORY EXPLOIT</span><span>90%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-[#00e5ff] w-[90%]"></div></div>
-                            </div>
+                    <!-- Section Intro Card -->
+                    <div class="flex-shrink-0 w-[85vw] md:w-[450px] flex flex-col justify-center pr-8">
+                        <p class="text-indigo-400 font-mono text-xs uppercase tracking-widest mb-4">02 // HORIZONTAL REEL</p>
+                        <h2 class="font-display text-4xl sm:text-6xl md:text-7xl font-bold uppercase leading-none mb-6">
+                            Selected<br><span class="text-outline">Works</span>
+                        </h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                            Scroll down to navigate horizontally through production security architectures, high-performance crypto engines, and real-time data tokenizers.
+                        </p>
+                        <div class="flex items-center gap-3 text-xs font-mono text-cyan-400">
+                            <i data-lucide="arrow-right" class="w-4 h-4 animate-bounce-x"></i>
+                            <span>CONTINUE SCROLLING</span>
                         </div>
                     </div>
 
-                    <!-- Skill Node 2 -->
-                    <div class="abstergo-panel p-6 gs-skill hoverable">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        <h4 class="text-lg font-bold tracking-widest mb-4 flex items-center justify-between font-historical">
-                            <span>Cryptographic Systems</span>
-                            <span class="text-xs font-mono text-white">LVL. 48</span>
-                        </h4>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>C / C++20 SYSTEMS</span><span>92%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-white w-[92%]"></div></div>
+                    <!-- Project Card 1: E-D--Crypto -->
+                    <div class="flex-shrink-0 w-[85vw] md:w-[620px] glass-panel p-6 md:p-8 hoverable group transition-all">
+                        <div class="flex justify-between items-center text-xs font-mono mb-4 text-gray-400">
+                            <span class="text-cyan-400 font-bold">PROJECT_01 // CRYPTO</span>
+                            <span>YEAR: 2026</span>
+                        </div>
+                        <div class="aspect-video w-full bg-gradient-to-tr from-indigo-950 via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-6 flex items-center justify-center p-6 border border-white/10">
+                            <i data-lucide="key-round" class="w-16 h-16 text-cyan-400 group-hover:scale-110 transition-transform duration-500"></i>
+                            <div class="absolute bottom-4 right-4 font-mono text-xs text-gray-500">AES-256-CBC + RSA-2048</div>
+                        </div>
+                        <h3 class="font-display text-2xl md:text-3xl font-bold uppercase text-white group-hover:text-cyan-400 transition-colors mb-3">E-D--Crypto Suite</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">High-performance cryptographic file encryption system written in pure C utilizing OpenSSL EVP interfaces, zero-padding guards, and hybrid asymmetric key encapsulation.</p>
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">C / C++</span>
+                                <span class="px-3 py-1 rounded-full border border-cyan-500/30 text-xs font-mono text-cyan-400">OpenSSL</span>
                             </div>
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>OPENSSL EVP / AES / RSA</span><span>90%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-white w-[90%]"></div></div>
-                            </div>
+                            <a href="https://github.com/28d33/E-D--Crypto" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-mono text-white hover:text-cyan-400 transition-colors">
+                                <span>VIEW SOURCE</span>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Skill Node 3 -->
-                    <div class="abstergo-panel p-6 gs-skill hoverable">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        <h4 class="text-lg font-bold tracking-widest mb-4 flex items-center justify-between font-historical">
-                            <span>Defensive SIEM & Forensics</span>
-                            <span class="text-xs font-mono text-[#00e5ff]">LVL. 45</span>
-                        </h4>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>ELK STACK / SURICATA</span><span>88%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-[#00e5ff] w-[88%]"></div></div>
+                    <!-- Project Card 2: Perimeter Defense & SIEM -->
+                    <div class="flex-shrink-0 w-[85vw] md:w-[620px] glass-panel p-6 md:p-8 hoverable group transition-all">
+                        <div class="flex justify-between items-center text-xs font-mono mb-4 text-gray-400">
+                            <span class="text-indigo-400 font-bold">PROJECT_02 // DEFENSE</span>
+                            <span>YEAR: 2026</span>
+                        </div>
+                        <div class="aspect-video w-full bg-gradient-to-tr from-cyan-950 via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-6 flex items-center justify-center p-6 border border-white/10">
+                            <i data-lucide="shield-alert" class="w-16 h-16 text-indigo-400 group-hover:scale-110 transition-transform duration-500"></i>
+                            <div class="absolute bottom-4 right-4 font-mono text-xs text-gray-500">SURICATA IDS + ELK</div>
+                        </div>
+                        <h3 class="font-display text-2xl md:text-3xl font-bold uppercase text-white group-hover:text-indigo-400 transition-colors mb-3">Perimeter Defense & SIEM</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">Multi-tier DMZ defense architecture integrating Suricata IDS/IPS, IPTables kernel firewall rules, and unified ELK telemetry for live automated attack correlation.</p>
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">ELK Stack</span>
+                                <span class="px-3 py-1 rounded-full border border-indigo-500/30 text-xs font-mono text-indigo-400">Suricata</span>
                             </div>
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>VOLATILITY 3 & YARA</span><span>85%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-[#00e5ff] w-[85%]"></div></div>
-                            </div>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-mono text-white hover:text-indigo-400 transition-colors">
+                                <span>VIEW SPECS</span>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Skill Node 4 -->
-                    <div class="abstergo-panel p-6 gs-skill hoverable">
-                        <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                        <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                        <h4 class="text-lg font-bold tracking-widest mb-4 flex items-center justify-between font-historical">
-                            <span>Governance & Hardening</span>
-                            <span class="text-xs font-mono text-white">LVL. 42</span>
-                        </h4>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>ISO 27001 / NIST 800-171</span><span>85%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-white w-[85%]"></div></div>
+                    <!-- Project Card 3: Automated Security Audit -->
+                    <div class="flex-shrink-0 w-[85vw] md:w-[620px] glass-panel p-6 md:p-8 hoverable group transition-all">
+                        <div class="flex justify-between items-center text-xs font-mono mb-4 text-gray-400">
+                            <span class="text-cyan-400 font-bold">PROJECT_03 // DEVSECOPS</span>
+                            <span>YEAR: 2026</span>
+                        </div>
+                        <div class="aspect-video w-full bg-gradient-to-tr from-fuchsia-950 via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-6 flex items-center justify-center p-6 border border-white/10">
+                            <i data-lucide="binary" class="w-16 h-16 text-cyan-400 group-hover:scale-110 transition-transform duration-500"></i>
+                            <div class="absolute bottom-4 right-4 font-mono text-xs text-gray-500">SAST & DAST ENGINE</div>
+                        </div>
+                        <h3 class="font-display text-2xl md:text-3xl font-bold uppercase text-white group-hover:text-cyan-400 transition-colors mb-3">Automated Security Audit</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">Automated vulnerability assessment engine combining Bandit SAST, OWASP ZAP dynamic analysis, and CI/CD security gating to eliminate zero-days before deploy.</p>
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">Python</span>
+                                <span class="px-3 py-1 rounded-full border border-cyan-500/30 text-xs font-mono text-cyan-400">OWASP ZAP</span>
                             </div>
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-400 font-mono mb-1"><span>LINUX KERNEL SYSCTL & GPO</span><span>88%</span></div>
-                                <div class="w-full h-[2px] bg-white/10"><div class="h-full bg-white w-[88%]"></div></div>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-mono text-white hover:text-cyan-400 transition-colors">
+                                <span>VIEW PIPELINE</span>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 4: Data Stream Masking -->
+                    <div class="flex-shrink-0 w-[85vw] md:w-[620px] glass-panel p-6 md:p-8 hoverable group transition-all">
+                        <div class="flex justify-between items-center text-xs font-mono mb-4 text-gray-400">
+                            <span class="text-indigo-400 font-bold">PROJECT_04 // HIGH-PERF</span>
+                            <span>YEAR: 2026</span>
+                        </div>
+                        <div class="aspect-video w-full bg-gradient-to-tr from-purple-950 via-zinc-950 to-black rounded-2xl relative overflow-hidden mb-6 flex items-center justify-center p-6 border border-white/10">
+                            <i data-lucide="database-zap" class="w-16 h-16 text-indigo-400 group-hover:scale-110 transition-transform duration-500"></i>
+                            <div class="absolute bottom-4 right-4 font-mono text-xs text-gray-500">C++20 TOKENIZER</div>
+                        </div>
+                        <h3 class="font-display text-2xl md:text-3xl font-bold uppercase text-white group-hover:text-indigo-400 transition-colors mb-3">Data Stream Masking</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">High-throughput C++ data sanitization microservice providing real-time PII & financial payload masking with strict sub-millisecond latency guarantees.</p>
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 rounded-full border border-white/10 text-xs font-mono text-gray-300">C++20</span>
+                                <span class="px-3 py-1 rounded-full border border-indigo-500/30 text-xs font-mono text-indigo-400">DPDK</span>
                             </div>
+                            <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-mono text-white hover:text-indigo-400 transition-colors">
+                                <span>VIEW BENCHMARKS</span>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
                         </div>
                     </div>
 
@@ -443,149 +281,110 @@
             </div>
         </section>
 
-        <!-- Sequence 04: Verified Accreditations -->
-        <section id="credentials" class="py-32 px-6 md:px-20 max-w-screen-2xl mx-auto w-full relative z-10 border-t border-[#00e5ff]/20">
-            <div class="mb-16 gs-section-header">
-                <p class="text-[#00e5ff] text-xs tracking-[0.4em] mb-2 font-mono">SEQUENCE 04 // VERIFIED ARCHIVES</p>
-                <h2 class="font-historical text-4xl md:text-5xl border-b border-white/10 pb-6 inline-block pr-20">Accreditations</h2>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> ACAD_01</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">Ethical Hacking</h3>
-                    <p class="text-xs font-mono text-[#00e5ff] mb-2">IISc Bangalore</p>
-                    <p class="text-xs text-gray-400">Network exploitation, system defense & cryptographic algorithms.</p>
+        <!-- Capabilities & Accreditations Section -->
+        <section id="capabilities" class="py-32 px-6 md:px-20 relative z-10">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gs-fade-up">
+                    <div>
+                        <p class="text-indigo-400 font-mono text-xs uppercase tracking-widest mb-4">03 // TACTICAL ARSENAL</p>
+                        <h2 class="font-display text-4xl sm:text-6xl md:text-7xl font-bold uppercase">System<br>Capabilities</h2>
+                    </div>
                 </div>
 
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> ACAD_02</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">Cybersecurity Course</h3>
-                    <p class="text-xs font-mono text-[#00e5ff] mb-2">IIT Guwahati</p>
-                    <p class="text-xs text-gray-400">Threat modeling, vulnerability assessment & defense in depth.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-panel p-6 hoverable group">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="shield" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-lg text-white mb-2 uppercase">Offensive Ops</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed font-mono">Penetration testing, Active Directory exploitation, OWASP Top 10 web vulnerabilities, Burp Suite Pro.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 hoverable group">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="lock" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-lg text-white mb-2 uppercase">Cryptography</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed font-mono">C/C++ systems engineering, OpenSSL EVP API, AES-256, RSA-2048, key lifecycle management.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 hoverable group">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-lg text-white mb-2 uppercase">Forensics</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed font-mono">Volatility 3 memory extraction, DLL injection detection, YARA rules, incident triage.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 hoverable group">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="server" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-lg text-white mb-2 uppercase">Hardening</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed font-mono">Zero-trust DMZ segmentation, Linux kernel sysctl hardening, ISO 27001 compliance scripting.</p>
+                    </div>
                 </div>
 
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#e0f7fa] font-mono text-xs mb-2">>> CORP_01</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">Ethical Hacker</h3>
-                    <p class="text-xs font-mono text-[#e0f7fa] mb-2">Cisco</p>
-                    <p class="text-xs text-gray-400">Enterprise network reconnaissance and perimeter auditing.</p>
-                </div>
-
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#e0f7fa] font-mono text-xs mb-2">>> CORP_02</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">Presecurity Certified</h3>
-                    <p class="text-xs font-mono text-[#e0f7fa] mb-2">TryHackMe</p>
-                    <p class="text-xs text-gray-400">Offensive methodologies, Linux security & web attack vectors.</p>
-                </div>
-
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> CORP_03</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">Cyber Job Simulation</h3>
-                    <p class="text-xs font-mono text-[#00e5ff] mb-2">Deloitte Australia</p>
-                    <p class="text-xs text-gray-400">Incident response triage, governance & forensic reporting.</p>
-                </div>
-
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> CORP_04</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">Cyber Analyst IAM</h3>
-                    <p class="text-xs font-mono text-[#00e5ff] mb-2">Tata Consultancy Services</p>
-                    <p class="text-xs text-gray-400">Identity and Access Management, RBAC & compliance audits.</p>
-                </div>
-
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#e0f7fa] font-mono text-xs mb-2">>> CIP_01</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">CIP Associate</h3>
-                    <p class="text-xs font-mono text-[#e0f7fa] mb-2">OPSWAT</p>
-                    <p class="text-xs text-gray-400">Critical Infrastructure Protection & supply chain defense.</p>
-                </div>
-
-                <div class="abstergo-panel p-5 hoverable">
-                    <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-                    <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-                    <div class="text-[#00e5ff] font-mono text-xs mb-2">>> CTF_CAPTURE</div>
-                    <h3 class="font-historical text-lg font-bold text-white mb-1">50+ CTF Flags</h3>
-                    <p class="text-xs font-mono text-[#00e5ff] mb-2">PBCTF / IDEEEAS / Triwizard</p>
-                    <p class="text-xs text-gray-400">Binary exploitation, reverse engineering & cryptography.</p>
+                <!-- Verified Credentials Grid -->
+                <div class="mt-20 pt-16 border-t border-white/10 gs-fade-up">
+                    <p class="text-cyan-400 font-mono text-xs uppercase tracking-widest mb-6">VERIFIED ACCREDITATIONS</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">IISc Bangalore</span><span class="text-gray-400">Ethical Hacking</span></div>
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">IIT Guwahati</span><span class="text-gray-400">Cybersecurity Course</span></div>
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">Cisco</span><span class="text-gray-400">Ethical Hacker</span></div>
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">TryHackMe</span><span class="text-gray-400">Presecurity Certified</span></div>
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">Deloitte</span><span class="text-gray-400">Cyber Job Simulation</span></div>
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">TCS</span><span class="text-gray-400">Cyber Analyst IAM</span></div>
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">OPSWAT</span><span class="text-gray-400">CIP Associate</span></div>
+                        <div class="glass-panel p-4"><span class="text-white font-bold block mb-1">CTF Tournaments</span><span class="text-cyan-400">50+ Flags Captured</span></div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Footer / Contact -->
-        <footer id="contact" class="mt-auto py-24 px-6 md:px-20 border-t border-white/10 relative overflow-hidden bg-[#020611]/90 backdrop-blur-md">
-            
-            <div class="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 z-10 relative">
-                
-                <div class="text-center md:text-left">
-                    <p class="text-xs text-gray-500 tracking-[0.4em] mb-2 font-mono">END OF SEQUENCE // SESSION READY</p>
-                    <h2 class="font-historical text-3xl md:text-5xl mb-6">Initiate Contact</h2>
-                    <a href="mailto:d33kshith@proton.me?subject=Security%20Inquiry%20from%20Portfolio" class="desync-text desync-hover hoverable font-mono text-lg md:text-2xl tracking-widest text-white transition-colors" data-text="[ TERMINATE_SESSION // EMAIL_UPLINK ]">
-                        [ TERMINATE_SESSION // d33kshith@proton.me ]
-                    </a>
-                </div>
+        <!-- Contact & Dimensional Fly-Through (Camera Flies into 3D Core) -->
+        <section id="contact" class="min-h-screen w-full flex flex-col items-center justify-center relative z-10 px-6 overflow-hidden">
+            <div class="text-center z-10 gs-fade-up">
+                <p class="text-indigo-400 font-mono text-xs uppercase tracking-widest mb-6">04 // INITIATE TRANSMISSION</p>
+                <h2 class="font-display text-5xl sm:text-7xl md:text-9xl font-bold uppercase tracking-tighter mb-10 hover:text-outline cursor-pointer transition-all duration-500">
+                    Let's Talk
+                </h2>
+                <a href="mailto:d33kshith@proton.me?subject=Security%20Inquiry%20from%20Portfolio" class="hoverable inline-flex items-center gap-4 bg-white text-black px-10 py-5 rounded-full font-bold uppercase tracking-widest hover:bg-cyan-400 hover:text-black transition-all hover:scale-105 shadow-xl shadow-cyan-500/20">
+                    d33kshith@proton.me <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                </a>
+            </div>
 
+            <footer class="absolute bottom-8 w-full px-10 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 font-mono uppercase gap-4">
+                <p>© 2026 DEEKSHITH (D33). POWERED BY THREE.JS, LENIS & GSAP.</p>
                 <div class="flex gap-6">
-                    <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="hoverable text-gray-400 hover:text-[#00e5ff] transition-colors p-4 abstergo-panel group rounded-full" aria-label="GitHub">
-                        <i data-lucide="github" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-                    </a>
-                    <a href="https://linkedin.com/in/d33kshithanand" target="_blank" rel="noopener noreferrer" class="hoverable text-gray-400 hover:text-[#00e5ff] transition-colors p-4 abstergo-panel group rounded-full" aria-label="LinkedIn">
-                        <i data-lucide="linkedin" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-                    </a>
-                    <a href="mailto:d33kshith@proton.me" class="hoverable text-gray-400 hover:text-white transition-colors p-4 abstergo-panel group rounded-full" aria-label="Email">
-                        <i data-lucide="mail" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-                    </a>
+                    <a href="https://github.com/28d33" target="_blank" rel="noopener noreferrer" class="hoverable hover:text-cyan-400 transition-colors">Github</a>
+                    <a href="https://linkedin.com/in/d33kshithanand" target="_blank" rel="noopener noreferrer" class="hoverable hover:text-cyan-400 transition-colors">LinkedIn</a>
+                    <a href="mailto:d33kshith@proton.me" class="hoverable hover:text-cyan-400 transition-colors">Email</a>
                 </div>
+            </footer>
+        </section>
+    </main>
 
-            </div>
-            
-            <div class="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center text-xs font-mono text-gray-500 gap-4 max-w-screen-2xl mx-auto">
-                <span>&copy; 2026 DEEKSHITH (D33). ANIMUS OMEGA KERNEL // THREE.JS & GSAP.</span>
-                <span class="text-[#00e5ff]">LOCATION: BANGALORE, INDIA [12.9716° N, 77.5946° E]</span>
-            </div>
-
-            <!-- Red desync line at the bottom -->
-            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#ff3333] to-transparent opacity-40"></div>
-        </footer>
-
-    </div>
-
-    <!-- Interactive Animus Terminal Drawer Modal -->
+    <!-- Interactive Terminal Drawer Modal -->
     <div id="terminalModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="w-full max-w-2xl abstergo-panel bg-[#020611]/95 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] border-[#00e5ff]/40">
-            <span class="corner-tl corner-accent"></span><span class="corner-tr corner-accent"></span>
-            <span class="corner-bl corner-accent"></span><span class="corner-br corner-accent"></span>
-            
-            <div class="px-4 py-3 bg-[#020611] border-b border-[#00e5ff]/20 flex items-center justify-between">
+        <div class="w-full max-w-2xl glass-panel bg-black/95 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] border-indigo-500/40">
+            <div class="px-4 py-3 bg-zinc-950 border-b border-white/10 flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 bg-[#00e5ff] inline-block animate-pulse"></span>
-                    <span class="text-xs font-mono text-[#00e5ff] ml-2">animus@subject-17:d33#</span>
+                    <span class="w-2.5 h-2.5 bg-cyan-400 inline-block animate-pulse rounded-full"></span>
+                    <span class="text-xs font-mono text-cyan-400 ml-2">d33@interactive-core:~#</span>
                 </div>
-                <button id="closeTerminalBtn" class="text-gray-400 hover:text-[#ff3333] transition-colors">
+                <button id="closeTerminalBtn" class="text-gray-400 hover:text-white transition-colors">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
             <div id="terminalBody" class="p-4 overflow-y-auto flex-1 font-mono text-xs space-y-2 text-gray-300">
-                <div class="text-[#00e5ff] font-bold">=== ANIMUS OMEGA v6.0 // OPERATOR DEEKSHITH (D33) ===</div>
-                <div class="text-gray-400">Type <span class="text-[#00e5ff] font-semibold">help</span> for commands. Press <span class="text-[#ff3333]">ESC</span> to abort.</div>
+                <div class="text-cyan-400 font-bold">=== DEEKSHITH (D33) INTERACTIVE TERMINAL v7.0 ===</div>
+                <div class="text-gray-400">Type <span class="text-cyan-400 font-semibold">help</span> for commands. Press <span class="text-indigo-400">ESC</span> to exit.</div>
                 <div id="terminalHistory"></div>
             </div>
-            <div class="p-3 bg-[#020611] border-t border-[#00e5ff]/20 flex items-center gap-2">
-                <span class="text-[#00e5ff] font-mono text-xs">d33:animus#</span>
-                <input id="terminalInput" type="text" class="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none" placeholder="Enter memory command (whoami, memories, skills, certs)..." autocomplete="off" spellcheck="false">
+            <div class="p-3 bg-zinc-950 border-t border-white/10 flex items-center gap-2">
+                <span class="text-cyan-400 font-mono text-xs">d33:~$</span>
+                <input id="terminalInput" type="text" class="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none" placeholder="Enter command (whoami, projects, skills, certs)..." autocomplete="off" spellcheck="false">
             </div>
         </div>
     </div>
