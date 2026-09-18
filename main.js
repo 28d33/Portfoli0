@@ -1,193 +1,319 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — PROCEDURAL ASCII FLOW & TERMINAL PORTFOLIO
+   DEEKSHITH (D33) — 3D IMMERSIVE PORTFOLIO & INTERACTIVE SYSTEMS
+   Three.js WebGL Particle Engine + Parallax + Terminal Interface
    ========================================================================== */
 
 (function () {
     'use strict';
 
     /* ==========================================================================
-       1. PROCEDURAL ASCII FLOW BACKGROUND ENGINE (Wave Scale=10, Speed=1.3, Complexity=1.0)
+       1. LUCIDE ICONS INITIALIZATION
        ========================================================================== */
-    class ProceduralAsciiFlowEngine {
-    constructor() {
-        this.container = document.getElementById('ascii-background');
-        if (!this.container) return;
-
-        // Character set mapped from darkest to lightest value
-        this.chars = " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
-        this.charLen = this.chars.length;
-
-        // Configuration with user requested parameters
-        this.config = {
-            fontSize: 14,
-            density: 10,       // Wave Scale = 10
-            speed: 1.3,        // Time Multiplier = 1.3
-            complexity: 1.0,   // Interference = 1.0
-            theme: 'ghost',    // Default clean theme
-            mouseX: -0.2,
-            mouseY: -0.2,
-            targetMouseX: 0,
-            targetMouseY: 0
-        };
-
-        this.cols = 0;
-        this.rows = 0;
-        this.time = 0;
-
-        this.calculateGrid();
-        this.bindEvents();
-        this.startLoop();
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
     }
 
-    calculateGrid() {
-        const charWidth = this.config.fontSize * 0.6;
-        const charHeight = this.config.fontSize;
-        this.cols = Math.ceil(window.innerWidth / charWidth);
-        this.rows = Math.ceil(window.innerHeight / charHeight);
-    }
+    /* ==========================================================================
+       2. THREE.JS 3D PARTICLE TORUS KNOT BACKGROUND ENGINE
+       ========================================================================== */
+    class ThreeJsBackgroundEngine {
+        constructor() {
+            this.canvas = document.getElementById('webgl-canvas');
+            if (!this.canvas || typeof THREE === 'undefined') return;
 
-    bindEvents() {
-        window.addEventListener('resize', () => this.calculateGrid());
+            this.scene = null;
+            this.camera = null;
+            this.renderer = null;
+            this.objectsGroup = null;
+            this.torusKnot = null;
+            this.material = null;
+            this.dustParticles = null;
+            this.clock = new THREE.Clock();
 
-        window.addEventListener('mousemove', (e) => {
-            this.config.targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
-            this.config.targetMouseY = (e.clientY / window.innerHeight) * 2 - 1;
-        });
+            this.mouseX = 0;
+            this.mouseY = 0;
+            this.targetX = 0;
+            this.targetY = 0;
+            this.scrollY = 0;
 
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches && e.touches.length > 0) {
-                this.config.targetMouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
-                this.config.targetMouseY = (e.touches[0].clientY / window.innerHeight) * 2 - 1;
+            this.init();
+            this.bindEvents();
+            this.animate();
+        }
+
+        createCircleTexture() {
+            const matCanvas = document.createElement('canvas');
+            matCanvas.width = 64;
+            matCanvas.height = 64;
+            const ctx = matCanvas.getContext('2d');
+            
+            // Solid center core
+            ctx.beginPath();
+            ctx.arc(32, 32, 28, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            
+            // Soft glow outer ring
+            ctx.beginPath();
+            ctx.arc(32, 32, 30, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            return new THREE.CanvasTexture(matCanvas);
+        }
+
+        init() {
+            // 1. Scene Setup
+            this.scene = new THREE.Scene();
+            this.scene.fog = new THREE.FogExp2(0x020617, 0.05);
+
+            // 2. Camera Setup
+            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.camera.position.z = 15;
+            this.camera.position.y = 2;
+
+            // 3. Renderer Setup
+            this.renderer = new THREE.WebGLRenderer({
+                canvas: this.canvas,
+                alpha: true,
+                antialias: true,
+                powerPreference: 'high-performance'
+            });
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // 4. Object Group
+            this.objectsGroup = new THREE.Group();
+            this.scene.add(this.objectsGroup);
+
+            // 5. Torus Knot Particle Mesh
+            const particleTexture = this.createCircleTexture();
+            const geometry = new THREE.TorusKnotGeometry(6, 1.5, 300, 40);
+            
+            this.material = new THREE.PointsMaterial({
+                size: 0.16,
+                map: particleTexture,
+                transparent: true,
+                opacity: 0.85,
+                color: 0x0ea5e9, // Tailwind sky-500
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            this.torusKnot = new THREE.Points(geometry, this.material);
+            this.torusKnot.position.x = window.innerWidth > 1024 ? 5 : 0;
+            this.objectsGroup.add(this.torusKnot);
+
+            // 6. Ambient Floating Dust Particles
+            const dustGeometry = new THREE.BufferGeometry();
+            const dustCount = 1000;
+            const posArray = new Float32Array(dustCount * 3);
+            for (let i = 0; i < dustCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 40;
             }
+            dustGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const dustMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0x8b5cf6, // Tailwind violet-500
+                transparent: true,
+                opacity: 0.45,
+                blending: THREE.AdditiveBlending
+            });
+            
+            this.dustParticles = new THREE.Points(dustGeometry, dustMaterial);
+            this.scene.add(this.dustParticles);
+        }
+
+        bindEvents() {
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+
+            window.addEventListener('mousemove', (e) => {
+                this.mouseX = (e.clientX - windowHalfX) * 0.001;
+                this.mouseY = (e.clientY - windowHalfY) * 0.001;
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches.length > 0) {
+                    this.mouseX = (e.touches[0].clientX - windowHalfX) * 0.001;
+                    this.mouseY = (e.touches[0].clientY - windowHalfY) * 0.001;
+                }
+            }, { passive: true });
+
+            window.addEventListener('scroll', () => {
+                this.scrollY = window.scrollY;
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                if (!this.camera || !this.renderer) return;
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+                if (this.torusKnot) {
+                    this.torusKnot.position.x = window.innerWidth > 1024 ? 5 : 0;
+                }
+            });
+        }
+
+        animate() {
+            const renderLoop = () => {
+                const elapsedTime = this.clock.getElapsedTime();
+
+                // Easing for smooth mouse follow
+                this.targetX = this.mouseX * 0.5;
+                this.targetY = this.mouseY * 0.5;
+
+                if (this.objectsGroup) {
+                    this.objectsGroup.rotation.y += 0.05 * (this.targetX - this.objectsGroup.rotation.y);
+                    this.objectsGroup.rotation.x += 0.05 * (this.targetY - this.objectsGroup.rotation.x);
+                }
+
+                // Continuous baseline rotation for the Torus Knot
+                if (this.torusKnot) {
+                    this.torusKnot.rotation.y += 0.0025;
+                    this.torusKnot.rotation.z += 0.0015;
+                }
+
+                // Animate dust particles slowly upwards & oscillating
+                if (this.dustParticles) {
+                    this.dustParticles.rotation.y = -elapsedTime * 0.02;
+                    this.dustParticles.position.y = Math.sin(elapsedTime * 0.2) * 0.5;
+                    this.dustParticles.rotation.x = this.scrollY * 0.001;
+                }
+
+                // Color breathing effect shifting between sky-blue (#0ea5e9) and violet (#8b5cf6)
+                if (this.material) {
+                    const r = 14 / 255 + Math.abs(Math.sin(elapsedTime * 0.5)) * (139 / 255 - 14 / 255);
+                    const g = 165 / 255 + Math.abs(Math.sin(elapsedTime * 0.5)) * (92 / 255 - 165 / 255);
+                    const b = 233 / 255 + Math.abs(Math.sin(elapsedTime * 0.5)) * (246 / 255 - 233 / 255);
+                    this.material.color.setRGB(r, g, b);
+                }
+
+                // Scroll Parallax effect
+                if (this.camera) {
+                    this.camera.position.y = 2 - (this.scrollY * 0.004);
+                    this.camera.position.z = 15 - (this.scrollY * 0.0015);
+                }
+
+                if (this.renderer && this.scene && this.camera) {
+                    this.renderer.render(this.scene, this.camera);
+                }
+
+                requestAnimationFrame(renderLoop);
+            };
+
+            requestAnimationFrame(renderLoop);
+        }
+    }
+
+    /* ==========================================================================
+       3. SCROLL REVEAL OBSERVER
+       ========================================================================== */
+    function initScrollReveal() {
+        const reveals = document.querySelectorAll('.reveal');
+        
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            reveals.forEach(el => observer.observe(el));
+        } else {
+            // Fallback for older browsers
+            function checkScroll() {
+                const windowHeight = window.innerHeight;
+                reveals.forEach(el => {
+                    const top = el.getBoundingClientRect().top;
+                    if (top < windowHeight - 80) {
+                        el.classList.add('active');
+                    }
+                });
+            }
+            window.addEventListener('scroll', checkScroll);
+            checkScroll();
+        }
+    }
+
+    /* ==========================================================================
+       4. NAVBAR SCROLL GLASS EFFECT & ACTIVE LINK SPY
+       ========================================================================== */
+    function initNavbar() {
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main[id], section[id]');
+
+        window.addEventListener('scroll', () => {
+            if (navbar) {
+                if (window.scrollY > 40) {
+                    navbar.classList.add('glass');
+                    navbar.classList.remove('py-4');
+                    navbar.classList.add('py-2');
+                } else {
+                    navbar.classList.remove('glass');
+                    navbar.classList.add('py-4');
+                    navbar.classList.remove('py-2');
+                }
+            }
+
+            let current = '';
+            sections.forEach(sec => {
+                if (window.scrollY >= sec.offsetTop - 150) {
+                    current = sec.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('text-sky-400');
+                    link.classList.remove('text-gray-300');
+                } else {
+                    link.classList.remove('text-sky-400');
+                    link.classList.add('text-gray-300');
+                }
+            });
         }, { passive: true });
     }
 
-    calculateIntensity(x, y, t) {
-        const aspectRatio = this.rows / (this.cols || 1);
-        const nx = (x / this.cols - 0.5) * this.config.density;
-        const ny = (y / this.rows - 0.5) * (this.config.density * aspectRatio);
+    /* ==========================================================================
+       5. MOBILE DRAWER NAVIGATION
+       ========================================================================== */
+    function initMobileMenu() {
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
-        const dx = nx - (this.config.mouseX * (this.config.density / 3));
-        const dy = ny - (this.config.mouseY * (this.config.density / 3));
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
 
-        // 1. Base ripple expanding from center
-        let value = Math.sin(distance - t);
-
-        // 2. Overlapping sine/cosine waves for complexity/interference
-        value += Math.sin(nx * (this.config.complexity / 2) + t * 0.7);
-        value += Math.cos(ny * (this.config.complexity / 2) - t * 0.5);
-
-        // 3. Rotational swirling influence
-        const angle = Math.atan2(dy, dx);
-        value += Math.sin(angle * 3 + t * 0.8) * 0.5;
-
-        // Normalize combined wave value
-        value = (value + 3.5) / 7;
-
-        // Subtle vignette effect
-        const edgeDistance = Math.sqrt(Math.pow((x / this.cols) - 0.5, 2) + Math.pow((y / this.rows) - 0.5, 2));
-        const vignette = Math.max(0, 1 - (edgeDistance * 1.5));
-        value = value * vignette;
-
-        return Math.max(0, Math.min(0.999, value));
-    }
-
-    updateThemeVisuals() {
-        const xPos = ((this.config.mouseX + 1) / 2) * 100;
-        const yPos = ((this.config.mouseY + 1) / 2) * 100;
-
-        // Spotlight gradient text clipping with subtle base illumination
-        this.container.style.backgroundImage = `radial-gradient(circle at ${xPos}% ${yPos}%, rgba(255, 255, 255, 0.95) 0%, rgba(52, 211, 153, 0.45) 25%, rgba(148, 163, 184, 0.3) 55%, rgba(100, 116, 139, 0.18) 100%)`;
-        this.container.style.webkitBackgroundClip = 'text';
-        this.container.style.backgroundClip = 'text';
-        this.container.style.webkitTextFillColor = 'transparent';
-    }
-
-    startLoop() {
-        const render = () => {
-            this.config.mouseX += (this.config.targetMouseX - this.config.mouseX) * 0.05;
-            this.config.mouseY += (this.config.targetMouseY - this.config.mouseY) * 0.05;
-
-            this.time += 0.05 * this.config.speed;
-
-            let outputString = '';
-            for (let y = 0; y < this.rows; y++) {
-                for (let x = 0; x < this.cols; x++) {
-                    const intensity = this.calculateIntensity(x, y, this.time);
-                    const charIndex = Math.floor(intensity * this.charLen);
-                    outputString += this.chars[charIndex];
-                }
-                outputString += '\n';
-            }
-
-            this.container.textContent = outputString;
-            this.updateThemeVisuals();
-
-            requestAnimationFrame(render);
-        };
-
-        requestAnimationFrame(render);
-    }
-}
-
-new ProceduralAsciiFlowEngine();
-
-/* ==========================================================================
-   2. TYPEWRITER EFFECT FOR LANDING COMMAND
-   ========================================================================== */
-    const typingEl = document.getElementById('landingCommandTyping');
-    if (typingEl) {
-        const fullText = './boot_system.sh --operator=DEEKSHITH --mode=PRO';
-        typingEl.textContent = '';
-        let charIdx = 0;
-
-        function typeChar() {
-            if (charIdx < fullText.length) {
-                typingEl.textContent += fullText.charAt(charIdx);
-                charIdx++;
-                setTimeout(typeChar, 35 + Math.random() * 30);
-            }
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
         }
-
-        setTimeout(typeChar, 300);
     }
 
     /* ==========================================================================
-       3. METRICS COUNTER ANIMATION
+       6. INTERACTIVE TERMINAL DRAWER & KEYBOARD SHORTCUTS
        ========================================================================== */
-    const counters = document.querySelectorAll('.counter');
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
-                let cur = 0;
-                const inc = Math.max(1, Math.floor(target / 20));
-                const timer = setInterval(() => {
-                    cur += inc;
-                    if (cur >= target) {
-                        el.textContent = target;
-                        clearInterval(timer);
-                    } else {
-                        el.textContent = cur;
-                    }
-                }, 40);
-                counterObserver.unobserve(el);
-            }
-        });
-    }, { threshold: 0.3 });
-
-    counters.forEach(c => counterObserver.observe(c));
-
-    /* ==========================================================================
-       4. INTERACTIVE TERMINAL DRAWER
-       ========================================================================== */
-    class InteractiveTerminal {
+    class InteractiveTerminalDrawer {
         constructor() {
-            this.overlay = document.getElementById('terminalOverlay');
-            this.openBtn = document.getElementById('terminalToggleBtn');
-            this.heroOpenBtn = document.getElementById('landingShellBtn');
+            this.modal = document.getElementById('terminalModal');
+            this.openBtn = document.getElementById('terminalLaunchBtn');
+            this.mobileOpenBtn = document.getElementById('mobileTerminalLaunchBtn');
             this.closeBtn = document.getElementById('closeTerminalBtn');
             this.input = document.getElementById('terminalInput');
             this.history = document.getElementById('terminalHistory');
@@ -197,14 +323,15 @@ new ProceduralAsciiFlowEngine();
 
         bindEvents() {
             if (this.openBtn) this.openBtn.addEventListener('click', () => this.open());
-            if (this.heroOpenBtn) this.heroOpenBtn.addEventListener('click', () => this.open());
+            if (this.mobileOpenBtn) this.mobileOpenBtn.addEventListener('click', () => this.open());
             if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
 
+            // Global shortcut: '~' or '`' to open, 'Escape' to close
             window.addEventListener('keydown', (e) => {
-                if (e.key === '`' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                if ((e.key === '`' || e.key === '~') && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                     e.preventDefault();
                     this.toggle();
-                } else if (e.key === 'Escape' && this.overlay && !this.overlay.classList.contains('hidden')) {
+                } else if (e.key === 'Escape' && this.modal && !this.modal.classList.contains('hidden')) {
                     this.close();
                 }
             });
@@ -218,11 +345,19 @@ new ProceduralAsciiFlowEngine();
                     }
                 });
             }
+
+            if (this.modal) {
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) {
+                        this.close();
+                    }
+                });
+            }
         }
 
         open() {
-            if (this.overlay) {
-                this.overlay.classList.remove('hidden');
+            if (this.modal) {
+                this.modal.classList.remove('hidden');
                 setTimeout(() => {
                     if (this.input) this.input.focus();
                 }, 100);
@@ -230,73 +365,86 @@ new ProceduralAsciiFlowEngine();
         }
 
         close() {
-            if (this.overlay) {
-                this.overlay.classList.add('hidden');
+            if (this.modal) {
+                this.modal.classList.add('hidden');
             }
         }
 
         toggle() {
-            if (!this.overlay) return;
-            if (this.overlay.classList.contains('hidden')) {
+            if (!this.modal) return;
+            if (this.modal.classList.contains('hidden')) {
                 this.open();
             } else {
                 this.close();
             }
         }
 
+        appendHistory(text, styleClass = 'text-gray-300') {
+            if (!this.history) return;
+            const div = document.createElement('div');
+            div.className = `${styleClass} whitespace-pre-wrap leading-relaxed`;
+            div.textContent = text;
+            this.history.appendChild(div);
+
+            const body = document.getElementById('terminalBody');
+            if (body) body.scrollTop = body.scrollHeight;
+        }
+
         processCommand(rawCmd) {
             const cmd = rawCmd.toLowerCase();
-            this.appendHistory(`d33:~$ ${rawCmd}`, 'color: #10b981; font-weight: 600;');
+            this.appendHistory(`d33:~$ ${rawCmd}`, 'text-emerald-400 font-semibold');
 
             switch (cmd) {
                 case 'help':
                     this.appendHistory(`Available Commands:
-- whoami       : About Deekshith
-- projects     : List key security projects
-- skills       : List technical capabilities
-- certs        : View certifications
-- contact      : Get contact details
-- clear        : Clear terminal output
-- exit         : Close terminal`, 'color: #94a3b8;');
+- whoami       : Operator credentials & core specialization
+- projects     : Production engineering & security projects
+- skills       : Offensive & low-level cryptographic tools
+- certs        : Verified cybersecurity credentials
+- contact      : Direct communication endpoints
+- clear        : Wipe terminal buffer
+- exit         : Terminate terminal session`, 'text-sky-300');
                     break;
 
                 case 'whoami':
-                    this.appendHistory(`Deekshith (D33)
-Cybersecurity engineer & penetration tester based in Bangalore, India.
-Focus: Offensive testing, digital forensics, cryptographic tools in C/C++.`, 'color: #e2e8f0;');
+                    this.appendHistory(`DEEKSHITH (D33)
+Role     : Cybersecurity Engineer & Systems Developer
+Location : Bangalore, Karnataka, India
+Focus    : Offensive Security, Cryptography in C/C++, Digital Forensics`, 'text-gray-200');
                     break;
 
                 case 'projects':
                     this.appendHistory(`1. E-D--Crypto         -> C / OpenSSL / AES-256 / RSA-2048
-2. Perimeter Security  -> Zero-Trust / ELK SIEM / DMZ
-3. Security Assessment -> S-SDLC / SAST & DAST Audit
-4. Data Security       -> C++ / Financial Data Masking
-5. Compliance          -> ISO 27001 / CMMC / GPO Hardening`, 'color: #0ea5e9;');
+2. Perimeter Defense   -> ELK SIEM / Suricata IDS / Zero-Trust DMZ
+3. Security Audit      -> Automated Bandit SAST & OWASP ZAP Framework
+4. Data Stream Masking -> C++20 Real-Time Financial Payload Sanitizer
+5. GPO Hardening       -> ISO 27001 & NIST 800-171 Compliance Automation
+6. Memory Forensics    -> Volatility 3 & YARA Malware Pipeline`, 'text-cyan-300');
                     break;
 
                 case 'skills':
-                    this.appendHistory(`Offensive : Penetration Testing, OWASP Top 10, Active Directory
-Defensive : Digital Forensics, SIEM (ELK Stack), Incident Response
-Languages : Python, Bash, C/C++, x86/x64 Assembly, PowerShell, SQL
-Tools     : Kali Linux, Burp Suite, Metasploit, Nmap, Docker, Volatility`, 'color: #e2e8f0;');
+                    this.appendHistory(`Offensive : Penetration Testing, OWASP Top 10, Active Directory, Reverse Eng
+Languages : C, C++20, Python, Bash, x86_64 Assembly, SQL, JavaScript
+Security  : OpenSSL, Burp Suite, Metasploit, Nmap, Wireshark, Volatility, YARA
+Defensive : ELK Stack, Suricata IDS/IPS, Linux Kernel Hardening, GPO`, 'text-gray-200');
                     break;
 
                 case 'certs':
-                    this.appendHistory(`- Presecurity (TryHackMe)
+                    this.appendHistory(`- Ethical Hacking (IISc Bangalore)
 - Cybersecurity Course (IIT Guwahati)
 - Ethical Hacker (Cisco)
+- Presecurity Certified (TryHackMe)
 - Cyber Job Simulation (Deloitte Australia)
 - Cybersecurity Analyst IAM (TCS)
-- Ethical Hacking (IISc Bangalore)
 - Critical Infrastructure Protection (OPSWAT)
-- PBCTF 4.0 / IDEEEAS / Triwizard CTF (50+ Flags)`, 'color: #f59e0b;');
+- 50+ CTF Flags (PBCTF, IDEEEAS, Triwizard)`, 'text-amber-300');
                     break;
 
                 case 'contact':
                     this.appendHistory(`Email    : d33kshith@proton.me
 GitHub   : github.com/28d33
 LinkedIn : linkedin.com/in/d33kshithanand
-Location : Bangalore, Karnataka, India`, 'color: #e2e8f0;');
+Location : Bangalore, India`, 'text-sky-300');
                     break;
 
                 case 'clear':
@@ -311,120 +459,27 @@ Location : Bangalore, Karnataka, India`, 'color: #e2e8f0;');
                     break;
 
                 default:
-                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for options.`, 'color: #64748b;');
+                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for options.`, 'text-rose-400');
                     break;
             }
-
-            const body = document.getElementById('terminalBody');
-            if (body) body.scrollTop = body.scrollHeight;
-        }
-
-        appendHistory(text, style) {
-            if (!this.history) return;
-            const p = document.createElement('div');
-            p.style = `${style || 'color: #94a3b8;'} white-space: pre-wrap; margin-bottom: 6px;`;
-            p.textContent = text;
-            this.history.appendChild(p);
         }
     }
 
-    new InteractiveTerminal();
-
     /* ==========================================================================
-       5. PROJECT CATEGORY FILTERING
+       7. BOOTSTRAP APPLICATION
        ========================================================================== */
-    const filterTags = document.querySelectorAll('.filter-tag');
-    const projectCards = document.querySelectorAll('.project-card');
-
-    filterTags.forEach(tag => {
-        tag.addEventListener('click', () => {
-            filterTags.forEach(t => t.classList.remove('active'));
-            tag.classList.add('active');
-            const filter = tag.getAttribute('data-filter');
-
-            projectCards.forEach(card => {
-                const cat = card.getAttribute('data-category');
-                if (filter === 'all' || cat === filter) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    });
-
-    /* ==========================================================================
-       6. NAVBAR SCROLL & ACTIVE LINK SPY
-       ========================================================================== */
-    const navbar = document.getElementById('navbar');
-    const navItems = document.querySelectorAll('.nav-item');
-    const sections = document.querySelectorAll('section[id]');
-
-    window.addEventListener('scroll', () => {
-        if (navbar) {
-            navbar.classList.toggle('scrolled', window.scrollY > 30);
-        }
-
-        let current = '';
-        sections.forEach(sec => {
-            if (window.scrollY >= sec.offsetTop - 120) {
-                current = sec.getAttribute('id');
-            }
-        });
-
-        navItems.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
-        });
-    }, { passive: true });
-
-    /* ==========================================================================
-       7. MOBILE MENU
-       ========================================================================== */
-    const mobileToggle = document.getElementById('mobileToggle');
-    const navLinks = document.getElementById('navLinks');
-
-    if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-        });
-
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('open');
-            });
-        });
+    function initApp() {
+        new ThreeJsBackgroundEngine();
+        initScrollReveal();
+        initNavbar();
+        initMobileMenu();
+        new InteractiveTerminalDrawer();
     }
 
-    /* ==========================================================================
-       8. CONTACT FORM DISPATCH
-       ========================================================================== */
-    const contactForm = document.getElementById('contactForm');
-    const formStatus = document.getElementById('formStatus');
-
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value || 'Security Inquiry';
-            const message = document.getElementById('message').value;
-
-            if (formStatus) {
-                formStatus.textContent = 'Opening email client...';
-            }
-
-            const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
-            const mailtoUrl = `mailto:d33kshith@proton.me?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-            setTimeout(() => {
-                window.location.href = mailtoUrl;
-                if (formStatus) {
-                    formStatus.textContent = 'Message sent to mail client.';
-                }
-                contactForm.reset();
-            }, 500);
-        });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+        initApp();
     }
 
 })();
