@@ -1,22 +1,22 @@
 /* ==========================================================================
-   DEEKSHITH (D33) — PURE TERMINAL WORKSTATION & RECURSIVE ASCII ENGINE
+   DEEKSHITH (D33) — HIGH-ASSURANCE MONOCHROMATIC ASCII TERMINAL ENGINE
    Features:
-   - Full-Screen Recursive Monospace Terminal ASCII Background Engine (Canvas)
-   - Real-time 3D Torus Projection + Kernel Hex/Assembly Streams
-   - Interactive Hacker Recon Shell (Ring-0 Bash Terminal Drawer)
-   - Linear/Vercel Spotlight Card Engine
+   - Full-Screen Recursive Animated ASCII Canvas Engine (3D Torus + Hex Streams)
+   - Real-time System Uptime & UTC Clock Telemetry
+   - Interactive Bash Recon Shell (Ring-0 Terminal)
    - Metric Telemetry Counter & Category Filtering
+   - Pure Black & White Aesthetic
    ========================================================================== */
 
 (function () {
     'use strict';
 
     /* ==========================================================================
-       1. RECURSIVE BACKGROUND TERMINAL ASCII ENGINE (Strictly Terminal Style)
+       1. RECURSIVE ANIMATED ASCII BACKGROUND CANVAS ENGINE
        ========================================================================== */
-    class RecursiveBackgroundTerminalAsciiEngine {
+    class AnimatedAsciiBackgroundEngine {
         constructor() {
-            this.canvas = document.getElementById('bg-ascii-canvas');
+            this.canvas = document.getElementById('asciiBgCanvas');
             if (!this.canvas) return;
 
             this.ctx = this.canvas.getContext('2d');
@@ -24,14 +24,14 @@
             this.cols = 0;
             this.rows = 0;
 
-            // Mathematical 3D Torus angles
+            // 3D Geometry Angles
             this.A = 0;
             this.B = 0;
-            this.radarAngle = 0;
-            this.streamOffsets = [];
-            this.memoryBuffer = [];
 
-            // Low-level x86_64 / Kernel Terminal Opcodes
+            // Rain Streams
+            this.streams = [];
+            
+            // x86_64 Kernel & Security Assembly Opcodes
             this.opcodes = [
                 'MOV RAX, 0x3B',
                 'XOR RDI, RDI',
@@ -39,29 +39,35 @@
                 'SYSCALL',
                 'PUSH RBP',
                 'MOV RBP, RSP',
-                'SUB RSP, 0x40',
+                'SUB RSP, 0x30',
                 'XOR EAX, EAX',
                 'TEST RAX, RAX',
                 'JZ .L_DECRYPT',
                 'MOV CR0, RAX',
                 'INT 0x80',
                 'NOP',
-                'CALL [RIP+0x80]',
-                'MOV [RSP+0x10], RDX',
-                'RET'
+                'CALL [RIP+0x40]',
+                'MOV [RSP+8], RDX',
+                'RET',
+                '0x7FFE_8910',
+                '0xDEAD_BEEF',
+                '0xCAFE_BABE'
             ];
 
-            this.hexChars = '0123456789ABCDEF!#*+-~:/';
+            this.hexChars = '0123456789ABCDEF!#*+-~:/_';
 
+            // Memory Dumps
+            this.memoryBuffer = [];
             this.initMemoryBuffer();
+
             this.resize();
             this.bindEvents();
             this.startLoop();
         }
 
         initMemoryBuffer() {
-            for (let i = 0; i < 40; i++) {
-                const addr = '0x' + (0x7ffe0000 + i * 16).toString(16).toUpperCase();
+            for (let i = 0; i < 30; i++) {
+                const addr = '0x' + (0x7ffe1000 + i * 16).toString(16).toUpperCase();
                 let hex = '';
                 for (let j = 0; j < 8; j++) {
                     hex += Math.floor(Math.random() * 256).toString(16).padStart(2, '0').toUpperCase() + ' ';
@@ -73,14 +79,14 @@
         resize() {
             this.canvas.width = window.innerWidth;
             this.canvas.height = window.innerHeight;
-            this.cols = Math.floor(this.canvas.width / 10);
+            this.cols = Math.floor(this.canvas.width / 11);
             this.rows = Math.floor(this.canvas.height / (this.fontSize + 3));
 
-            this.streamOffsets = [];
+            this.streams = [];
             for (let i = 0; i < this.cols; i++) {
-                this.streamOffsets.push({
+                this.streams.push({
                     y: Math.random() * this.rows,
-                    speed: 0.15 + Math.random() * 0.45,
+                    speed: 0.12 + Math.random() * 0.35,
                     char: this.hexChars[Math.floor(Math.random() * this.hexChars.length)],
                     opcodeIdx: Math.floor(Math.random() * this.opcodes.length)
                 });
@@ -95,7 +101,7 @@
             let lastTime = 0;
             const animate = (time) => {
                 requestAnimationFrame(animate);
-                if (time - lastTime > 40) { // ~25 FPS for authentic terminal pulse
+                if (time - lastTime > 38) { // ~26 FPS for crisp retro terminal pulse
                     lastTime = time;
                     this.render(time * 0.001);
                 }
@@ -112,39 +118,37 @@
             ctx.font = `${this.fontSize}px 'JetBrains Mono', 'Share Tech Mono', monospace`;
             ctx.textBaseline = 'top';
 
-            // Phase cycle: alternates smoothly between 3D Torus projection & Matrix Opcodes
             this.A += 0.035;
             this.B += 0.018;
-            this.radarAngle += 0.03;
 
-            // 1. Render Background Matrix Rain of Low-Level Opcodes & Hex
+            // 1. Render Background Opcode & Hex Matrix Rain (Pure White with Variable Opacity)
             for (let col = 0; col < this.cols; col += 3) {
-                const stream = this.streamOffsets[col];
+                const stream = this.streams[col];
                 if (!stream) continue;
 
                 stream.y += stream.speed;
                 if (stream.y > this.rows + 15) {
                     stream.y = -5;
-                    stream.speed = 0.15 + Math.random() * 0.45;
+                    stream.speed = 0.12 + Math.random() * 0.35;
                 }
 
                 const rowIdx = Math.floor(stream.y);
-                const xPos = col * 10;
+                const xPos = col * 11;
                 const yPos = rowIdx * (this.fontSize + 3);
 
                 if (col % 9 === 0 && rowIdx >= 0 && rowIdx < this.rows) {
-                    ctx.fillStyle = 'rgba(59, 130, 246, 0.38)';
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
                     ctx.fillText(this.opcodes[stream.opcodeIdx], xPos, yPos);
                 } else if (rowIdx >= 0 && rowIdx < this.rows) {
-                    ctx.fillStyle = 'rgba(16, 185, 129, 0.32)';
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
                     const ch = this.hexChars[(Math.floor(t * 10) + col) % this.hexChars.length];
                     ctx.fillText(ch, xPos, yPos);
                 }
             }
 
-            // 2. Render 3D Rotating Monospace Wireframe in Upper-Right / Center
-            const torusCols = Math.min(48, Math.floor(this.cols * 0.5));
-            const torusRows = Math.min(22, Math.floor(this.rows * 0.6));
+            // 2. Render Mathematical 3D Rotating ASCII Torus in Top Right / Center
+            const torusCols = Math.min(46, Math.floor(this.cols * 0.45));
+            const torusRows = Math.min(22, Math.floor(this.rows * 0.55));
             const b = [];
             const z = [];
             for (let k = 0; k < torusCols * torusRows; k++) {
@@ -153,7 +157,7 @@
             }
 
             const R1 = 1;
-            const R2 = 2.2;
+            const R2 = 2.0;
             const K2 = 5;
 
             for (let j = 0; j < 6.28; j += 0.32) {
@@ -170,8 +174,8 @@
                     const n = Math.sin(this.B);
                     const torusT = c * h * g - f * e;
 
-                    const x = Math.floor(torusCols / 2 + 36 * D * (l * h * m - torusT * n));
-                    const y = Math.floor(torusRows / 2 + 18 * D * (l * h * n + torusT * m));
+                    const x = Math.floor(torusCols / 2 + 34 * D * (l * h * m - torusT * n));
+                    const y = Math.floor(torusRows / 2 + 17 * D * (l * h * n + torusT * m));
                     const o = x + torusCols * y;
                     const N = Math.floor(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n));
 
@@ -184,40 +188,95 @@
             }
 
             // Draw projected 3D Wireframe ASCII onto background
-            const startX = Math.max(20, w - torusCols * 11 - 40);
-            const startY = Math.max(60, Math.floor(h * 0.15));
+            const startX = Math.max(20, w - torusCols * 11 - 30);
+            const startY = Math.max(70, Math.floor(h * 0.12));
 
-            ctx.fillStyle = 'rgba(52, 211, 153, 0.45)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.48)';
             for (let ty = 0; ty < torusRows; ty++) {
                 for (let tx = 0; tx < torusCols; tx++) {
                     const char = b[tx + torusCols * ty];
                     if (char && char !== ' ') {
-                        ctx.fillText(char, startX + tx * 10, startY + ty * (this.fontSize + 2));
+                        ctx.fillText(char, startX + tx * 11, startY + ty * (this.fontSize + 2));
                     }
                 }
             }
 
-            // 3. Render Cyber Terminal Memory Addresses on Bottom Left
-            const memLines = 10;
-            const memStartY = h - memLines * (this.fontSize + 4) - 30;
+            // 3. Render Memory Address Telemetry on Bottom Left
+            const memLines = 8;
+            const memStartY = h - memLines * (this.fontSize + 4) - 25;
             for (let m = 0; m < memLines; m++) {
                 const idx = (Math.floor(t * 2) + m) % this.memoryBuffer.length;
-                ctx.fillStyle = 'rgba(148, 163, 184, 0.28)';
-                ctx.fillText(this.memoryBuffer[idx], 30, memStartY + m * (this.fontSize + 4));
+                ctx.fillStyle = 'rgba(200, 200, 200, 0.25)';
+                ctx.fillText(this.memoryBuffer[idx], 25, memStartY + m * (this.fontSize + 4));
             }
         }
     }
 
-    new RecursiveBackgroundTerminalAsciiEngine();
+    new AnimatedAsciiBackgroundEngine();
 
     /* ==========================================================================
-       4. INTERACTIVE HACKER RECON TERMINAL (BASH SHELL)
+       2. REAL-TIME SYSTEM TELEMETRY (Uptime & UTC Clock)
+       ========================================================================== */
+    const sysClock = document.getElementById('sysClock');
+    const sysUptime = document.getElementById('sysUptime');
+    const startTime = Date.now();
+
+    function updateTelemetry() {
+        // UTC Clock
+        if (sysClock) {
+            const now = new Date();
+            const utcString = now.toUTCString().split(' ')[4] + ' UTC';
+            sysClock.textContent = utcString;
+        }
+
+        // Uptime counter
+        if (sysUptime) {
+            const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+            const hrs = String(Math.floor(elapsedSec / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((elapsedSec % 3600) / 60)).padStart(2, '0');
+            const secs = String(elapsedSec % 60).padStart(2, '0');
+            sysUptime.textContent = `${hrs}:${mins}:${secs}`;
+        }
+    }
+
+    setInterval(updateTelemetry, 1000);
+    updateTelemetry();
+
+    /* ==========================================================================
+       3. METRIC COUNTER ANIMATION
+       ========================================================================== */
+    const counters = document.querySelectorAll('.counter');
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                let cur = 0;
+                const inc = Math.max(1, Math.floor(target / 25));
+                const timer = setInterval(() => {
+                    cur += inc;
+                    if (cur >= target) {
+                        el.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        el.textContent = cur;
+                    }
+                }, 35);
+                counterObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    counters.forEach(c => counterObserver.observe(c));
+
+    /* ==========================================================================
+       4. INTERACTIVE RECON BASH SHELL DRAWER
        ========================================================================== */
     class HackerTerminal {
         constructor() {
             this.overlay = document.getElementById('terminalOverlay');
             this.openBtn = document.getElementById('terminalToggleBtn');
-            this.heroLaunchBtn = document.getElementById('heroTerminalBtn');
+            this.heroLaunchBtn = document.getElementById('heroShellBtn');
             this.closeBtn = document.getElementById('closeTerminalBtn');
             this.input = document.getElementById('terminalInput');
             this.history = document.getElementById('terminalHistory');
@@ -234,7 +293,7 @@
                 if (e.key === '`' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                     e.preventDefault();
                     this.toggle();
-                } else if (e.key === 'Escape' && !this.overlay.classList.contains('hidden')) {
+                } else if (e.key === 'Escape' && this.overlay && !this.overlay.classList.contains('hidden')) {
                     this.close();
                 }
             });
@@ -253,7 +312,9 @@
         open() {
             if (this.overlay) {
                 this.overlay.classList.remove('hidden');
-                setTimeout(() => this.input.focus(), 100);
+                setTimeout(() => {
+                    if (this.input) this.input.focus();
+                }, 100);
             }
         }
 
@@ -264,6 +325,7 @@
         }
 
         toggle() {
+            if (!this.overlay) return;
             if (this.overlay.classList.contains('hidden')) {
                 this.open();
             } else {
@@ -273,67 +335,96 @@
 
         processCommand(rawCmd) {
             const cmd = rawCmd.toLowerCase();
-            this.appendHistory(`root@d33:~$ ${rawCmd}`, 't-prompt-echo');
+            this.appendHistory(`root@d33:~$ ${rawCmd}`, 'color: #ffffff; font-weight: bold;');
 
             switch (cmd) {
                 case 'help':
-                    this.appendHistory(`Available Commands:
-- whoami        : Display operator biometrics & clearance
-- skills        : List offensive & defensive capabilities
-- projects      : View classified exploit repositories
-- certs         : View accreditations (CPENT, Cisco, IIT, etc.)
-- overclock     : Surge recursive ASCII opcode flux
-- matrix        : Trigger binary data stream
-- clear         : Clear shell output
-- exit          : Close terminal drawer`, 't-output-dim');
+                    this.appendHistory(`AVAILABLE COMMANDS:
+- whoami       : Display operator biometrics and callsign
+- about        : View operator dossier & philosophy
+- skills       : List offensive & defensive cyber arsenal
+- projects     : Inspect deployed exploit repositories
+- certs        : View accreditations (TryHackMe, Cisco, IIT, IISc, CTF)
+- exp          : View professional engagement history
+- contact      : Display direct comms and PGP endpoint
+- matrix       : Trigger raw hexadecimal stream
+- date         : Show current UTC date & time
+- uptime       : Display active session uptime
+- clear        : Clear shell display
+- exit         : Close shell window`, 'color: #a3a3a3;');
                     break;
 
                 case 'whoami':
-                    this.appendHistory(`OPERATOR: DEEKSHITH (D33)
-ROLE: Red Team Specialist // Exploit Architect
-STATUS: Available for Offensive Security Deployments
-BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
+                    this.appendHistory(`OPERATOR: DEEKSHITH
+CALLSIGN: D33
+ROLE    : Ethical Hacker & Exploit Researcher
+BASE    : Bangalore, India
+STATUS  : Ring-0 Clearance // Active Deployments`, 'color: #ffffff;');
+                    break;
+
+                case 'about':
+                    this.appendHistory(`MISSION: "Breaking things to make them stronger."
+Axiom  : "</> You Are Now Less Valuable Than The Data You Produce </>"
+Focus  : Offensive Penetration Testing, Zero-Trust Architecture, Digital Forensics, Low-Level Cryptography (C/C++).`, 'color: #e5e5e5;');
                     break;
 
                 case 'skills':
-                    this.appendHistory(`ARSENAL DUMP:
-[+] Offensive: Penetration Testing, Web App Sec, AD Attacks, OWASP Top 10, Social Eng
-[+] Defensive: Digital Forensics, SIEM (ELK Stack), Incident Response, Malware Analysis
-[+] Systems  : Python, C/C++, Bash, PowerShell, Assembly (x86), SQL
-[+] Platforms: Kali Linux, Burp Suite Pro, Metasploit, Docker, Volatility`, 't-highlight');
+                    this.appendHistory(`[+] OFFENSIVE : Penetration Testing, Web App Sec (OWASP Top 10), Active Directory, Social Eng, Red Teaming
+[+] DEFENSIVE : Digital Forensics, SIEM (ELK Stack), Incident Response, Malware Disassembly, Zero-Trust
+[+] LANGUAGES : Python, Bash, C/C++, x86/x64 Assembly, PowerShell, SQL
+[+] TOOLS     : Kali Linux, Burp Suite, Metasploit, Nmap, Wireshark, Docker, Volatility, OpenSSL`, 'color: #ffffff;');
                     break;
 
                 case 'projects':
                     this.appendHistory(`CLASSIFIED REPOSITORIES:
 1. E-D--Crypto         -> C / OpenSSL / AES-256 / RSA-2048
 2. Perimeter_Security  -> Zero-Trust / ELK SIEM / VirtualBox
-3. Security_Assessment -> S-SDLC / SAST / DAST Audit
+3. Security_Assessment -> S-SDLC / SAST & DAST Audit
 4. Data_Security       -> C++ / Field Encryption / Masking
-5. Compliance          -> ISO 27001 / CMMC / GPO Hardening`, 't-output-green');
+5. Compliance          -> ISO 27001 / CMMC / GPO Hardening`, 'color: #e5e5e5;');
                     break;
 
                 case 'certs':
-                    this.appendHistory(`ACCREDITATIONS:
-* CPENT (Certified Penetration Testing Professional - EC-Council)
-* TryHackMe Presecurity
-* Cybersecurity Program - IIT Guwahati
+                    this.appendHistory(`ACCREDITATIONS & VICTORIES:
+* Presecurity - TryHackMe
+* Cybersecurity Course - IIT Guwahati
 * Ethical Hacker - Cisco
 * Cyber Job Simulation - Deloitte Australia
+* Cybersecurity Analyst IAM - TCS
 * Ethical Hacking - IISc Bangalore
-* IAM Analyst - TCS Virtual
-* MARVELOps Docker 101
-* PBCTF 4.0 & IDEEEAS CTF Victor`, 't-output-green');
+* Critical Infrastructure Protection - OPSWAT Academy
+* Cybersecurity Essentials - Cisco
+* PBCTF 4.0 / IDEEEAS CTF / Triwizard CTF (50+ Flags)`, 'color: #ffffff;');
                     break;
 
-                case 'overclock':
-                    document.body.classList.toggle('overclocked-aura');
-                    const isOverclocked = document.body.classList.contains('overclocked-aura');
-                    this.appendHistory(`[+] TERMINAL ASCII ENGINE: Opcode flux ${isOverclocked ? 'OVERCLOCKED to 200%' : 'RESTORED to nominal standard (100%)'}.`, 't-highlight');
+                case 'exp':
+                    this.appendHistory(`LOGGED ENGAGEMENTS:
+[1] Cybersecurity Intern @ HUMAN INITIALS (2025 - Active)
+    - Risk mitigation, vulnerability scanning, incident response.
+[2] Member @ MARVEL UVCE (Level 1 in CLCY Domain - Active)
+    - Cloud security research, network defense labs.`, 'color: #e5e5e5;');
+                    break;
+
+                case 'contact':
+                    this.appendHistory(`DIRECT UPLINK:
+Email    : d33kshith@proton.me
+GitHub   : github.com/28d33
+LinkedIn : linkedin.com/in/d33kshithanand
+Location : Bangalore, Karnataka, India`, 'color: #ffffff;');
                     break;
 
                 case 'matrix':
-                    this.appendHistory(`01000100 00110011 00110011 01001011 01010011 01001000
-[+] NEURAL UPLINK ESTABLISHED. ACCESS GRANTED.`, 't-output-green');
+                    this.appendHistory(`01000100 00110011 00110011 01011111 01010010 01001111 01001111 01010100
+[+] PACKET STREAM ESTABLISHED. INTEGRITY: 100%`, 'color: #ffffff;');
+                    break;
+
+                case 'date':
+                    this.appendHistory(new Date().toUTCString(), 'color: #a3a3a3;');
+                    break;
+
+                case 'uptime':
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    this.appendHistory(`Session Uptime: ${elapsed} seconds`, 'color: #a3a3a3;');
                     break;
 
                 case 'clear':
@@ -348,7 +439,7 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
                     break;
 
                 default:
-                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for available commands.`, 't-output-dim');
+                    this.appendHistory(`Command not recognized: '${rawCmd}'. Type 'help' for available options.`, 'color: #737373;');
                     break;
             }
 
@@ -356,12 +447,10 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
             if (body) body.scrollTop = body.scrollHeight;
         }
 
-        appendHistory(text, className) {
+        appendHistory(text, style) {
             if (!this.history) return;
             const p = document.createElement('div');
-            p.className = className || 't-output-dim';
-            p.style.whiteSpace = 'pre-wrap';
-            p.style.marginBottom = '6px';
+            p.style = `${style || 'color: #a3a3a3;'} white-space: pre-wrap; margin-bottom: 6px; font-family: var(--font-mono);`;
             p.textContent = text;
             this.history.appendChild(p);
         }
@@ -370,15 +459,25 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
     new HackerTerminal();
 
     /* ==========================================================================
-       5. SPOTLIGHT CARD TRACKER (Linear / Vercel Monochromatic Flashlight)
+       5. PROJECT CATEGORY FILTERING
        ========================================================================== */
-    document.querySelectorAll('.spotlight-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
+    const filterTabs = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-ascii-card');
+
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            filterTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const filter = tab.getAttribute('data-filter');
+
+            projectCards.forEach(card => {
+                const cat = card.getAttribute('data-category');
+                if (filter === 'all' || cat === filter) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
     });
 
@@ -391,12 +490,12 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
 
     window.addEventListener('scroll', () => {
         if (navbar) {
-            navbar.classList.toggle('scrolled', window.scrollY > 40);
+            navbar.classList.toggle('scrolled', window.scrollY > 30);
         }
 
         let current = '';
         sections.forEach(sec => {
-            if (window.scrollY >= sec.offsetTop - 150) {
+            if (window.scrollY >= sec.offsetTop - 140) {
                 current = sec.getAttribute('id');
             }
         });
@@ -407,65 +506,7 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
     }, { passive: true });
 
     /* ==========================================================================
-       7. METRICS COUNTER ANIMATION
-       ========================================================================== */
-    const counters = document.querySelectorAll('.counter');
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
-                let cur = 0;
-                const inc = Math.max(1, Math.floor(target / 30));
-                const t = setInterval(() => {
-                    cur += inc;
-                    if (cur >= target) {
-                        el.textContent = target;
-                        clearInterval(t);
-                    } else {
-                        el.textContent = cur;
-                    }
-                }, 35);
-                counterObserver.unobserve(el);
-            }
-        });
-    }, { threshold: 0.3 });
-
-    counters.forEach(c => counterObserver.observe(c));
-
-    /* ==========================================================================
-       8. PROJECT CATEGORY FILTERING
-       ========================================================================== */
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    const projectCards = document.querySelectorAll('.project-showcase-card');
-
-    filterTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            filterTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            const filter = tab.getAttribute('data-filter');
-
-            projectCards.forEach(card => {
-                const cat = card.getAttribute('data-category');
-                if (filter === 'all' || cat === filter) {
-                    card.style.display = 'flex';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 20);
-                } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(14px)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 250);
-                }
-            });
-        });
-    });
-
-    /* ==========================================================================
-       9. MOBILE MENU TOGGLE
+       7. MOBILE NAVIGATION TOGGLE
        ========================================================================== */
     const mobileToggle = document.getElementById('mobileToggle');
     const navMenu = document.getElementById('navMenu');
@@ -483,7 +524,7 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
     }
 
     /* ==========================================================================
-       10. CONTACT FORM DISPATCH
+       8. CONTACT FORM DISPATCH
        ========================================================================== */
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
@@ -498,7 +539,7 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
             const message = document.getElementById('message').value;
 
             if (formStatus) {
-                formStatus.textContent = 'Encrypting & dispatching to mail client...';
+                formStatus.textContent = 'Encrypting & dispatching payload to email client...';
             }
 
             const body = `Callsign/Name: ${name}\nEmail: ${email}\n\nPayload:\n${message}`;
@@ -507,12 +548,12 @@ BASE: Bangalore, India // Ring-0 Clearance`, 't-output-green');
             setTimeout(() => {
                 window.location.href = mailtoUrl;
                 if (formStatus) {
-                    formStatus.textContent = 'Transmission launched in client. Awaiting handshake.';
+                    formStatus.textContent = 'Transmission dispatched to default mail client. Awaiting handshake.';
                 }
                 contactForm.reset();
-            }, 800);
+            }, 600);
         });
     }
 
-    console.log('%c[DEEKSHITH // LUXURY MONOCHROME 3D ENGINE LOADED] // CALLSIGN: D33', 'color: #ffffff; font-weight: bold; font-size: 13px;');
+    console.log('%c[DEEKSHITH // HIGH-ASSURANCE MONOCHROME ASCII WORKSTATION LOADED]', 'color: #ffffff; font-weight: bold; font-family: monospace;');
 })();

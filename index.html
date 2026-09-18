@@ -7,891 +7,923 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <title>DEEKSHITH (D33) // TERMINAL // OFFENSIVE CYBERSECURITY</title>
     <meta name="description"
-        content="Terminal interface of Deekshith (D33) — Elite Cybersecurity Engineer, Penetration Tester, Ring-0 Exploit Architect & Digital Forensics Researcher." />
+        content="Pure ASCII Terminal Portfolio of Deekshith (D33) — Ethical Hacker, Penetration Tester, Exploit Researcher & Security Engineer." />
 
-    <!-- Open Graph & Vercel Meta -->
-    <meta property="og:title" content="DEEKSHITH (D33) // RED TEAM &amp; OFFENSIVE CYBERSECURITY" />
-    <meta property="og:description" content="Penetration Testing, Exploit Development, Zero-Trust Defense, and Cryptography." />
+    <!-- Open Graph Meta -->
+    <meta property="og:title" content="DEEKSHITH (D33) // FULL ASCII TERMINAL WORKSTATION" />
+    <meta property="og:description" content="Offensive Penetration Testing, Zero-Trust Architecture, Forensics & Cryptography." />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#020408" />
+    <meta name="theme-color" content="#000000" />
 
-    <!-- Google Fonts -->
+    <!-- Monospace Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Syne:wght@700;800;900&family=Share+Tech+Mono&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Share+Tech+Mono&display=swap"
         rel="stylesheet" />
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- GSAP for smooth terminal scrolling & interactions -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
     <link rel="stylesheet" href="style.css" />
 </head>
 
-<body class="terminal-cyber-theme">
+<body class="terminal-body">
 
-    <!-- Full-Screen Recursive Terminal ASCII Background Engine -->
-    <div id="bg-ascii-container" class="bg-ascii-wrapper">
-        <canvas id="bg-ascii-canvas"></canvas>
+    <!-- Full-Screen Recursive Animated ASCII Background Engine -->
+    <div id="ascii-canvas-container" class="ascii-canvas-layer">
+        <canvas id="asciiBgCanvas"></canvas>
     </div>
 
-    <!-- Terminal Scanline & Ambient Overlay -->
-    <div class="terminal-scanlines"></div>
-    <div class="ambient-scan-overlay"></div>
+    <!-- CRT Scanline & Monochromatic Vignette Overlay -->
+    <div class="crt-scanlines"></div>
+    <div class="crt-vignette"></div>
 
-    <!-- Terminal Workstation Navigation Bar -->
-    <header class="navbar terminal-navbar" id="navbar">
+    <!-- Top System Telemetry Bar (Full ASCII) -->
+    <aside class="ascii-topbar" aria-label="System Telemetry">
+        <div class="topbar-inner">
+            <div class="topbar-segment">
+                <span class="ascii-tag">[SYS]</span>
+                <span class="topbar-val">Linux 6.12.0-d33-hardened x86_64</span>
+            </div>
+            <div class="topbar-segment hide-mobile">
+                <span class="ascii-tag">[SECURITY]</span>
+                <span class="topbar-val">SELinux: Enforcing // Ring-0</span>
+            </div>
+            <div class="topbar-segment">
+                <span class="ascii-tag">[UPTIME]</span>
+                <span class="topbar-val" id="sysUptime">00:00:00</span>
+            </div>
+            <div class="topbar-segment hide-mobile">
+                <span class="ascii-tag">[TIME_UTC]</span>
+                <span class="topbar-val font-mono" id="sysClock">--:--:-- UTC</span>
+            </div>
+            <div class="topbar-segment">
+                <span class="topbar-status"><span class="status-indicator"></span> ARMED</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Navigation Bar (Terminal Header) -->
+    <header class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#hero" class="nav-brand terminal-brand">
-                <div class="terminal-prompt-badge">
-                    <span class="t-prompt-symbol">&gt;_</span>
-                </div>
-                <div class="brand-title">
-                    <span class="name"><span class="t-user">root</span><span class="t-at">@</span><span class="t-host">d33</span>:<span class="t-path">~</span><span class="t-dollar">$</span> <span class="cursor-blink">_</span></span>
-                    <span class="role">RING-0 // CALLSIGN: D33</span>
-                </div>
+            <a href="#hero" class="nav-brand">
+                <span class="brand-bracket">[</span>
+                <span class="brand-user">root</span><span class="brand-at">@</span><span class="brand-host">d33</span>:<span class="brand-path">~</span><span class="brand-dollar">$</span>
+                <span class="brand-bracket">]</span>
+                <span class="cursor-blink">_</span>
             </a>
 
             <nav class="nav-menu" id="navMenu">
-                <a href="#hero" class="nav-link active"><span class="cmd-num">[1]</span> ~/home</a>
-                <a href="#about" class="nav-link"><span class="cmd-num">[2]</span> ~/operator</a>
-                <a href="#skills" class="nav-link"><span class="cmd-num">[3]</span> ~/arsenal</a>
-                <a href="#projects" class="nav-link"><span class="cmd-num">[4]</span> ~/exploits</a>
-                <a href="#certs" class="nav-link"><span class="cmd-num">[5]</span> ~/clearance</a>
-                <a href="#experience" class="nav-link"><span class="cmd-num">[6]</span> ~/logs</a>
-                <a href="#contact" class="nav-link"><span class="cmd-num">[7]</span> ~/comms</a>
+                <a href="#hero" class="nav-link active"><span class="nav-num">[1]</span> ~/home</a>
+                <a href="#about" class="nav-link"><span class="nav-num">[2]</span> ~/about</a>
+                <a href="#skills" class="nav-link"><span class="nav-num">[3]</span> ~/skills</a>
+                <a href="#projects" class="nav-link"><span class="nav-num">[4]</span> ~/projects</a>
+                <a href="#certs" class="nav-link"><span class="nav-num">[5]</span> ~/certs</a>
+                <a href="#experience" class="nav-link"><span class="nav-num">[6]</span> ~/experience</a>
+                <a href="#contact" class="nav-link"><span class="nav-num">[7]</span> ~/contact</a>
             </nav>
 
             <div class="nav-actions">
-                <!-- Interactive Hacker Terminal Drawer Button -->
-                <button class="btn btn-sm btn-terminal" id="terminalToggleBtn" title="Open Interactive Security Shell">
-                    <i class="fas fa-terminal"></i> <span>SHELL <kbd class="kbd-mini">`</kbd></span>
+                <button class="ascii-btn btn-sm btn-terminal-toggle" id="terminalToggleBtn" title="Launch Interactive Bash Shell (`)">
+                    <i class="fas fa-terminal"></i> <span>SHELL <kbd>`</kbd></span>
                 </button>
-
-                <a href="resume.pdf" download="Deekshith_Resume.pdf" class="btn btn-sm btn-outline">
-                    <i class="fas fa-file-shield"></i> <span>DOSSIER.PDF</span>
+                <a href="resume.pdf" download="Deekshith_Resume.pdf" class="ascii-btn btn-sm btn-inverted">
+                    <i class="fas fa-download"></i> <span>RESUME.PDF</span>
                 </a>
-
-                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
-                    <span></span><span></span><span></span>
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
+                    <span class="ascii-hamburger">[MENU]</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
+    <!-- Main Workstation Layout -->
     <main class="page-content">
 
-        <!-- ==================== HERO / TERMINAL CONSOLE SECTION ==================== -->
+        <!-- ==========================================================================
+             SECTION 1: HERO / FULL SMOOTH ASCII LANDING STAGE
+             ========================================================================== -->
         <section id="hero" class="hero-section">
-            <div class="container hero-grid">
+            <div class="container hero-container">
                 
-                <div class="hero-text-content">
-                    
-                    <!-- Terminal Command Execution Line -->
-                    <div class="terminal-cmd-banner">
-                        <span class="t-prompt-prefix"><span class="t-user">d33@kernel</span>:<span class="t-path">~</span>$</span>
-                        <span class="t-cmd-text">./init_operator.sh --mode=RECON --privileges=ROOT</span>
-                    </div>
-
-                    <!-- ASCII Art Name Banner -->
-                    <pre class="hero-ascii-banner" aria-label="DEEKSHITH ASCII ART">
-  ____  _____ _____ _  ______  _   _ ___ _____ _   _ 
- |  _ \| ____| ____| |/ / ___|| | | |_ _|_   _| | | |
- | | | |  _| |  _| | ' /\___ \| |_| || |  | | | |_| |
- | |_| | |___| |___| . \ ___) |  _  || |  | | |  _  |
- |____/|_____|_____|_|\_\____/|_| |_|___| |_| |_| |_|
-</pre>
-
-                    <div class="terminal-role-tag">
-                        <span class="t-bracket">[</span> <span class="t-accent">CALLSIGN: D33</span> &bull; <span class="t-emerald">RED TEAM OPERATOR</span> &bull; <span class="t-cyan">EXPLOIT ARCHITECT</span> <span class="t-bracket">]</span>
-                    </div>
-
-                    <p class="hero-lead terminal-lead">
-                        <span class="t-arrow">&gt;</span> Offensive security specialist and exploit engineer based in <strong>Bangalore, India</strong>. Specialized in adversary simulation, zero-day identification, low-level cryptographic suites in <strong>C/C++</strong>, and enterprise zero-trust infrastructure defense.
-                    </p>
-
-                    <div class="hero-buttons">
-                        <a href="#projects" class="btn btn-lg btn-emerald-aura">
-                            <i class="fas fa-crosshairs"></i>
-                            <span>$ ./view_operations.sh</span>
-                        </a>
-                        <a href="resume.pdf" download="Deekshith_Resume.pdf" class="btn btn-lg btn-secondary">
-                            <i class="fas fa-file-shield"></i>
-                            <span>$ cat dossier.pdf</span>
-                        </a>
-                        <button class="btn btn-lg btn-terminal-launch" id="heroTerminalBtn">
-                            <i class="fas fa-terminal"></i>
-                            <span>$ spawn_shell</span>
-                        </button>
-                    </div>
-
-                    <!-- Interactive CLI Hint -->
-                    <div class="interactive-hint terminal-hint">
-                        <i class="fas fa-terminal"></i>
-                        <span>Press <kbd class="kbd-key">`</kbd> or click <strong>SHELL</strong> for interactive Bash environment</span>
-                    </div>
+                <!-- Terminal Command Boot Line -->
+                <div class="terminal-cmd-bar">
+                    <span class="prompt-text"><span class="p-user">root@d33</span>:<span class="p-path">/dev/tty1</span>#</span>
+                    <span class="cmd-run">./init_workstation.sh --operator=DEEKSHITH --mode=RED_TEAM</span>
                 </div>
 
-                <!-- Terminal Telemetry Data Deck -->
-                <div class="hero-stats-panel">
-                    <div class="floating-stat-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ TTY1 // CLEARANCE ]</span>
+                <!-- Giant Smooth Full ASCII Hero Banner -->
+                <div class="ascii-banner-wrapper">
+                    <pre class="ascii-art-banner" id="heroAsciiName" aria-label="DEEKSHITH ASCII LOGO">
+██████╗ ███████╗███████╗██╗  ██╗███████╗██╗  ██╗██╗████████╗██╗  ██╗
+██╔══██╗██╔════╝██╔════╝██║ ██╔╝██╔════╝██║  ██║██║╚══██╔══╝██║  ██║
+██║  ██║█████╗  █████╗  █████╔╝ ███████╗███████║██║   ██║   ███████║
+██║  ██║██╔══╝  ██╔══╝  ██╔═██╗ ╚════██║██╔══██║██║   ██║   ██╔══██║
+██████╔╝███████╗███████╗██║  ██╗███████║██║  ██║██║   ██║   ██║  ██║
+╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝
+                    </pre>
+                </div>
+
+                <!-- Terminal Metadata Bar -->
+                <div class="ascii-meta-strip">
+                    <span class="meta-tag">+-----------------------------------------------------------------------+</span>
+                    <div class="meta-content">
+                        <span class="m-item"><strong>CALLSIGN:</strong> D33</span>
+                        <span class="m-sep">|</span>
+                        <span class="m-item"><strong>ROLE:</strong> ETHICAL HACKER // EXPLOIT RESEARCHER</span>
+                        <span class="m-sep">|</span>
+                        <span class="m-item"><strong>BASE:</strong> BANGALORE, INDIA</span>
+                    </div>
+                    <span class="meta-tag">+-----------------------------------------------------------------------+</span>
+                </div>
+
+                <!-- Terminal Hero Grid: Left Bio / Right ASCII Visual Shield Box -->
+                <div class="hero-grid">
+                    
+                    <!-- Left: Interactive Terminal Intro & Badges -->
+                    <div class="hero-intro-card ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 01 // OPERATOR BIO &amp; DIRECTIVE ] ──────────────────────────┐</span>
                         </div>
-                        <div class="stat-badge"><i class="fas fa-shield-halved text-emerald"></i> EC-COUNCIL VERIFIED</div>
-                        <h3 class="stat-title cyber-glow-green">CPENT Candidate</h3>
-                        <p class="stat-desc">Certified Penetration Testing Professional</p>
+                        <div class="box-inner">
+                            <p class="hero-summary">
+                                <span class="ascii-bullet">&gt;&gt;&gt;</span> <strong>Deekshith</strong> — Offensive cybersecurity practitioner, penetration tester, and vulnerability researcher. Approach target environments from adversarial perspectives to eliminate vulnerabilities before threat actors exploit them.
+                            </p>
+
+                            <!-- Role Chips -->
+                            <div class="ascii-chips-group">
+                                <span class="ascii-chip">[#] Ethical Hacker</span>
+                                <span class="ascii-chip">[#] Penetration Tester</span>
+                                <span class="ascii-chip">[#] CTF Victor</span>
+                                <span class="ascii-chip">[#] Exploit Dev</span>
+                                <span class="ascii-chip">[#] Forensics Analyst</span>
+                            </div>
+
+                            <!-- CTA Buttons -->
+                            <div class="hero-actions">
+                                <a href="#projects" class="ascii-btn btn-lg btn-inverted">
+                                    <i class="fas fa-terminal"></i> <span>$ ./view_projects.sh</span>
+                                </a>
+                                <a href="resume.pdf" download="Deekshith_Resume.pdf" class="ascii-btn btn-lg">
+                                    <i class="fas fa-file-code"></i> <span>$ cat resume.pdf</span>
+                                </a>
+                                <button class="ascii-btn btn-lg btn-shell-open" id="heroShellBtn">
+                                    <i class="fas fa-laptop-code"></i> <span>$ spawn_shell</span>
+                                </button>
+                            </div>
+
+                            <!-- Keyboard Hint -->
+                            <div class="ascii-shortcut-bar">
+                                <span class="sc-key">HINT:</span> Press <kbd>`</kbd> anywhere to trigger interactive bash shell &bull; Type <kbd>help</kbd> for options.
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
+                        </div>
                     </div>
 
-                    <div class="floating-stat-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ TTY2 // TRIUMPHS ]</span>
+                    <!-- Right: ASCII Telemetry Deck & Live ASCII Art Box -->
+                    <div class="hero-deck-card ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 02 // HARDWARE TELEMETRY &amp; CTF METRICS ] ──────────────────┐</span>
                         </div>
-                        <div class="stat-badge"><i class="fas fa-skull text-cyan"></i> ADVERSARY ENGAGEMENTS</div>
-                        <h3 class="stat-title cyber-glow-cyan"><span class="counter" data-target="50">0</span>+ CTF Flags</h3>
-                        <p class="stat-desc">PBCTF 4.0 &amp; IDEEEAS CTF Victor</p>
+                        <div class="box-inner">
+                            
+                            <!-- ASCII Mini Shield & CTF Count -->
+                            <div class="deck-stats-grid">
+                                <div class="deck-stat-cell">
+                                    <span class="cell-label">[ CERTIFICATIONS ]</span>
+                                    <span class="cell-val counter" data-target="8">0</span><span class="cell-suffix">+</span>
+                                    <span class="cell-sub">Presec / Cisco / IIT / IISc</span>
+                                </div>
+                                <div class="deck-stat-cell">
+                                    <span class="cell-label">[ CTF FLAGS CAPTURED ]</span>
+                                    <span class="cell-val counter" data-target="50">0</span><span class="cell-suffix">+</span>
+                                    <span class="cell-sub">PBCTF 4.0 / IDEEEAS / Triwizard</span>
+                                </div>
+                                <div class="deck-stat-cell">
+                                    <span class="cell-label">[ MARVEL UVCE ]</span>
+                                    <span class="cell-val">LVL-1</span>
+                                    <span class="cell-sub">Cloud &amp; Cyber Domain Lead</span>
+                                </div>
+                                <div class="deck-stat-cell">
+                                    <span class="cell-label">[ EXPLOIT SUITES ]</span>
+                                    <span class="cell-val">C/C++</span>
+                                    <span class="cell-sub">Custom AES-256 / RSA-2048</span>
+                                </div>
+                            </div>
+
+                            <!-- Live ASCII Cyber Graphic -->
+                            <pre class="ascii-art-cube" aria-label="ASCII Terminal Cyber Box">
+    +---------------------------------------+
+    | [>] SYSTEM INTEGRITY : 100% NOMINAL   |
+    | [>] MEMORY FOOTPRINT : 0x7FFE_0000    |
+    | [>] ENCRYPTION SUITE : AES-256-CBC    |
+    | [>] AUDIT POSTURE    : ZERO-TRUST     |
+    +---------------------------------------+
+                            </pre>
+                        </div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
+                        </div>
                     </div>
 
-                    <div class="floating-stat-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ TTY3 // RESEARCH ]</span>
-                        </div>
-                        <div class="stat-badge"><i class="fas fa-network-wired text-purple"></i> CLOUD &amp; CYBER LEAD</div>
-                        <h3 class="stat-title cyber-glow-purple">Level 3 Operator</h3>
-                        <p class="stat-desc">MARVEL UVCE Cloud &amp; Security Domain</p>
-                    </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- ==================== ABOUT / OPERATOR PROFILE ==================== -->
+        <!-- ==========================================================================
+             SECTION 2: ABOUT / OPERATOR DOSSIER
+             ========================================================================== -->
         <section id="about" class="section">
             <div class="container">
-                <div class="section-heading">
-                    <div class="terminal-cmd-tag">
-                        <span class="t-user">d33@kernel</span>:<span class="t-path">~</span>$ <span class="t-cmd">cat /etc/operator/biometrics.dossier</span>
-                    </div>
-                    <h2 class="title-lg">Operator Biometrics &amp; Philosophy</h2>
-                    <p class="subtitle-md">Breaking system perimeters to engineer unbreachable defensive architectures.</p>
+                
+                <div class="section-ascii-header">
+                    <span class="sec-cmd">$ cat /etc/operator/dossier.txt</span>
+                    <h2 class="sec-title">[ 02 // ABOUT OPERATOR &amp; CORE PHILOSOPHY ]</h2>
+                    <div class="sec-rule">=================================================================================</div>
                 </div>
 
-                <div class="about-bento-grid">
+                <div class="about-ascii-layout">
                     
-                    <!-- Bento 1: Primary Bio -->
-                    <div class="bento-item bento-large terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ TTY1 // OPERATOR_DOSSIER ]</span>
+                    <!-- Bio Box -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ DOSSIER: DEEKSHITH // CALLSIGN D33 ] ──────────────────────┐</span>
                         </div>
-                        <div class="bento-icon-header">
-                            <div class="icon-orb emerald"><i class="fas fa-user-secret"></i></div>
-                            <div>
-                                <h3 class="bento-title">Deekshith // Callsign D33</h3>
-                                <p class="bento-subtitle">Red Team Specialist &bull; Exploit Architect &bull; Forensic Investigator</p>
+                        <div class="box-inner">
+                            <p class="box-para">
+                                <strong>Mission Statement:</strong> "Breaking things to make them stronger."
+                            </p>
+                            <p class="box-para">
+                                Passionate cybersecurity practitioner with extensive hands-on experience spanning offensive penetration testing, zero-trust infrastructure redesign, digital forensics, and low-level cryptographic engineering in <strong>C and C++</strong>.
+                            </p>
+                            <p class="box-para">
+                                Driven by adversarial curiosity, I continuously inspect system boundaries, analyze network packets, dissect malware binaries, and audit source code to safeguard critical enterprise data.
+                            </p>
+
+                            <div class="ascii-quote-box">
+                                <span class="q-border">&gt;&gt;&gt;</span>
+                                <em>"&lt;/&gt; You Are Now Less Valuable Than The Data You Produce. &lt;/&gt;"</em>
                             </div>
                         </div>
-                        <p class="bento-body">
-                            Driven by relentless adversarial curiosity, I approach every target infrastructure from the perspective of an advanced threat actor. With deep focus across offensive penetration testing, zero-trust network hardening, reverse engineering, and low-level cryptographic suites (C/C++), I eliminate security blindspots before adversaries find them.
-                        </p>
-                        <div class="bento-checklist">
-                            <div class="check-item"><i class="fas fa-circle-radiation text-emerald"></i> <span><strong>Full-Scope Red Teaming:</strong> Social engineering, phishing simulation, Active Directory attacks, and internal pivot.</span></div>
-                            <div class="check-item"><i class="fas fa-shield-virus text-cyan"></i> <span><strong>Defensive Hardening:</strong> Zero-Trust segregation, SIEM log telemetry (ELK), and rapid incident mitigation.</span></div>
-                            <div class="check-item"><i class="fas fa-microchip text-purple"></i> <span><strong>High-Performance Cryptography:</strong> Engineered custom AES-256 and RSA-2048 encryption utilities from scratch in C.</span></div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- Bento 2: Base Coordinates -->
-                    <div class="bento-item terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ TTY2 // BASE_COORDS ]</span>
+                    <!-- Quick Facts & Spec Sheet -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ SPECIFICATIONS &amp; COORDINATES ] ────────────────────────────┐</span>
                         </div>
-                        <div class="icon-orb cyan"><i class="fas fa-satellite-dish"></i></div>
-                        <h4 class="bento-mini-title">Physical Coordinates</h4>
-                        <p class="bento-mini-val">Bangalore, Karnataka, India</p>
-                        <span class="bento-sub">Available for Global Red Team Deployments</span>
-                    </div>
-
-                    <!-- Bento 3: Encrypted Direct Comm -->
-                    <div class="bento-item terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ TTY3 // PGP_RELAY ]</span>
+                        <div class="box-inner">
+                            <table class="ascii-spec-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="spec-k">[NAME]</td>
+                                        <td class="spec-v">Deekshith (D33)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="spec-k">[LOCATION]</td>
+                                        <td class="spec-v">Bangalore, Karnataka, India (UTC+5:30)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="spec-k">[PRIMARY EMAIL]</td>
+                                        <td class="spec-v"><a href="mailto:d33kshith@proton.me">d33kshith@proton.me</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="spec-k">[PRIMARY FOCUS]</td>
+                                        <td class="spec-v">Red Teaming / Pentest / Forensics / Crypto</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="spec-k">[CURRENT STATUS]</td>
+                                        <td class="spec-v"><span class="badge-status">[AVAILABLE] Open to Deployments</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="spec-k">[ORGANIZATION]</td>
+                                        <td class="spec-v">MARVEL UVCE (Cloud &amp; Cybersecurity Domain)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="spec-k">[REPOSITORIES]</td>
+                                        <td class="spec-v"><a href="https://github.com/28d33" target="_blank">github.com/28d33</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="icon-orb purple"><i class="fas fa-key"></i></div>
-                        <h4 class="bento-mini-title">Encrypted Transmission</h4>
-                        <p class="bento-mini-val font-mono">d33kshith@proton.me</p>
-                        <span class="bento-sub">Proton RSA-4096 Secure Relay</span>
-                    </div>
-
-                    <!-- Bento 4: Core Axiom Banner -->
-                    <div class="bento-item bento-wide terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ TTY4 // CORE_AXIOM ]</span>
-                        </div>
-                        <div class="quote-wrapper">
-                            <i class="fas fa-terminal quote-icon text-emerald"></i>
-                            <blockquote class="core-quote">
-                                "&lt;/&gt; You Are Now Less Valuable Than The Data You Produce. Protect the perimeter, inspect the kernel, verify every transaction. &lt;/&gt;"
-                            </blockquote>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
                 </div>
+
             </div>
         </section>
 
-        <!-- ==================== SKILLS & ARSENAL ==================== -->
-        <section id="skills" class="section section-darker">
+        <!-- ==========================================================================
+             SECTION 3: SKILLS & ARSENAL
+             ========================================================================== -->
+        <section id="skills" class="section">
             <div class="container">
-                <div class="section-heading">
-                    <div class="terminal-cmd-tag">
-                        <span class="t-user">d33@kernel</span>:<span class="t-path">~</span>$ <span class="t-cmd">ls -la /opt/cyber_arsenal/</span>
-                    </div>
-                    <h2 class="title-lg">Offensive &amp; Defensive Arsenal</h2>
-                    <p class="subtitle-md">Battle-tested exploit tools, low-level binaries, and specialized offensive platforms.</p>
+                
+                <div class="section-ascii-header">
+                    <span class="sec-cmd">$ ls -la /opt/cyber_arsenal/</span>
+                    <h2 class="sec-title">[ 03 // OFFENSIVE &amp; DEFENSIVE CAPABILITIES ]</h2>
+                    <div class="sec-rule">=================================================================================</div>
                 </div>
 
-                <div class="skills-card-grid">
+                <div class="skills-ascii-grid">
                     
-                    <!-- Card 1: Offensive -->
-                    <div class="skill-category-box terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ ARSENAL // OFFENSIVE_OPS ]</span>
+                    <!-- 1. Offensive Security -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 01 // OFFENSIVE CAPABILITIES ] ───────────────────────────┐</span>
                         </div>
-                        <div class="cat-top">
-                            <div class="cat-icon-badge red"><i class="fas fa-crosshairs"></i></div>
-                            <div>
-                                <h3>Offensive Warfare</h3>
-                                <p>Exploitation &amp; Penetration Testing</p>
-                            </div>
+                        <div class="box-inner">
+                            <ul class="ascii-list">
+                                <li><span class="list-bullet">[+]</span> <strong>Penetration Testing:</strong> Web Apps, Networks, APIs <em>[EXPERT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Web Security:</strong> OWASP Top 10, Auth Bypass, SQLi, XSS <em>[EXPERT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Red Teaming:</strong> Adversary Simulation, Internal Pivot <em>[EXPERT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Active Directory:</strong> Kerberoasting, BloodHound, GPO <em>[ADVANCED]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Social Engineering:</strong> Phishing campaigns, OSINT recon <em>[ADVANCED]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Exploitation:</strong> Memory corruption, custom shellcode <em>[PROFICIENT]</em></li>
+                            </ul>
                         </div>
-                        <div class="tag-cloud">
-                            <span class="skill-pill highlight red-tag"><i class="fas fa-bolt"></i> Penetration Testing</span>
-                            <span class="skill-pill highlight red-tag"><i class="fas fa-globe"></i> Web App Security</span>
-                            <span class="skill-pill">OWASP Top 10</span>
-                            <span class="skill-pill">Network Exploitation</span>
-                            <span class="skill-pill">Red Teaming</span>
-                            <span class="skill-pill">Social Engineering</span>
-                            <span class="skill-pill">Active Directory Attacks</span>
-                            <span class="skill-pill">Phishing Campaigns</span>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- Card 2: Defensive -->
-                    <div class="skill-category-box terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ ARSENAL // DEFENSIVE_BASTION ]</span>
+                    <!-- 2. Defensive & Forensics -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 02 // DEFENSIVE &amp; FORENSICS ] ────────────────────────────┐</span>
                         </div>
-                        <div class="cat-top">
-                            <div class="cat-icon-badge emerald"><i class="fas fa-shield-halved"></i></div>
-                            <div>
-                                <h3>Defensive Bastion</h3>
-                                <p>Hardening &amp; Digital Forensics</p>
-                            </div>
+                        <div class="box-inner">
+                            <ul class="ascii-list">
+                                <li><span class="list-bullet">[+]</span> <strong>Digital Forensics:</strong> Memory &amp; Disk Artifact Analysis <em>[EXPERT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>SIEM / Telemetry:</strong> ELK Stack (Elasticsearch, Logstash) <em>[ADVANCED]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Incident Response:</strong> Containment, Root-cause analysis <em>[ADVANCED]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Malware Analysis:</strong> Static &amp; Dynamic Disassembly <em>[ADVANCED]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Zero-Trust Architecture:</strong> Microsegmentation, DMZ <em>[ADVANCED]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Threat Modelling:</strong> STRIDE, MITRE ATT&amp;CK mapping <em>[PROFICIENT]</em></li>
+                            </ul>
                         </div>
-                        <div class="tag-cloud">
-                            <span class="skill-pill highlight emerald-tag"><i class="fas fa-magnifying-glass"></i> Digital Forensics</span>
-                            <span class="skill-pill highlight emerald-tag"><i class="fas fa-chart-line"></i> SIEM &amp; ELK Stack</span>
-                            <span class="skill-pill">Incident Response</span>
-                            <span class="skill-pill">Malware Analysis</span>
-                            <span class="skill-pill">Threat Intelligence</span>
-                            <span class="skill-pill">Zero-Trust Segmentation</span>
-                            <span class="skill-pill">Vulnerability Scans</span>
-                            <span class="skill-pill">Threat Modeling</span>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- Card 3: Programming -->
-                    <div class="skill-category-box terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ ARSENAL // LOW_LEVEL_BINARIES ]</span>
+                    <!-- 3. Programming & Systems -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 03 // CODE &amp; LOW-LEVEL SYSTEMS ] ──────────────────────────┐</span>
                         </div>
-                        <div class="cat-top">
-                            <div class="cat-icon-badge blue"><i class="fas fa-code"></i></div>
-                            <div>
-                                <h3>Binary &amp; Scripting</h3>
-                                <p>Low-level code &amp; Exploit craft</p>
-                            </div>
+                        <div class="box-inner">
+                            <ul class="ascii-list">
+                                <li><span class="list-bullet">[+]</span> <strong>Python:</strong> Exploit automation, custom scanners, Scapy <em>[EXPERT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Bash Scripting:</strong> Linux automation, tool wrappers <em>[EXPERT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>C / C++:</strong> Custom AES/RSA cryptographic suites <em>[PROFICIENT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>Assembly (x86/x64):</strong> Reverse engineering, GDB debugging <em>[PROFICIENT]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>PowerShell:</strong> Windows automation, Active Directory scripts <em>[ADVANCED]</em></li>
+                                <li><span class="list-bullet">[+]</span> <strong>SQL:</strong> Injection testing, database audit queries <em>[PROFICIENT]</em></li>
+                            </ul>
                         </div>
-                        <div class="tag-cloud">
-                            <span class="skill-pill highlight cyan-tag"><i class="fab fa-python"></i> Python</span>
-                            <span class="skill-pill highlight cyan-tag"><i class="fas fa-terminal"></i> Bash Scripting</span>
-                            <span class="skill-pill">C / C++</span>
-                            <span class="skill-pill">JavaScript</span>
-                            <span class="skill-pill">PowerShell</span>
-                            <span class="skill-pill">Assembly (x86)</span>
-                            <span class="skill-pill">SQL</span>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- Card 4: Platform Toolset -->
-                    <div class="skill-category-box terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ ARSENAL // ARMORY_PLATFORMS ]</span>
+                    <!-- 4. Tools & Frameworks -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 04 // SECURITY TOOLSET ] ──────────────────────────────────┐</span>
                         </div>
-                        <div class="cat-top">
-                            <div class="cat-icon-badge purple"><i class="fas fa-toolbox"></i></div>
-                            <div>
-                                <h3>Armory Platforms</h3>
-                                <p>Industry suites &amp; security utilities</p>
+                        <div class="box-inner">
+                            <div class="ascii-tool-tags">
+                                <span class="t-tag">[ Kali Linux ]</span>
+                                <span class="t-tag">[ Burp Suite Pro ]</span>
+                                <span class="t-tag">[ Metasploit ]</span>
+                                <span class="t-tag">[ Nmap ]</span>
+                                <span class="t-tag">[ Wireshark ]</span>
+                                <span class="t-tag">[ ELK Stack ]</span>
+                                <span class="t-tag">[ Docker ]</span>
+                                <span class="t-tag">[ Hashcat ]</span>
+                                <span class="t-tag">[ Volatility ]</span>
+                                <span class="t-tag">[ Autopsy ]</span>
+                                <span class="t-tag">[ VirtualBox ]</span>
+                                <span class="t-tag">[ OpenSSL ]</span>
+                                <span class="t-tag">[ Ghidra ]</span>
+                                <span class="t-tag">[ GDB ]</span>
                             </div>
                         </div>
-                        <div class="tag-cloud">
-                            <span class="skill-pill highlight purple-tag"><i class="fas fa-dragon"></i> Kali Linux</span>
-                            <span class="skill-pill highlight purple-tag"><i class="fas fa-spider"></i> Burp Suite Pro</span>
-                            <span class="skill-pill">Metasploit</span>
-                            <span class="skill-pill">Nmap</span>
-                            <span class="skill-pill">Wireshark</span>
-                            <span class="skill-pill">Docker</span>
-                            <span class="skill-pill">Volatility</span>
-                            <span class="skill-pill">Autopsy</span>
-                            <span class="skill-pill">Hashcat</span>
-                            <span class="skill-pill">OpenSSL</span>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
                 </div>
+
             </div>
         </section>
 
-        <!-- ==================== PROJECTS / OPERATIONS ==================== -->
+        <!-- ==========================================================================
+             SECTION 4: PROJECTS / CLASSIFIED REPOSITORIES
+             ========================================================================== -->
         <section id="projects" class="section">
             <div class="container">
-                <div class="section-heading">
-                    <div class="terminal-cmd-tag">
-                        <span class="t-user">d33@kernel</span>:<span class="t-path">~</span>$ <span class="t-cmd">./query_classified_ops.py --filter=ALL</span>
-                    </div>
-                    <h2 class="title-lg">Exploit Engineering &amp; Projects</h2>
-                    <p class="subtitle-md">Open-source cryptographic suites, zero-trust architectures, and automated audit layers.</p>
+                
+                <div class="section-ascii-header">
+                    <span class="sec-cmd">$ ./query_repos.py --status=DEPLOYED --format=ASCII</span>
+                    <h2 class="sec-title">[ 04 // CLASSIFIED EXPLOIT &amp; DEFENSE REPOSITORIES ]</h2>
+                    <div class="sec-rule">=================================================================================</div>
                 </div>
 
-                <!-- Category Filters -->
-                <div class="filter-bar">
-                    <button class="filter-tab active" data-filter="all">[ ALL_OPERATIONS ]</button>
-                    <button class="filter-tab" data-filter="pentest">[ PENTEST_OPS ]</button>
-                    <button class="filter-tab" data-filter="tool">[ SECURITY_TOOLS ]</button>
-                    <button class="filter-tab" data-filter="research">[ GRC_RESEARCH ]</button>
+                <!-- Category Filter Bar -->
+                <div class="ascii-filter-bar">
+                    <button class="filter-btn active" data-filter="all">[ ALL_PROJECTS ]</button>
+                    <button class="filter-btn" data-filter="tool">[ TOOLS ]</button>
+                    <button class="filter-btn" data-filter="pentest">[ PENTEST ]</button>
+                    <button class="filter-btn" data-filter="research">[ RESEARCH ]</button>
                 </div>
 
-                <!-- Projects Grid -->
-                <div class="projects-container" id="projectsContainer">
-
-                    <!-- Project 1 -->
-                    <div class="project-showcase-card terminal-card glass-card spotlight-card aura-border" data-category="tool">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ REPO // E-D--CRYPTO ]</span>
-                        </div>
-                        <div class="p-card-header">
-                            <span class="p-category">Cryptography &bull; Utility</span>
-                            <span class="p-date">2024</span>
-                        </div>
-                        <h3 class="p-title">E-D--Crypto</h3>
-                        <p class="p-description">
-                            High-assurance C-based cryptographic utility engineered for military-grade file encryption and decryption utilizing AES-256-CBC, RSA-2048 (OAEP), and SHA-256 integrity verification.
-                        </p>
-                        <div class="p-stack">
-                            <span>C</span>
-                            <span>OpenSSL</span>
-                            <span>AES-256</span>
-                            <span>RSA-2048</span>
-                            <span>SHA256</span>
-                        </div>
-                        <div class="p-footer">
-                            <a href="https://github.com/28d33/E-D--Crypto" target="_blank" class="p-btn-link">
-                                <i class="fab fa-github"></i>
-                                <span>$ git clone repo.git</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project 2 -->
-                    <div class="project-showcase-card terminal-card glass-card spotlight-card aura-border" data-category="pentest">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ REPO // PERIMETER_SEC ]</span>
-                        </div>
-                        <div class="p-card-header">
-                            <span class="p-category accent-cyan">Zero-Trust Network</span>
-                            <span class="p-date">2025</span>
-                        </div>
-                        <h3 class="p-title">Perimeter Security</h3>
-                        <p class="p-description">
-                            Zero-Trust network architecture redesign for an enterprise cryptocurrency exchange platform. Implemented multi-tiered subnet isolation, isolated DMZ bastions, and centralized SIEM telemetry via ELK Stack.
-                        </p>
-                        <div class="p-stack">
-                            <span>ELK Stack</span>
-                            <span>SIEM</span>
-                            <span>Zero Trust</span>
-                            <span>VirtualBox</span>
-                        </div>
-                        <div class="p-footer">
-                            <a href="https://github.com/28d33/Perimeter_Security" target="_blank" class="p-btn-link">
-                                <i class="fab fa-github"></i>
-                                <span>$ git clone repo.git</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project 3 -->
-                    <div class="project-showcase-card terminal-card glass-card spotlight-card aura-border" data-category="pentest">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ REPO // SEC_ASSESSMENT ]</span>
-                        </div>
-                        <div class="p-card-header">
-                            <span class="p-category accent-emerald">Audit &bull; S-SDLC</span>
-                            <span class="p-date">2025</span>
-                        </div>
-                        <h3 class="p-title">Security Assessment Platform</h3>
-                        <p class="p-description">
-                            Strategic threat audit of the CryptoV4ult production platform. Enforced comprehensive S-SDLC frameworks, automated SAST/DAST pipelines, and multi-layer CI/CD security validation gates.
-                        </p>
-                        <div class="p-stack">
-                            <span>S-SDLC</span>
-                            <span>SAST / DAST</span>
-                            <span>CI/CD Security</span>
-                            <span>Threat Modeling</span>
-                        </div>
-                        <div class="p-footer">
-                            <a href="https://github.com/28d33/Security_Assessment" target="_blank" class="p-btn-link">
-                                <i class="fab fa-github"></i>
-                                <span>$ git clone repo.git</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project 4 -->
-                    <div class="project-showcase-card terminal-card glass-card spotlight-card aura-border" data-category="tool">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ REPO // DATA_SECURITY ]</span>
-                        </div>
-                        <div class="p-card-header">
-                            <span class="p-category">Data Shield &bull; C++</span>
-                            <span class="p-date">2025</span>
-                        </div>
-                        <h3 class="p-title">Data Security Framework</h3>
-                        <p class="p-description">
-                            Designed and deployed an enterprise data security layer for JFin Payments. Created custom high-performance C++ scripts executing AES/RSA field-level encryption, dynamic tokenization, and sensitive payload masking.
-                        </p>
-                        <div class="p-stack">
-                            <span>C++</span>
-                            <span>AES / RSA</span>
-                            <span>SHA256</span>
-                            <span>Compliance</span>
-                        </div>
-                        <div class="p-footer">
-                            <a href="https://github.com/28d33/Data_Security" target="_blank" class="p-btn-link">
-                                <i class="fab fa-github"></i>
-                                <span>$ git clone repo.git</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project 5 -->
-                    <div class="project-showcase-card terminal-card glass-card spotlight-card aura-border" data-category="research">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ REPO // COMPLIANCE_GRC ]</span>
-                        </div>
-                        <div class="p-card-header">
-                            <span class="p-category accent-purple">GRC &bull; Hardening</span>
-                            <span class="p-date">2025</span>
-                        </div>
-                        <h3 class="p-title">Enterprise Compliance Assessment</h3>
-                        <p class="p-description">
-                            Enterprise cybersecurity posture transformation for hybrid cloud architectures. Executed fleet-wide system hardening compliant with CMMC, HIPAA, and ISO 27001 GRC directives.
-                        </p>
-                        <div class="p-stack">
-                            <span>Hardening</span>
-                            <span>IAM</span>
-                            <span>GPO</span>
-                            <span>ISO 27001</span>
-                        </div>
-                        <div class="p-footer">
-                            <a href="https://github.com/28d33/Compliance" target="_blank" class="p-btn-link">
-                                <i class="fab fa-github"></i>
-                                <span>$ git clone repo.git</span>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== ACCREDITATIONS & CLEARANCE ==================== -->
-        <section id="certs" class="section section-darker">
-            <div class="container">
-                <div class="section-heading">
-                    <div class="terminal-cmd-tag">
-                        <span class="t-user">d33@kernel</span>:<span class="t-path">~</span>$ <span class="t-cmd">gpg --verify-clearance /var/vault/keys.asc</span>
-                    </div>
-                    <h2 class="title-lg">Accreditations &amp; Security Clearance</h2>
-                    <p class="subtitle-md">Verified industry credentials, institutional distinctions, and competitive CTF honors.</p>
-                </div>
-
-                <div class="credentials-grid">
+                <div class="projects-ascii-grid" id="projectsGrid">
                     
-                    <!-- CPENT Featured Card -->
-                    <div class="cred-card featured terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap gold">
-                            <i class="fas fa-award"></i>
+                    <!-- Project 1: E-D--Crypto -->
+                    <div class="project-ascii-card ascii-box" data-category="tool">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 01 // E-D--Crypto ] ──────────────────────────────────────┐</span>
                         </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">OFFENSIVE SPECIALIST</span>
-                            <h4 class="cred-title">CPENT Certification</h4>
-                            <p class="cred-org">Certified Penetration Testing Professional (EC-Council)</p>
+                        <div class="box-inner">
+                            <div class="p-topline">
+                                <span class="p-type">[ TOOL // CRYPTOGRAPHY ]</span>
+                                <a href="https://github.com/28d33/E-D--Crypto" target="_blank" class="p-link" title="Source Code">[GITHUB -&gt;]</a>
+                            </div>
+                            <h3 class="p-title">E-D--Crypto File Encryption Utility</h3>
+                            <p class="p-desc">
+                                High-assurance C-based cryptographic utility engineered for robust file encryption and decryption utilizing <strong>AES-256-CBC</strong>, <strong>RSA-2048 (OAEP)</strong>, and <strong>SHA-256</strong> integrity checks via OpenSSL.
+                            </p>
+                            <div class="p-tags">
+                                <code>[C]</code> <code>[OpenSSL]</code> <code>[AES-256]</code> <code>[RSA-2048]</code> <code>[SHA-256]</code>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- TryHackMe -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap">
-                            <img src="https://cdn.simpleicons.org/tryhackme/C11111" alt="TryHackMe" />
-                        </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">OFFENSIVE &amp; DEFENSE</span>
-                            <h4 class="cred-title">Presecurity</h4>
-                            <p class="cred-org">TryHackMe</p>
-                        </div>
-                    </div>
-
-                    <!-- IIT Guwahati -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap orange">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">ACADEMIC DISTINCTION</span>
-                            <h4 class="cred-title">Cybersecurity Program</h4>
-                            <p class="cred-org">IIT Guwahati</p>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- Cisco -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap">
-                            <img src="https://cdn.simpleicons.org/cisco/005073" alt="Cisco" />
+                    <!-- Project 2: Perimeter Security -->
+                    <div class="project-ascii-card ascii-box" data-category="pentest">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 02 // Perimeter_Security ] ───────────────────────────────┐</span>
                         </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">OFFENSIVE SECURITY</span>
-                            <h4 class="cred-title">Ethical Hacker</h4>
-                            <p class="cred-org">Cisco Networking Academy</p>
+                        <div class="box-inner">
+                            <div class="p-topline">
+                                <span class="p-type">[ PENTEST // INFRASTRUCTURE ]</span>
+                                <a href="https://github.com/28d33/Perimeter_Security" target="_blank" class="p-link" title="Source Code">[GITHUB -&gt;]</a>
+                            </div>
+                            <h3 class="p-title">Zero-Trust Perimeter &amp; Exchange Defense</h3>
+                            <p class="p-desc">
+                                Comprehensive Zero-Trust network architecture redesign for a cryptocurrency exchange. Engineered multi-zone network segmentation, hardened DMZ boundaries, and real-time SIEM monitoring with <strong>ELK Stack</strong>.
+                            </p>
+                            <div class="p-tags">
+                                <code>[ELK Stack]</code> <code>[SIEM]</code> <code>[Zero Trust]</code> <code>[VirtualBox]</code> <code>[Network DMZ]</code>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Deloitte -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap">
-                            <img src="https://static.cdnlogo.com/logos/d/78/deloitte.svg" alt="Deloitte" />
-                        </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">SIMULATION EXCELLENCE</span>
-                            <h4 class="cred-title">Cyber Job Simulation</h4>
-                            <p class="cred-org">Deloitte Australia</p>
-                        </div>
-                    </div>
-
-                    <!-- IISc Bangalore -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap emerald">
-                            <i class="fas fa-shield-halved"></i>
-                        </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">RESEARCH TRAINING</span>
-                            <h4 class="cred-title">Ethical Hacking</h4>
-                            <p class="cred-org">IISc Bangalore</p>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- TCS IAM -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap indigo">
-                            <i class="fas fa-fingerprint"></i>
+                    <!-- Project 3: Security Assessment -->
+                    <div class="project-ascii-card ascii-box" data-category="pentest">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 03 // Security_Assessment ] ──────────────────────────────┐</span>
                         </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">ENTERPRISE IAM</span>
-                            <h4 class="cred-title">Cybersecurity Analyst IAM</h4>
-                            <p class="cred-org">TCS Virtual Training</p>
+                        <div class="box-inner">
+                            <div class="p-topline">
+                                <span class="p-type">[ PENTEST // S-SDLC AUDIT ]</span>
+                                <a href="https://github.com/28d33/Security_Assessment" target="_blank" class="p-link" title="Source Code">[GITHUB -&gt;]</a>
+                            </div>
+                            <h3 class="p-title">CryptoV4ult Enterprise Security Audit</h3>
+                            <p class="p-desc">
+                                Strategic security audit and vulnerability assessment for the CryptoV4ult platform. Implemented Secure SDLC practices, comprehensive SAST/DAST pipelines, and continuous CI/CD security validation gates.
+                            </p>
+                            <div class="p-tags">
+                                <code>[S-SDLC]</code> <code>[SAST/DAST]</code> <code>[CI/CD Sec]</code> <code>[Vulnerability Audit]</code>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- OPSWAT CIP -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap red">
-                            <i class="fas fa-industry"></i>
+                    <!-- Project 4: Data Security -->
+                    <div class="project-ascii-card ascii-box" data-category="tool">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 04 // Data_Security ] ────────────────────────────────────┐</span>
                         </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">INFRASTRUCTURE PROTECTION</span>
-                            <h4 class="cred-title">Critical Infrastructure Protection</h4>
-                            <p class="cred-org">OPSWAT Academy</p>
+                        <div class="box-inner">
+                            <div class="p-topline">
+                                <span class="p-type">[ TOOL // DATA PROTECTION ]</span>
+                                <a href="https://github.com/28d33/Data_Security" target="_blank" class="p-link" title="Source Code">[GITHUB -&gt;]</a>
+                            </div>
+                            <h3 class="p-title">JFin Payments Data Protection Framework</h3>
+                            <p class="p-desc">
+                                End-to-end data security architecture for payment processing systems. Developed high-performance custom C++ encryption engines, sensitive field masking algorithms, and regulatory compliance validators.
+                            </p>
+                            <div class="p-tags">
+                                <code>[C++]</code> <code>[AES/RSA]</code> <code>[SHA256]</code> <code>[Data Masking]</code> <code>[PCI-DSS]</code>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- CTF Trophies -->
-                    <div class="cred-card terminal-card glass-card spotlight-card aura-border">
-                        <div class="cred-badge-wrap yellow">
-                            <i class="fas fa-trophy"></i>
+                    <!-- Project 5: Compliance Assessment -->
+                    <div class="project-ascii-card ascii-box" data-category="research">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ 05 // Compliance ] ───────────────────────────────────────┐</span>
                         </div>
-                        <div class="cred-content">
-                            <span class="cred-tag">COMPETITIVE CTFS</span>
-                            <h4 class="cred-title">PBCTF &amp; IDEEEAS CTF</h4>
-                            <p class="cred-org">DCSE Bangalore &amp; SIT Tumakuru</p>
+                        <div class="box-inner">
+                            <div class="p-topline">
+                                <span class="p-type">[ RESEARCH // GRC HARDENING ]</span>
+                                <a href="https://github.com/28d33/Compliance" target="_blank" class="p-link" title="Source Code">[GITHUB -&gt;]</a>
+                            </div>
+                            <h3 class="p-title">Hybrid Enterprise Compliance &amp; Hardening</h3>
+                            <p class="p-desc">
+                                Full compliance framework and system hardening blueprint across hybrid cloud environments. Focused on automated GPO enforcement, IAM zero-standing privileges, and CMMC / HIPAA / ISO 27001 mapping.
+                            </p>
+                            <div class="p-tags">
+                                <code>[System Hardening]</code> <code>[IAM]</code> <code>[GPO]</code> <code>[ISO 27001]</code> <code>[CMMC]</code>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
                 </div>
+
             </div>
         </section>
 
-        <!-- ==================== EXPERIENCE TIMELINE ==================== -->
+        <!-- ==========================================================================
+             SECTION 5: CERTIFICATIONS & CTF ACHIEVEMENTS
+             ========================================================================== -->
+        <section id="certs" class="section">
+            <div class="container">
+                
+                <div class="section-ascii-header">
+                    <span class="sec-cmd">$ gpg --verify-clearance /etc/credentials/verified.sig</span>
+                    <h2 class="sec-title">[ 05 // CERTIFICATIONS &amp; CTF ACHIEVEMENTS ]</h2>
+                    <div class="sec-rule">=================================================================================</div>
+                </div>
+
+                <div class="certs-ascii-grid">
+                    
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CERT]</span>
+                            <h4 class="c-title">Presecurity</h4>
+                            <p class="c-issuer">TryHackMe</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[ACADEMIC]</span>
+                            <h4 class="c-title">Cybersecurity Course</h4>
+                            <p class="c-issuer">IIT Guwahati</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CERT]</span>
+                            <h4 class="c-title">Ethical Hacker</h4>
+                            <p class="c-issuer">Cisco</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[INDUSTRY]</span>
+                            <h4 class="c-title">Cyber Job Simulation</h4>
+                            <p class="c-issuer">Deloitte Australia</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CERT]</span>
+                            <h4 class="c-title">Cybersecurity Analyst IAM</h4>
+                            <p class="c-issuer">TCS (Virtual Training)</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[ACADEMIC]</span>
+                            <h4 class="c-title">Ethical Hacking</h4>
+                            <p class="c-issuer">IISc Bangalore</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CERT]</span>
+                            <h4 class="c-title">Critical Infrastructure Protection</h4>
+                            <p class="c-issuer">OPSWAT Academy</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CERT]</span>
+                            <h4 class="c-title">Cybersecurity Essentials</h4>
+                            <p class="c-issuer">Cisco Networking Academy</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[RESEARCH]</span>
+                            <h4 class="c-title">Cyber Intelligence</h4>
+                            <p class="c-issuer">UVCE GA</p>
+                            <span class="c-status">VERIFIED // PASS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CONFERENCE]</span>
+                            <h4 class="c-title">Positive Hack Talks</h4>
+                            <p class="c-issuer">Positive Technologies (Bengaluru)</p>
+                            <span class="c-status">ATTENDEE // HONORS</span>
+                        </div>
+                    </div>
+
+                    <!-- CTF Honours -->
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CTF_VICTOR]</span>
+                            <h4 class="c-title">PBCTF 4.0</h4>
+                            <p class="c-issuer">DCSE Bangalore</p>
+                            <span class="c-status">PODIUM // 50+ FLAGS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CTF_VICTOR]</span>
+                            <h4 class="c-title">IDEEEAS CTF</h4>
+                            <p class="c-issuer">SIT Tumakuru</p>
+                            <span class="c-status">PODIUM // 50+ FLAGS</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-ascii-item ascii-box">
+                        <div class="box-inner">
+                            <span class="c-badge">[CTF_VICTOR]</span>
+                            <h4 class="c-title">Triwizard CTF</h4>
+                            <p class="c-issuer">DSU Bangalore</p>
+                            <span class="c-status">PODIUM // 50+ FLAGS</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             SECTION 6: EXPERIENCE & RESEARCH LOGS
+             ========================================================================= -->
         <section id="experience" class="section">
             <div class="container">
-                <div class="section-heading">
-                    <div class="terminal-cmd-tag">
-                        <span class="t-user">d33@kernel</span>:<span class="t-path">~</span>$ <span class="t-cmd">tail -f /var/log/engagements.log</span>
-                    </div>
-                    <h2 class="title-lg">Operational History &amp; Leadership</h2>
-                    <p class="subtitle-md">Adversary simulation, vulnerability triage, and cloud research initiatives.</p>
+                
+                <div class="section-ascii-header">
+                    <span class="sec-cmd">$ tail -n 50 /var/log/engagements.log</span>
+                    <h2 class="sec-title">[ 06 // OPERATIONAL EXPERIENCE &amp; ENGAGEMENTS ]</h2>
+                    <div class="sec-rule">=================================================================================</div>
                 </div>
 
-                <div class="timeline-container">
+                <div class="experience-ascii-layout">
                     
-                    <!-- Role 1 -->
-                    <div class="timeline-row">
-                        <div class="timeline-dot-aura"></div>
-                        <div class="timeline-card terminal-card glass-card spotlight-card aura-border">
-                            <div class="terminal-card-topbar">
-                                <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                                <span class="t-card-id">[ LOG_ENTRY_01 // ACTIVE_ENGAGEMENT ]</span>
-                            </div>
-                            <div class="t-card-header">
+                    <!-- Exp 1: HUMAN INITIALS -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ EXP_LOG_01 // 2025 // HUMAN INITIALS ] ────────────────────┐</span>
+                        </div>
+                        <div class="box-inner">
+                            <div class="exp-title-row">
                                 <div>
-                                    <h3 class="t-role">Cybersecurity Intern</h3>
-                                    <p class="t-company"><i class="fas fa-building-shield"></i> HUMAN INITIALS</p>
+                                    <h3 class="exp-role">Cybersecurity Intern</h3>
+                                    <p class="exp-company">HUMAN INITIALS // Security Operations</p>
                                 </div>
-                                <span class="t-badge highlight">2025 &bull; ACTIVE</span>
+                                <span class="exp-time">[ 2025 // ACTIVE ]</span>
                             </div>
-                            <p class="t-body">
-                                Serving as an offensive security intern, conducting penetration testing, vulnerability analysis, and zero-trust protocol validations.
+                            <p class="exp-desc">
+                                Serving as a Cybersecurity Intern focusing on threat analysis, vulnerability assessment, and defensive security protocols to maintain organizational integrity.
                             </p>
-                            <ul class="t-list">
-                                <li>Conducted regular vulnerability assessments and network attack surface reductions across enterprise subnets.</li>
-                                <li>Co-developed incident response playbooks and automated security validation checkpoints.</li>
-                                <li>Simulated adversary tactics across internal environments to eliminate configuration blindspots.</li>
+                            <ul class="ascii-list">
+                                <li><span class="list-bullet">[+]</span> Identifying and mitigating security risks across enterprise network infrastructures.</li>
+                                <li><span class="list-bullet">[+]</span> Conducting automated and manual vulnerability scans and security posture assessments.</li>
+                                <li><span class="list-bullet">[+]</span> Collaborating on incident response playbooks and rapid triage pipelines.</li>
                             </ul>
+                        </div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <!-- Role 2 -->
-                    <div class="timeline-row">
-                        <div class="timeline-dot-aura"></div>
-                        <div class="timeline-card terminal-card glass-card spotlight-card aura-border">
-                            <div class="terminal-card-topbar">
-                                <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                                <span class="t-card-id">[ LOG_ENTRY_02 // LEVEL_3_LEAD ]</span>
-                            </div>
-                            <div class="t-card-header">
+                    <!-- Exp 2: MARVEL UVCE -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ EXP_LOG_02 // PRESENT // MARVEL UVCE ] ────────────────────┐</span>
+                        </div>
+                        <div class="box-inner">
+                            <div class="exp-title-row">
                                 <div>
-                                    <h3 class="t-role">Level 3 Operator &amp; Core Member</h3>
-                                    <p class="t-company"><i class="fas fa-network-wired"></i> MARVEL &bull; CLCY Domain (UVCE)</p>
+                                    <h3 class="exp-role">Member @ MARVEL (CLCY Domain)</h3>
+                                    <p class="exp-company">University Visvesvaraya College of Engineering (UVCE)</p>
                                 </div>
-                                <span class="t-badge highlight">ACTIVE &bull; LEVEL 3 CERTIFIED</span>
+                                <span class="exp-time">[ LEVEL 1 VERIFIED ]</span>
                             </div>
-                            <p class="t-body">
-                                Completed advanced Level 3 rank within the Cloud &amp; Cybersecurity domain at University Visvesvaraya College of Engineering.
+                            <p class="exp-desc">
+                                Active member of the MARVEL organization within the Cloud &amp; Cybersecurity (CLCY) domain at UVCE.
                             </p>
-                            <ul class="t-list">
-                                <li>Led advanced research on cloud infrastructure resilience, container security, and SIEM pipelines.</li>
-                                <li>Architected hands-on exploit demonstration labs and CTF training modules for engineering peers.</li>
-                                <li>Collaborated on building custom security utilities and malware sandbox testing environments.</li>
+                            <ul class="ascii-list">
+                                <li><span class="list-bullet">[+]</span> Successfully completed <strong>Level 1</strong> certification in the CLCY domain.</li>
+                                <li><span class="list-bullet">[+]</span> Conducting research on cloud security, zero-trust container security, and network defenses.</li>
+                                <li><span class="list-bullet">[+]</span> Collaborating with research peers on custom security tooling and isolated exploit labs.</li>
                             </ul>
                         </div>
-                    </div>
-
-                    <!-- Role 3 -->
-                    <div class="timeline-row">
-                        <div class="timeline-dot-aura"></div>
-                        <div class="timeline-card terminal-card glass-card spotlight-card aura-border">
-                            <div class="terminal-card-topbar">
-                                <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                                <span class="t-card-id">[ LOG_ENTRY_03 // AWS_RESEARCH ]</span>
-                            </div>
-                            <div class="t-card-header">
-                                <div>
-                                    <h3 class="t-role">Student Builder &amp; Security Researcher</h3>
-                                    <p class="t-company"><i class="fab fa-aws"></i> AWS Student Builder Group @ UVCE</p>
-                                </div>
-                                <span class="t-badge">ACTIVE CORPS</span>
-                            </div>
-                            <p class="t-body">
-                                Spearheading cloud infrastructure resilience, IAM policy enforcement, and AWS security architecture experiments.
-                            </p>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
                 </div>
+
             </div>
         </section>
 
-        <!-- ==================== CONTACT / COMMS ==================== -->
-        <section id="contact" class="section section-darker">
+        <!-- ==========================================================================
+             SECTION 7: CONTACT / COMMS TRANSMISSION
+             ========================================================================== -->
+        <section id="contact" class="section">
             <div class="container">
-                <div class="section-heading">
-                    <div class="terminal-cmd-tag">
-                        <span class="t-user">d33@kernel</span>:<span class="t-path">~</span>$ <span class="t-cmd">nc -lvnp 4444 # OPEN_ENCRYPTED_UPLINK</span>
-                    </div>
-                    <h2 class="title-lg">Establish Encrypted Uplink</h2>
-                    <p class="subtitle-md">Available for offensive penetration testing, red teaming, security architecture, or full-time roles.</p>
+                
+                <div class="section-ascii-header">
+                    <span class="sec-cmd">$ nc -lvnp 4444 # OPEN_UPLINK</span>
+                    <h2 class="sec-title">[ 07 // TRANSMIT ENCRYPTED PAYLOAD / CONTACT ]</h2>
+                    <div class="sec-rule">=================================================================================</div>
                 </div>
 
-                <div class="contact-layout">
+                <div class="contact-ascii-layout">
                     
-                    <div class="contact-info-panel terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ SOCKET // DIRECT_RELAY ]</span>
+                    <!-- Direct Channels -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ DIRECT TRANSMISSION CHANNELS ] ────────────────────────────┐</span>
                         </div>
-                        <h3 class="contact-title">Direct Relay</h3>
-                        <p class="contact-intro">
-                            Transmission lines are monitored 24/7. Connect directly via PGP encrypted email or through verified professional networks.
-                        </p>
+                        <div class="box-inner">
+                            <p class="box-para">
+                                Direct transmission channels monitored 24/7. Connect directly via PGP encrypted email or through verified professional code repositories.
+                            </p>
 
-                        <div class="contact-methods">
-                            <a href="mailto:d33kshith@proton.me" class="contact-method-card">
-                                <div class="m-icon emerald"><i class="fas fa-envelope-shield"></i></div>
-                                <div>
-                                    <span class="m-label">Encrypted Relay</span>
-                                    <span class="m-val font-mono">d33kshith@proton.me</span>
-                                </div>
-                            </a>
-
-                            <a href="https://github.com/28d33" target="_blank" class="contact-method-card">
-                                <div class="m-icon blue"><i class="fab fa-github"></i></div>
-                                <div>
-                                    <span class="m-label">Code Repositories</span>
-                                    <span class="m-val">github.com/28d33</span>
-                                </div>
-                            </a>
-
-                            <a href="https://linkedin.com/in/d33kshithanand" target="_blank" class="contact-method-card">
-                                <div class="m-icon purple"><i class="fab fa-linkedin"></i></div>
-                                <div>
-                                    <span class="m-label">Professional Intelligence</span>
-                                    <span class="m-val">linkedin.com/in/d33kshithanand</span>
-                                </div>
-                            </a>
+                            <ul class="contact-methods-list">
+                                <li>
+                                    <span class="c-type">[EMAIL]</span>
+                                    <a href="mailto:d33kshith@proton.me">d33kshith@proton.me</a>
+                                </li>
+                                <li>
+                                    <span class="c-type">[GITHUB]</span>
+                                    <a href="https://github.com/28d33" target="_blank">github.com/28d33</a>
+                                </li>
+                                <li>
+                                    <span class="c-type">[LINKEDIN]</span>
+                                    <a href="https://linkedin.com/in/d33kshithanand" target="_blank">linkedin.com/in/d33kshithanand</a>
+                                </li>
+                                <li>
+                                    <span class="c-type">[LOCATION]</span>
+                                    <span>Bangalore, Karnataka, India</span>
+                                </li>
+                            </ul>
                         </div>
-
-                        <div class="location-banner">
-                            <i class="fas fa-map-pin"></i>
-                            <span>Based in <strong>Bangalore, Karnataka, India</strong> (IST / UTC+5:30)</span>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
                         </div>
                     </div>
 
-                    <div class="contact-form-panel terminal-card glass-card spotlight-card aura-border">
-                        <div class="terminal-card-topbar">
-                            <span class="t-dots-mini"><span></span><span></span><span></span></span>
-                            <span class="t-card-id">[ SOCKET // TRANSMISSION_BUFFER ]</span>
+                    <!-- Dispatch Form -->
+                    <div class="ascii-box">
+                        <div class="box-header">
+                            <span class="box-title">┌── [ TRANSMISSION BUFFER FORM ] ────────────────────────────────┐</span>
                         </div>
-                        <form id="contactForm" class="contact-form-clean">
-                            <div class="form-grid-2">
-                                <div class="form-group">
-                                    <label for="name">[ CALLSIGN / NAME ]</label>
-                                    <input type="text" id="name" placeholder="Agent Smith" required />
+                        <div class="box-inner">
+                            <form id="contactForm" class="ascii-form">
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="name">[ CALLSIGN / NAME ]</label>
+                                        <input type="text" id="name" placeholder="Agent" required />
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="email">[ RETURN_EMAIL ]</label>
+                                        <input type="email" id="email" placeholder="agent@network.com" required />
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="email">[ RETURN_EMAIL ]</label>
-                                    <input type="email" id="email" placeholder="agent@network.com" required />
+                                <div class="form-field">
+                                    <label for="subject">[ MISSION_SCOPE ]</label>
+                                    <input type="text" id="subject" placeholder="Red Team Audit / Security Consultation" />
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="subject">[ MISSION_SCOPE ]</label>
-                                <input type="text" id="subject" placeholder="Red Team Engagement / Security Audit" />
-                            </div>
-                            <div class="form-group">
-                                <label for="message">[ PAYLOAD_BODY ]</label>
-                                <textarea id="message" rows="5" placeholder="Specify engagement targets, timeline, or consultation requirements..." required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-lg btn-emerald-aura btn-block">
-                                <i class="fas fa-paper-plane"></i>
-                                <span>$ transmit_payload --encrypted</span>
-                            </button>
-                            <p class="form-status" id="formStatus"></p>
-                        </form>
+                                <div class="form-field">
+                                    <label for="message">[ PAYLOAD_BODY ]</label>
+                                    <textarea id="message" rows="4" placeholder="Specify engagement details, requirements or question..." required></textarea>
+                                </div>
+                                <button type="submit" class="ascii-btn btn-block btn-inverted">
+                                    <i class="fas fa-paper-plane"></i> <span>$ transmit_payload --dispatch</span>
+                                </button>
+                                <p class="form-status" id="formStatus"></p>
+                            </form>
+                        </div>
+                        <div class="box-footer">
+                            <span class="box-bottom">└────────────────────────────────────────────────────────────────────────┘</span>
+                        </div>
                     </div>
 
                 </div>
+
             </div>
         </section>
 
     </main>
 
-    <!-- ==================== INTERACTIVE HACKER TERMINAL DRAWER ==================== -->
-    <div class="terminal-drawer-overlay hidden" id="terminalOverlay">
-        <div class="terminal-window-card glass-card">
-            <div class="terminal-topbar">
-                <div class="t-dots">
-                    <span class="t-dot red" id="closeTerminalBtn"></span>
-                    <span class="t-dot yellow"></span>
-                    <span class="t-dot green"></span>
+    <!-- ==========================================================================
+         INTERACTIVE BASH RECON SHELL DRAWER
+         ========================================================================== -->
+    <div class="shell-overlay hidden" id="terminalOverlay">
+        <div class="shell-window ascii-box">
+            <div class="shell-topbar">
+                <span class="shell-title">[ SHELL: root@d33:~ (RING-0 BASH v5.2) ]</span>
+                <div class="shell-actions">
+                    <span class="shell-hint">ESC to close</span>
+                    <button class="shell-close-btn" id="closeTerminalBtn">[X]</button>
                 </div>
-                <div class="t-title"><i class="fas fa-terminal"></i> d33@cyber-ops: ~ (BASH / RING-0 SHELL)</div>
-                <div class="t-close-hint">ESC to exit</div>
             </div>
-            <div class="terminal-body-scroll" id="terminalBody">
-                <p class="t-output-green">=== [ D33 TACTICAL RECON TERMINAL // V4.9.2 ] ===</p>
-                <p class="t-output-dim">Type <span class="t-highlight">'help'</span> to view available cyber commands.</p>
-                <p class="t-output-dim">System status: ALL SYSTEMS ARMED &bull; ROOT PRIVILEGES: ACTIVE</p>
+            <div class="shell-body" id="terminalBody">
+                <div class="shell-banner-text">
+======================================================================
+  D33 INTERACTIVE SECURITY SHELL // HARDENED KERNEL 6.12
+  Type 'help' to inspect available system commands.
+======================================================================
+                </div>
                 <div id="terminalHistory"></div>
-                <div class="terminal-prompt-line">
-                    <span class="t-prompt">root@d33:~$</span>
-                    <input type="text" id="terminalInput" class="t-input" autocomplete="off" autofocus />
+                <div class="shell-input-row">
+                    <span class="shell-prompt">root@d33:~$</span>
+                    <input type="text" id="terminalInput" class="shell-input" autocomplete="off" autofocus />
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer terminal-footer">
-        <div class="container footer-grid">
+    <!-- Terminal Footer -->
+    <footer class="terminal-footer">
+        <div class="container footer-inner">
             <div class="footer-left">
-                <span class="footer-name">root@deekshith:~$ <span class="cursor-blink">_</span></span>
-                <p class="footer-tagline">"You are now less valuable than the data you produce."</p>
+                <span class="footer-brand">root@deekshith:~$ <span class="cursor-blink">_</span></span>
+                <p class="footer-axiom">"&lt;/&gt; You Are Now Less Valuable Than The Data You Produce &lt;/&gt;"</p>
             </div>
             <div class="footer-right">
-                <div class="footer-nav">
+                <div class="footer-commands">
                     <a href="#hero">[1] ~/home</a>
-                    <a href="#about">[2] ~/operator</a>
-                    <a href="#projects">[3] ~/exploits</a>
-                    <a href="#certs">[4] ~/clearance</a>
-                    <a href="#contact">[5] ~/comms</a>
-                    <a href="https://github.com/28d33" target="_blank">[git] GitHub</a>
-                    <a href="https://linkedin.com/in/d33kshithanand" target="_blank">[in] LinkedIn</a>
+                    <a href="#about">[2] ~/about</a>
+                    <a href="#skills">[3] ~/skills</a>
+                    <a href="#projects">[4] ~/projects</a>
+                    <a href="#certs">[5] ~/certs</a>
+                    <a href="#experience">[6] ~/experience</a>
+                    <a href="#contact">[7] ~/contact</a>
                 </div>
-                <p class="copyright">&copy; 2026 Deekshith. High-Assurance Terminal Environment.</p>
+                <p class="copyright">&copy; 2026 DEEKSHITH. ALL RIGHTS RESERVED. HIGH-ASSURANCE ASCII WORKSTATION.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Main Terminal Engine Script -->
+    <!-- Main Terminal & ASCII Engine Script -->
     <script src="main.js"></script>
 </body>
 
