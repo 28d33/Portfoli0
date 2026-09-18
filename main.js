@@ -1,7 +1,14 @@
 /* ==========================================================================
-   1. PROCEDURAL ASCII FLOW BACKGROUND ENGINE (Wave Scale=10, Speed=1.3, Complexity=1.0)
+   DEEKSHITH (D33) — PROCEDURAL ASCII FLOW & TERMINAL PORTFOLIO
    ========================================================================== */
-class ProceduralAsciiFlowEngine {
+
+(function () {
+    'use strict';
+
+    /* ==========================================================================
+       1. PROCEDURAL ASCII FLOW BACKGROUND ENGINE (Wave Scale=10, Speed=1.3, Complexity=1.0)
+       ========================================================================== */
+    class ProceduralAsciiFlowEngine {
     constructor() {
         this.container = document.getElementById('ascii-background');
         if (!this.container) return;
@@ -90,10 +97,10 @@ class ProceduralAsciiFlowEngine {
         const xPos = ((this.config.mouseX + 1) / 2) * 100;
         const yPos = ((this.config.mouseY + 1) / 2) * 100;
 
-        // Spotlight gradient effect
-        this.container.style.color = 'rgba(148, 163, 184, 0.35)';
-        this.container.style.backgroundImage = `radial-gradient(circle at ${xPos}% ${yPos}%, #ffffff 0%, rgba(52, 211, 153, 0.4) 30%, rgba(14, 165, 233, 0.2) 50%, transparent 75%)`;
+        // Spotlight gradient text clipping with subtle base illumination
+        this.container.style.backgroundImage = `radial-gradient(circle at ${xPos}% ${yPos}%, rgba(255, 255, 255, 0.95) 0%, rgba(52, 211, 153, 0.45) 25%, rgba(148, 163, 184, 0.3) 55%, rgba(100, 116, 139, 0.18) 100%)`;
         this.container.style.webkitBackgroundClip = 'text';
+        this.container.style.backgroundClip = 'text';
         this.container.style.webkitTextFillColor = 'transparent';
     }
 
@@ -114,7 +121,7 @@ class ProceduralAsciiFlowEngine {
                 outputString += '\n';
             }
 
-            this.container.innerText = outputString;
+            this.container.textContent = outputString;
             this.updateThemeVisuals();
 
             requestAnimationFrame(render);
