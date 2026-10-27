@@ -1,0 +1,712 @@
+// =========================================================================
+// DEEKSHITH (D33) — FLUID AUTO-ADJUSTING FUSION ARCHITECTURE
+// Automatic resolution detection for Mobile, Tablet, Laptop, Desktop & 4K
+// =========================================================================
+
+(function () {
+    'use strict';
+
+    // --- 1. LUCIDE ICONS INITIALIZATION ---
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
+    // --- 2. LENIS SMOOTH VIRTUAL SCROLLING ---
+    let lenis = null;
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
+    if (typeof Lenis !== 'undefined') {
+        lenis = new Lenis({
+            duration: isTouch ? 1.0 : 1.4,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 1.8,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0);
+        }
+    }
+
+    // --- 3. MOBILE MENU DRAWER LOGIC ---
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let isMobileMenuOpen = false;
+
+    function toggleMobileMenu(forceState) {
+        if (!mobileMenu) return;
+        isMobileMenuOpen = forceState !== undefined ? forceState : !isMobileMenuOpen;
+        if (isMobileMenuOpen) {
+            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.add('flex');
+            gsap.fromTo(mobileMenu, { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" });
+        } else {
+            gsap.to(mobileMenu, {
+                opacity: 0,
+                y: -10,
+                duration: 0.2,
+                ease: "power2.in",
+                onComplete: () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                }
+            });
+        }
+    }
+
+    mobileMenuBtn?.addEventListener('click', () => toggleMobileMenu());
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => toggleMobileMenu(false));
+    });
+
+    // --- 4. CUSTOM DUAL LERP CURSOR (Desktop / Fine Pointer Only) ---
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let dotPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let ringPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    let targetX = 0;
+    let targetY = 0;
+
+    if (!isTouch) {
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            
+            targetX = (e.clientX / window.innerWidth) * 2 - 1;
+            targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function bindHoverTargets() {
+            const hoverables = document.querySelectorAll('.hoverable, button, a, .glass-panel');
+            hoverables.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+        }
+        bindHoverTargets();
+
+        function renderCursor() {
+            dotPos.x += (mouse.x - dotPos.x) * 0.35;
+            dotPos.y += (mouse.y - dotPos.y) * 0.35;
+            ringPos.x += (mouse.x - ringPos.x) * 0.15;
+            ringPos.y += (mouse.y - ringPos.y) * 0.15;
+            
+            if (cursorDot) cursorDot.style.transform = `translate(${dotPos.x}px, ${dotPos.y}px)`;
+            if (cursorRing) cursorRing.style.transform = `translate(${ringPos.x}px, ${ringPos.y}px)`;
+            
+            requestAnimationFrame(renderCursor);
+        }
+        renderCursor();
+
+        // Magnetic Buttons
+        function initMagneticButtons() {
+            const magnetics = document.querySelectorAll('.magnetic-wrap');
+            magnetics.forEach(wrap => {
+                const area = wrap.querySelector('.magnetic-area');
+                const content = wrap.querySelector('.magnetic-content');
+                if (!area || !content) return;
+                
+                area.addEventListener('mousemove', (e) => {
+                    const rect = wrap.getBoundingClientRect();
+                    const hx = rect.left + rect.width / 2;
+                    const hy = rect.top + rect.height / 2;
+                    const dx = (e.clientX - hx) * 0.35;
+                    const dy = (e.clientY - hy) * 0.35;
+                    gsap.to(content, { x: dx, y: dy, duration: 0.3, ease: "power2.out", overwrite: true });
+                });
+                
+                area.addEventListener('mouseleave', () => {
+                    gsap.to(content, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)", overwrite: true });
+                });
+            });
+        }
+        initMagneticButtons();
+    }
+
+
+    // --- 5. PRELOADER & HERO ENTRANCE SEQUENCE (Exact v5 Architecture) ---
+    function initPreloaderAndHero() {
+        if (typeof gsap === 'undefined') return;
+
+        const tl = gsap.timeline();
+
+        tl.to("#loader-progress", {
+            width: "100%",
+            duration: 1.4,
+            ease: "power3.inOut"
+        })
+        .to(".loader-text .char", {
+            y: "0%",
+            opacity: 1,
+            stagger: 0.04,
+            duration: 0.7,
+            ease: "power4.out"
+        }, "-=0.4")
+        .to("#loader", {
+            yPercent: -100,
+            duration: 0.9,
+            ease: "power4.inOut",
+            delay: 0.15,
+            onComplete: () => {
+                const loaderEl = document.getElementById('loader');
+                if (loaderEl) loaderEl.style.display = 'none';
+            }
+        })
+        .to("#ui-layer", {
+            opacity: 1,
+            duration: 0.1
+        }, "-=0.9")
+        .to(".hero-line", {
+            y: "0%",
+            duration: 1.1,
+            stagger: 0.12,
+            ease: "power4.out"
+        }, "-=0.4")
+        .fromTo(".hero-elem", 
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: "power3.out" },
+            "-=0.7"
+        );
+    }
+    initPreloaderAndHero();
+
+
+    // --- 6. AUTO-ADJUSTING 10,000 PARTICLE MORPHING THREE.JS BACKGROUND ---
+    const particleCount = window.innerWidth < 640 ? 4500 : 10000;
+    const positionAttributes = {
+        shape1: new Float32Array(particleCount * 3), // Hero: Clustered Torus Knot
+        shape2: new Float32Array(particleCount * 3), // Manifesto: Twisted Helix Spindle
+        shape3: new Float32Array(particleCount * 3), // Pinned Showcase: Undulating Wave Grid
+        shape4: new Float32Array(particleCount * 3)  // Contact/Credentials: Cyber Matrix Vortex
+    };
+
+    // Generate Shape Coordinate Buffers
+    for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+
+        // SHAPE 1: Clustered Torus Knot (Hero)
+        const t = (i / particleCount) * Math.PI * 2 * 6;
+        const r1 = 10 + Math.sin(t * 3) * 3;
+        const x1 = Math.cos(t) * r1;
+        const y1 = Math.sin(t) * r1;
+        const z1 = Math.sin(t * 4) * 6;
+        positionAttributes.shape1[i3] = x1 + (Math.random() - 0.5) * 1.5;
+        positionAttributes.shape1[i3 + 1] = y1 + (Math.random() - 0.5) * 1.5;
+        positionAttributes.shape1[i3 + 2] = z1 + (Math.random() - 0.5) * 1.5;
+
+        // SHAPE 2: Twisted Helix (Manifesto)
+        const t2 = (i / particleCount) * Math.PI * 16;
+        const radius2 = 7 + (Math.random() - 0.5) * 2;
+        positionAttributes.shape2[i3] = Math.cos(t2) * radius2;
+        positionAttributes.shape2[i3 + 1] = ((i / particleCount) - 0.5) * 45;
+        positionAttributes.shape2[i3 + 2] = Math.sin(t2) * radius2;
+
+        // SHAPE 3: Undulating Wave Grid (Pinned Showcase)
+        const gridCols = Math.round(Math.sqrt(particleCount));
+        const col = i % gridCols;
+        const row = Math.floor(i / gridCols);
+        const spacing = 0.65;
+        const x3 = (col - gridCols / 2) * spacing;
+        const z3 = (row - gridCols / 2) * spacing;
+        positionAttributes.shape3[i3] = x3;
+        positionAttributes.shape3[i3 + 1] = Math.sin(x3 * 0.3) * Math.cos(z3 * 0.3) * 3;
+        positionAttributes.shape3[i3 + 2] = z3;
+
+        // SHAPE 4: Cyber Matrix Vortex (Contact)
+        const radius4 = 15 + Math.random() * 25;
+        const angle4 = Math.random() * Math.PI * 2;
+        const height4 = (Math.random() - 0.5) * 50;
+        positionAttributes.shape4[i3] = Math.cos(angle4) * radius4;
+        positionAttributes.shape4[i3 + 1] = height4;
+        positionAttributes.shape4[i3 + 2] = Math.sin(angle4) * radius4;
+    }
+
+    let camera = null;
+    let renderer = null;
+    let particleSystem = null;
+    let particleMaterial = null;
+    let particleGeometry = null;
+    let scrollProgress = 0;
+
+    // Fluid Camera Distance Calculation according to aspect ratio and screen width
+    function getResponsiveCamZ() {
+        const aspect = window.innerWidth / window.innerHeight;
+        if (aspect < 0.75) {
+            // Tall portrait mobile
+            return 50;
+        } else if (aspect < 1.1) {
+            // Square screens / Portrait Tablets
+            return 42;
+        } else if (window.innerWidth >= 2560) {
+            // 4K & Ultrawide Monitors
+            return 34;
+        } else {
+            // Standard Laptops (1366x768, 1440x900, 1920x1080)
+            return 36;
+        }
+    }
+
+    function getResponsiveParticleSize() {
+        if (window.innerWidth < 640) return 0.26;
+        if (window.innerWidth < 1024) return 0.24;
+        if (window.innerWidth >= 2560) return 0.18;
+        return 0.22;
+    }
+
+    function initThreeJS() {
+        const canvas = document.getElementById('webgl-canvas');
+        if (!canvas || typeof THREE === 'undefined') return;
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2('#050507', 0.02);
+
+        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, getResponsiveCamZ());
+
+        renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true,
+            antialias: window.innerWidth >= 768,
+            powerPreference: "high-performance"
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Restrained palette: electric lime → cyan, with per-particle depth falloff
+        const colors = new Float32Array(particleCount * 3);
+        const c1 = new THREE.Color(0xccff00);
+        const c2 = new THREE.Color(0x06b6d4);
+
+        for (let i = 0; i < particleCount; i++) {
+            const i3 = i * 3;
+            const rand = Math.random();
+            const color = c1.clone().lerp(c2, Math.pow(rand, 2) * 0.85);
+            const depth = 0.42 + Math.random() * 0.58;
+            colors[i3] = color.r * depth;
+            colors[i3 + 1] = color.g * depth;
+            colors[i3 + 2] = color.b * depth;
+        }
+
+        particleGeometry = new THREE.BufferGeometry();
+        const currentPositions = new Float32Array(positionAttributes.shape1);
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        // Generative Circular Particle Texture
+        const createCircleTexture = () => {
+            const c = document.createElement('canvas');
+            c.width = 32; c.height = 32;
+            const ctx = c.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(16, 16, 14, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
+            return new THREE.CanvasTexture(c);
+        };
+
+        particleMaterial = new THREE.PointsMaterial({
+            size: getResponsiveParticleSize(),
+            vertexColors: true,
+            map: createCircleTexture(),
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
+
+        // Global Scroll Progress Tracking
+        ScrollTrigger.create({
+            trigger: document.body,
+            start: "top top",
+            end: "bottom bottom",
+            onUpdate: (self) => {
+                scrollProgress = self.progress;
+            }
+        });
+
+        // Animation Render Loop
+        const clock = new THREE.Clock();
+        let camOffsetX = 0;
+        let camOffsetY = 0;
+
+        function animate() {
+            const time = clock.getElapsedTime();
+
+            let fromShape, toShape, factor;
+            if (scrollProgress < 0.33) {
+                fromShape = positionAttributes.shape1;
+                toShape = positionAttributes.shape2;
+                factor = scrollProgress / 0.33;
+            } else if (scrollProgress < 0.66) {
+                fromShape = positionAttributes.shape2;
+                toShape = positionAttributes.shape3;
+                factor = (scrollProgress - 0.33) / 0.33;
+            } else {
+                fromShape = positionAttributes.shape3;
+                toShape = positionAttributes.shape4;
+                factor = (scrollProgress - 0.66) / 0.34;
+            }
+
+            factor = Math.max(0, Math.min(1, factor));
+
+            const posArray = particleGeometry.attributes.position.array;
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                const targetXVal = fromShape[i] + (toShape[i] - fromShape[i]) * factor;
+                const targetYVal = fromShape[i + 1] + (toShape[i + 1] - fromShape[i + 1]) * factor;
+                const targetZVal = fromShape[i + 2] + (toShape[i + 2] - fromShape[i + 2]) * factor;
+
+                const noise = Math.sin(time * 1.5 + posArray[i] * 0.2) * 0.08;
+
+                posArray[i] += (targetXVal - posArray[i]) * 0.06;
+                posArray[i + 1] += (targetYVal + noise - posArray[i + 1]) * 0.06;
+                posArray[i + 2] += (targetZVal - posArray[i + 2]) * 0.06;
+            }
+            particleGeometry.attributes.position.needsUpdate = true;
+
+            particleSystem.rotation.y = time * 0.035;
+            particleSystem.rotation.x = Math.sin(time * 0.02) * 0.08;
+
+            if (!isTouch) {
+                camOffsetX += (targetX * 2.5 - camOffsetX) * 0.05;
+                camOffsetY += (targetY * 2.5 - camOffsetY) * 0.05;
+                camera.position.x = camOffsetX;
+                camera.position.y = camOffsetY;
+            }
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Responsive Debounced Resize Handler
+        let resizeTimer;
+        function handleResize() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (camera && renderer && particleMaterial) {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.position.z = getResponsiveCamZ();
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    particleMaterial.size = getResponsiveParticleSize();
+                }
+                ScrollTrigger.refresh();
+            }, 80);
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initThreeJS);
+    } else {
+        initThreeJS();
+    }
+
+
+    // --- 7. GSAP HORIZONTAL PINNED SHOWCASE (Auto-Adjusting Horizontal Distance) ---
+    function initHorizontalScroll() {
+        const horizontalSection = document.getElementById('horizontal-work');
+        const track = document.getElementById('horizontal-track');
+        if (!horizontalSection || !track) return;
+
+        const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + (window.innerWidth < 640 ? 30 : 80));
+
+        gsap.to(track, {
+            x: getScrollAmount,
+            ease: "none",
+            scrollTrigger: {
+                trigger: horizontalSection,
+                start: "top top",
+                end: () => `+=${Math.max(window.innerHeight * 1.5, track.scrollWidth - window.innerWidth + 200)}`,
+                pin: true,
+                scrub: 1.1,
+                invalidateOnRefresh: true,
+                anticipatePin: 1
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHorizontalScroll);
+    } else {
+        initHorizontalScroll();
+    }
+
+
+    // --- 8. PROJECT INSPECTION MODAL ---
+    const projectData = {
+        crypto: {
+            tag: "CRYPTOGRAPHIC UTILITY // C & OpenSSL",
+            title: "E-D-Crypto Utility",
+            desc: "Developed a C-based file encryption/decryption utility using AES-256-CBC, RSA-2048 (OAEP), and SHA-256 integrity checks via OpenSSL.",
+            specs: [
+                "AES-256-CBC file encryption with RSA-2048 (OAEP) key exchange",
+                "SHA-256 integrity verification for tamper detection",
+                "OpenSSL EVP interfaces with strict padding validation",
+                "Built for secure file storage and transfer"
+            ],
+            link: "https://github.com/28d33/E-D--Crypto"
+        },
+        siem: {
+            tag: "ZERO-TRUST NETWORK // ELK STACK",
+            title: "Zero-Trust Network Design",
+            desc: "Redesigned a segmented, zero-trust network for a cryptocurrency exchange, adding DMZ isolation and continuous threat monitoring with the ELK Stack.",
+            specs: [
+                "Zero-trust architecture with multi-zone segmentation",
+                "DMZ isolation for internet-facing services",
+                "Continuous monitoring with the ELK Stack",
+                "Real-time threat detection and response"
+            ],
+            link: "https://github.com/28d33/Perimeter_Security"
+        },
+        sast: {
+            tag: "SECURITY AUDIT // SAST & DAST",
+            title: "Security Assessment",
+            desc: "Ran a security audit that embedded SAST and DAST checks into the CI/CD pipeline, catching insecure code before it reached production.",
+            specs: [
+                "Secure SDLC practices embedded in delivery",
+                "SAST and DAST testing inside the pipeline",
+                "CI/CD security gates for code integrity",
+                "Vulnerability detection before release"
+            ],
+            link: "https://github.com/28d33/Security_Assessment"
+        },
+        stream: {
+            tag: "DATA SECURITY // C++ & COMPLIANCE",
+            title: "Data Security Framework",
+            desc: "Built a C++ framework for AES/RSA encryption, SHA-256 integrity verification, and data masking to meet regulatory requirements.",
+            specs: [
+                "C++ implementation of AES and RSA encryption",
+                "SHA-256 integrity verification",
+                "Data masking for regulatory compliance",
+                "Built for sensitive production data"
+            ],
+            link: "https://github.com/28d33/Data_Security"
+        }
+    };
+
+    window.openProjectModal = function(key) {
+        const data = projectData[key];
+        if (!data) return;
+
+        document.getElementById('modal-tag').innerText = data.tag;
+        document.getElementById('modal-title').innerText = data.title;
+        document.getElementById('modal-desc').innerText = data.desc;
+        
+        const specsList = document.getElementById('modal-specs');
+        specsList.innerHTML = '';
+        data.specs.forEach(s => {
+            const li = document.createElement('li');
+            li.innerText = s;
+            specsList.appendChild(li);
+        });
+
+        document.getElementById('modal-link').href = data.link;
+
+        const modal = document.getElementById('project-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    };
+
+    window.closeProjectModal = function() {
+        const modal = document.getElementById('project-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    };
+
+    document.getElementById('project-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'project-modal') closeProjectModal();
+    });
+
+    // --- 8b. EVENT DELEGATION (keeps the CSP free of 'unsafe-inline') ---
+    document.addEventListener('click', (e) => {
+        const card = e.target.closest?.('[data-project]');
+        if (card) {
+            window.openProjectModal(card.dataset.project);
+            return;
+        }
+        const action = e.target.closest?.('[data-action]');
+        if (!action) return;
+        if (action.dataset.action === 'close-modal') window.closeProjectModal();
+        if (action.dataset.action === 'copy-email') window.copyContactEmail();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const card = e.target.closest?.('[data-project]');
+        if (!card) return;
+        e.preventDefault();
+        window.openProjectModal(card.dataset.project);
+    });
+
+
+    // --- 9. TACTICAL TERMINAL DRAWER ---
+    const terminalDrawer = document.getElementById('terminal-drawer');
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalLogs = document.getElementById('terminal-logs');
+    const navTerminalBtn = document.getElementById('nav-terminal-btn');
+    const closeTerminalBtn = document.getElementById('close-terminal-btn');
+
+    let isTerminalOpen = false;
+
+    function toggleTerminal(state) {
+        isTerminalOpen = state !== undefined ? state : !isTerminalOpen;
+        if (isTerminalOpen) {
+            terminalDrawer.classList.remove('translate-y-full');
+            terminalDrawer.classList.add('translate-y-0');
+            setTimeout(() => terminalInput?.focus(), 250);
+        } else {
+            terminalDrawer.classList.add('translate-y-full');
+            terminalDrawer.classList.remove('translate-y-0');
+        }
+    }
+
+    navTerminalBtn?.addEventListener('click', () => toggleTerminal());
+    closeTerminalBtn?.addEventListener('click', () => toggleTerminal(false));
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '`' || e.key === '~') {
+            e.preventDefault();
+            toggleTerminal();
+        }
+        if (e.key === 'Escape') {
+            closeProjectModal();
+            toggleTerminal(false);
+            toggleMobileMenu(false);
+        }
+    });
+
+    const commands = {
+        help: () => `AVAILABLE COMMANDS:
+whoami    About me
+skills    Technical skills
+projects  Selected projects
+matrix    Certifications
+contact   Contact details
+clear     Clear the terminal`,
+
+        whoami: () => `IDENTITY: Deekshith (D33)
+ROLE: AI Security Engineer & Penetration Tester
+FOCUS: AI agents, MCP, offensive security
+LOCATION: Bangalore, India
+STATUS: Open to remote / relocation`,
+
+        skills: () => `CORE SKILLS:
+- AI          : Agent harnesses, MCP servers, copilots, RAG, LLM red teaming, token optimization
+- Security    : Penetration Testing, Web App Security, Network Exploitation, Red Teaming, Forensics, SIEM
+- Languages   : Python, Bash, C/C++, x86 Assembly, JavaScript
+- Tools       : Kali Linux, Burp Suite, Metasploit, Nmap, Wireshark, ELK Stack`,
+
+        projects: () => `SELECTED PROJECTS:
+[01] E-D-Crypto Utility        (AES-256-CBC / RSA-2048)
+[02] Zero-Trust Network Design (ELK Stack / Segmentation)
+[03] Security Assessment       (SAST / DAST / Secure SDLC)
+[04] Data Security Framework   (C++ / AES / RSA / SHA-256)`,
+
+        matrix: () => `CERTIFICATIONS & EXPERIENCE:
+- CPENT: Certified Penetration Testing Professional (EC-Council)
+         Passed during B.Tech · self-studied · Hackers4Humanity voucher
+- IIT Guwahati: Cybersecurity Course
+- TryHackMe: Junior Penetration Tester / Pre Security
+- Cisco: Ethical Hacker & Cybersecurity Essentials`,
+
+        contact: () => `CONTACT:
+- Email   : d33kshith@proton.me
+- GitHub  : https://github.com/28d33
+- LinkedIn: https://www.linkedin.com/in/d33kshithanand`,
+
+        clear: () => {
+            if (terminalLogs) terminalLogs.innerHTML = '';
+            return '';
+        }
+    };
+
+    terminalInput?.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+
+        const raw = terminalInput.value.trim().slice(0, 120);
+        terminalInput.value = '';
+        if (!raw) return;
+
+        const cmd = raw.toLowerCase();
+
+        const line = document.createElement('div');
+        const prompt = document.createElement('span');
+        prompt.className = 'text-[#ccff00]';
+        prompt.textContent = 'd33@portfolio:~$';
+        const typed = document.createElement('span');
+        typed.className = 'text-white';
+        typed.textContent = raw;               // typed input is never parsed as HTML
+        line.append(prompt, ' ', typed);
+        terminalLogs.appendChild(line);
+
+        const resp = document.createElement('div');
+        resp.className = 'text-white/70 whitespace-pre-wrap';
+
+        if (Object.hasOwn(commands, cmd)) {
+            const out = commands[cmd]();
+            if (out) {
+                resp.textContent = out;
+                terminalLogs.appendChild(resp);
+            }
+        } else {
+            const err = document.createElement('span');
+            err.className = 'text-rose-400';
+            err.textContent = `Command '${cmd}' not recognized. Type 'help' for available commands.`;
+            resp.appendChild(err);
+            terminalLogs.appendChild(resp);
+        }
+
+        // keep the scrollback bounded
+        while (terminalLogs.childElementCount > 200) terminalLogs.removeChild(terminalLogs.firstElementChild);
+
+        terminalLogs.scrollTop = terminalLogs.scrollHeight;
+    });
+
+
+    // --- 10. COPY EMAIL HELPER ---
+    window.copyContactEmail = function() {
+        const email = "d33kshith@proton.me";
+        if (!navigator.clipboard || !window.isSecureContext) return;
+        navigator.clipboard.writeText(email).then(() => {
+            const btn = document.getElementById('copy-email-btn');
+            if (btn) {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span class="text-emerald-400">COPIED TO CLIPBOARD</span>`;
+                if (window.lucide) lucide.createIcons();
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    if (window.lucide) lucide.createIcons();
+                }, 2000);
+            }
+        });
+    };
+
+})();
