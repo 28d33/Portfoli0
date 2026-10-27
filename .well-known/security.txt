@@ -1,0 +1,7 @@
+# Vulnerability disclosure policy — https://portfolio-d33.vercel.app/
+# RFC 9116
+Contact: mailto:d33kshith@proton.me
+Expires: 2027-10-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://portfolio-d33.vercel.app/.well-known/security.txt
+Policy: https://portfolio-d33.vercel.app/.well-known/security.txt

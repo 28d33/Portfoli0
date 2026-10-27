@@ -190,7 +190,7 @@
 
 
     // --- 6. AUTO-ADJUSTING 10,000 PARTICLE MORPHING THREE.JS BACKGROUND ---
-    const particleCount = window.innerWidth < 640 ? 6000 : 10000;
+    const particleCount = window.innerWidth < 640 ? 4500 : 10000;
     const positionAttributes = {
         shape1: new Float32Array(particleCount * 3), // Hero: Clustered Torus Knot
         shape2: new Float32Array(particleCount * 3), // Manifesto: Twisted Helix Spindle
@@ -251,24 +251,24 @@
         const aspect = window.innerWidth / window.innerHeight;
         if (aspect < 0.75) {
             // Tall portrait mobile
-            return 44;
+            return 50;
         } else if (aspect < 1.1) {
             // Square screens / Portrait Tablets
-            return 38;
+            return 42;
         } else if (window.innerWidth >= 2560) {
             // 4K & Ultrawide Monitors
-            return 28;
+            return 34;
         } else {
             // Standard Laptops (1366x768, 1440x900, 1920x1080)
-            return 32;
+            return 36;
         }
     }
 
     function getResponsiveParticleSize() {
-        if (window.innerWidth < 640) return 0.38;
-        if (window.innerWidth < 1024) return 0.32;
-        if (window.innerWidth >= 2560) return 0.24;
-        return 0.28;
+        if (window.innerWidth < 640) return 0.26;
+        if (window.innerWidth < 1024) return 0.24;
+        if (window.innerWidth >= 2560) return 0.18;
+        return 0.22;
     }
 
     function initThreeJS() {
@@ -290,19 +290,19 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Colors: Electric Lime (#ccff00), Cyan (#06b6d4), Indigo (#4f46e5)
+        // Restrained palette: electric lime → cyan, with per-particle depth falloff
         const colors = new Float32Array(particleCount * 3);
         const c1 = new THREE.Color(0xccff00);
         const c2 = new THREE.Color(0x06b6d4);
-        const c3 = new THREE.Color(0x4f46e5);
 
         for (let i = 0; i < particleCount; i++) {
             const i3 = i * 3;
             const rand = Math.random();
-            const color = rand < 0.5 ? c1.clone().lerp(c2, rand * 2) : c2.clone().lerp(c3, (rand - 0.5) * 2);
-            colors[i3] = color.r;
-            colors[i3 + 1] = color.g;
-            colors[i3 + 2] = color.b;
+            const color = c1.clone().lerp(c2, Math.pow(rand, 2) * 0.85);
+            const depth = 0.42 + Math.random() * 0.58;
+            colors[i3] = color.r * depth;
+            colors[i3 + 1] = color.g * depth;
+            colors[i3 + 2] = color.b * depth;
         }
 
         particleGeometry = new THREE.BufferGeometry();
@@ -327,7 +327,7 @@
             vertexColors: true,
             map: createCircleTexture(),
             transparent: true,
-            opacity: 0.75,
+            opacity: 0.5,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         });
@@ -465,21 +465,21 @@
             title: "E-D-Crypto Utility",
             desc: "Developed a C-based file encryption/decryption utility using AES-256-CBC, RSA-2048 (OAEP), and SHA-256 integrity checks via OpenSSL.",
             specs: [
-                "AES-256-CBC and RSA-2048 (OAEP) implementation",
-                "SHA-256 integrity verification",
-                "OpenSSL integration for robust security",
-                "Designed for secure file storage and transfer"
+                "AES-256-CBC file encryption with RSA-2048 (OAEP) key exchange",
+                "SHA-256 integrity verification for tamper detection",
+                "OpenSSL EVP interfaces with strict padding validation",
+                "Built for secure file storage and transfer"
             ],
             link: "https://github.com/28d33/E-D--Crypto"
         },
         siem: {
             tag: "ZERO-TRUST NETWORK // ELK STACK",
-            title: "Perimeter Security Architecture",
-            desc: "Redesigned a zero-trust network architecture for a cryptocurrency exchange with multi-zone segmentation and DMZ. Implemented continuous security monitoring using the ELK Stack for real-time threat detection and response.",
+            title: "Zero-Trust Network Design",
+            desc: "Redesigned a segmented, zero-trust network for a cryptocurrency exchange, adding DMZ isolation and continuous threat monitoring with the ELK Stack.",
             specs: [
-                "Zero-trust network architecture design",
-                "Multi-zone segmentation and DMZ implementation",
-                "Continuous security monitoring using ELK Stack",
+                "Zero-trust architecture with multi-zone segmentation",
+                "DMZ isolation for internet-facing services",
+                "Continuous monitoring with the ELK Stack",
                 "Real-time threat detection and response"
             ],
             link: "https://github.com/28d33/Perimeter_Security"
@@ -487,24 +487,24 @@
         sast: {
             tag: "SECURITY AUDIT // SAST & DAST",
             title: "Security Assessment",
-            desc: "Conducted a strategic security audit integrating Secure SDLC practices with SAST/DAST testing methodologies. Implemented CI/CD security layers to enforce code integrity and vulnerability detection throughout the pipeline.",
+            desc: "Ran a security audit that embedded SAST and DAST checks into the CI/CD pipeline, catching insecure code before it reached production.",
             specs: [
-                "Secure SDLC practices integration",
-                "SAST/DAST testing methodologies",
-                "CI/CD security layers implementation",
-                "Strategic security audit and vulnerability detection"
+                "Secure SDLC practices embedded in delivery",
+                "SAST and DAST testing inside the pipeline",
+                "CI/CD security gates for code integrity",
+                "Vulnerability detection before release"
             ],
             link: "https://github.com/28d33/Security_Assessment"
         },
         stream: {
             tag: "DATA SECURITY // C++ & COMPLIANCE",
             title: "Data Security Framework",
-            desc: "Built a data security framework using custom C++ scripts implementing AES/RSA encryption and SHA-256 integrity verification. Applied data masking techniques to ensure compliance with relevant regulatory requirements.",
+            desc: "Built a C++ framework for AES/RSA encryption, SHA-256 integrity verification, and data masking to meet regulatory requirements.",
             specs: [
-                "Custom C++ scripts for AES/RSA encryption",
+                "C++ implementation of AES and RSA encryption",
                 "SHA-256 integrity verification",
-                "Data masking techniques application",
-                "Compliance with regulatory requirements"
+                "Data masking for regulatory compliance",
+                "Built for sensitive production data"
             ],
             link: "https://github.com/28d33/Data_Security"
         }
@@ -545,6 +545,27 @@
         if (e.target.id === 'project-modal') closeProjectModal();
     });
 
+    // --- 8b. EVENT DELEGATION (keeps the CSP free of 'unsafe-inline') ---
+    document.addEventListener('click', (e) => {
+        const card = e.target.closest?.('[data-project]');
+        if (card) {
+            window.openProjectModal(card.dataset.project);
+            return;
+        }
+        const action = e.target.closest?.('[data-action]');
+        if (!action) return;
+        if (action.dataset.action === 'close-modal') window.closeProjectModal();
+        if (action.dataset.action === 'copy-email') window.copyContactEmail();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const card = e.target.closest?.('[data-project]');
+        if (!card) return;
+        e.preventDefault();
+        window.openProjectModal(card.dataset.project);
+    });
+
 
     // --- 9. TACTICAL TERMINAL DRAWER ---
     const terminalDrawer = document.getElementById('terminal-drawer');
@@ -583,40 +604,43 @@
     });
 
     const commands = {
-        help: () => `OPERATIONAL DIRECTIVES:
-- whoami      : Display operator identification & role
-- skills      : Capability matrix & security toolkit
-- projects    : List active security deployments
-- matrix      : Display verified institutional credentials
-- contact     : Reveal communication uplink channels
-- clear       : Wipe terminal output buffer`,
+        help: () => `AVAILABLE COMMANDS:
+whoami    About me
+skills    Technical skills
+projects  Selected projects
+matrix    Certifications
+contact   Contact details
+clear     Clear the terminal`,
 
         whoami: () => `IDENTITY: Deekshith (D33)
-ROLE: Cybersecurity Intern, Red Team, Social Engineering, Forensics
+ROLE: AI Security Engineer & Penetration Tester
+FOCUS: AI agents, MCP, offensive security
 LOCATION: Bangalore, India
-STATUS: Open to Opportunities`,
+STATUS: Open to remote / relocation`,
 
-        skills: () => `CORE CAPABILITIES:
-- Security    : Penetration Testing, Web App Sec, Network Exploitation, Red Teaming, Digital Forensics, SIEM
-- Languages   : Python, Bash Scripting, C/C++, x86 Assembly, JavaScript
+        skills: () => `CORE SKILLS:
+- AI          : Agent harnesses, MCP servers, copilots, RAG, LLM red teaming, token optimization
+- Security    : Penetration Testing, Web App Security, Network Exploitation, Red Teaming, Forensics, SIEM
+- Languages   : Python, Bash, C/C++, x86 Assembly, JavaScript
 - Tools       : Kali Linux, Burp Suite, Metasploit, Nmap, Wireshark, ELK Stack`,
 
-        projects: () => `DEPLOYED REPOSITORIES:
+        projects: () => `SELECTED PROJECTS:
 [01] E-D-Crypto Utility        (AES-256-CBC / RSA-2048)
-[02] Perimeter Security Arch   (Zero-Trust / ELK Stack)
-[03] Security Assessment       (SAST/DAST / Secure SDLC)
+[02] Zero-Trust Network Design (ELK Stack / Segmentation)
+[03] Security Assessment       (SAST / DAST / Secure SDLC)
 [04] Data Security Framework   (C++ / AES / RSA / SHA-256)`,
 
-        matrix: () => `VERIFIED CLEARANCE:
-- CPENT: Certified Penetration Testing Professional
+        matrix: () => `CERTIFICATIONS & EXPERIENCE:
+- CPENT: Certified Penetration Testing Professional (EC-Council)
+         Passed during B.Tech · self-studied · Hackers4Humanity voucher
 - IIT Guwahati: Cybersecurity Course
-- TryHackMe: Jr Penetration Tester / PreSecurity
+- TryHackMe: Junior Penetration Tester / Pre Security
 - Cisco: Ethical Hacker & Cybersecurity Essentials`,
 
-        contact: () => `SECURE CHANNELS:
+        contact: () => `CONTACT:
 - Email   : d33kshith@proton.me
 - GitHub  : https://github.com/28d33
-- LinkedIn: https://linkedin.com/in/d33kshithanand`,
+- LinkedIn: https://www.linkedin.com/in/d33kshithanand`,
 
         clear: () => {
             if (terminalLogs) terminalLogs.innerHTML = '';
@@ -625,39 +649,52 @@ STATUS: Open to Opportunities`,
     };
 
     terminalInput?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const raw = terminalInput.value.trim();
-            terminalInput.value = '';
-            if (!raw) return;
+        if (e.key !== 'Enter') return;
 
-            const cmd = raw.toLowerCase();
+        const raw = terminalInput.value.trim().slice(0, 120);
+        terminalInput.value = '';
+        if (!raw) return;
 
-            const line = document.createElement('div');
-            line.innerHTML = `<span class="text-[#ccff00]">d33@uplink:~$</span> <span class="text-white">${raw}</span>`;
-            terminalLogs.appendChild(line);
+        const cmd = raw.toLowerCase();
 
-            const resp = document.createElement('div');
-            resp.className = 'text-white/70 whitespace-pre-wrap';
+        const line = document.createElement('div');
+        const prompt = document.createElement('span');
+        prompt.className = 'text-[#ccff00]';
+        prompt.textContent = 'd33@portfolio:~$';
+        const typed = document.createElement('span');
+        typed.className = 'text-white';
+        typed.textContent = raw;               // typed input is never parsed as HTML
+        line.append(prompt, ' ', typed);
+        terminalLogs.appendChild(line);
 
-            if (commands[cmd]) {
-                const out = commands[cmd]();
-                if (out) {
-                    resp.innerText = out;
-                    terminalLogs.appendChild(resp);
-                }
-            } else {
-                resp.innerHTML = `<span class="text-rose-400">Command '${cmd}' not recognized. Type 'help' for directives.</span>`;
+        const resp = document.createElement('div');
+        resp.className = 'text-white/70 whitespace-pre-wrap';
+
+        if (Object.hasOwn(commands, cmd)) {
+            const out = commands[cmd]();
+            if (out) {
+                resp.textContent = out;
                 terminalLogs.appendChild(resp);
             }
-
-            terminalLogs.scrollTop = terminalLogs.scrollHeight;
+        } else {
+            const err = document.createElement('span');
+            err.className = 'text-rose-400';
+            err.textContent = `Command '${cmd}' not recognized. Type 'help' for available commands.`;
+            resp.appendChild(err);
+            terminalLogs.appendChild(resp);
         }
+
+        // keep the scrollback bounded
+        while (terminalLogs.childElementCount > 200) terminalLogs.removeChild(terminalLogs.firstElementChild);
+
+        terminalLogs.scrollTop = terminalLogs.scrollHeight;
     });
 
 
     // --- 10. COPY EMAIL HELPER ---
     window.copyContactEmail = function() {
         const email = "d33kshith@proton.me";
+        if (!navigator.clipboard || !window.isSecureContext) return;
         navigator.clipboard.writeText(email).then(() => {
             const btn = document.getElementById('copy-email-btn');
             if (btn) {
