@@ -1,0 +1,8 @@
+# https://portfolio-d33.vercel.app/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-d33.vercel.app/sitemap.xml
+
+# Security contact
+# https://portfolio-d33.vercel.app/.well-known/security.txt
