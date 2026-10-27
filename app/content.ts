@@ -900,7 +900,4 @@ export const portfolioHtml = `<!-- Custom Physics Dual LERP Cursor (Desktop Only
             <span class="text-[#ccff00] font-bold flex-shrink-0">d33@portfolio:~$</span>
             <input id="terminal-input" type="text" class="flex-1 bg-transparent border-none outline-none text-white font-mono text-xs min-w-0" autocomplete="off" spellcheck="false" placeholder="Enter command...">
         </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="main.js" defer></script>`;
+    </div>`;
